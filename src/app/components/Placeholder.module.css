@@ -1,0 +1,74 @@
+.placeholder {
+  min-height: 100vh;
+  padding: 200px 0 var(--space-3xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  max-width: 880px;
+}
+
+.title {
+  margin-top: var(--space-sm);
+}
+
+.italic {
+  font-style: italic;
+  font-weight: 400;
+}
+
+.signature {
+  color: var(--color-black);
+  transform: rotate(-2deg);
+  align-self: flex-start;
+  margin-top: calc(-1 * var(--space-md));
+}
+
+.lede {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--color-black);
+  max-width: 60ch;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+  width: 100%;
+  max-width: 720px;
+}
+
+.metaText {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  margin-top: var(--space-xs);
+  color: var(--color-black);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+@media (max-width: 768px) {
+  .placeholder {
+    padding: 140px 0 var(--space-2xl);
+  }
+  .meta {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+}
