@@ -45,6 +45,8 @@ export default function Work() {
     const img = imgRef.current;
     if (!root || !floater || !img) return;
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const isTouch = window.matchMedia("(hover: none)").matches;
 
     const ctx = gsap.context(() => {
@@ -95,7 +97,7 @@ export default function Work() {
       const onEnter = (e: globalThis.MouseEvent) => {
         active = true;
         if (src) img.src = src;
-        gsap.set(floater, { x: e.clientX, y: e.clientY });
+        gsap.set(floater, { x: e.clientX, y: e.clientY, display: "block" });
         gsap.to(floater, {
           opacity: 1,
           scale: 1,
@@ -110,6 +112,9 @@ export default function Work() {
           scale: 0.92,
           duration: 0.3,
           ease: "power3.out",
+          onComplete: () => {
+            if (!active) gsap.set(floater, { display: "none" });
+          },
         });
       };
       row.addEventListener("mouseenter", onEnter);

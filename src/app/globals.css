@@ -222,8 +222,6 @@ svg {
   text-transform: uppercase;
   border-radius: var(--radius-pill);
   position: relative;
-  overflow: hidden;
-  isolation: isolate;
   padding: 20px 36px;
   line-height: 1;
   white-space: nowrap;
@@ -237,7 +235,6 @@ svg {
   background-color: var(--color-green);
   color: var(--color-black);
   border: none;
-  will-change: transform;
 }
 .btn-primary:hover {
   box-shadow: 0 10px 30px -10px rgba(140, 255, 0, 0.55);
@@ -262,19 +259,22 @@ svg {
   background: transparent;
   color: var(--color-black);
   border: 1.5px solid var(--color-black);
+  overflow: hidden;
+  isolation: isolate;
 }
 .btn-secondary::before {
   content: "";
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0;
   background-color: var(--color-black);
-  transform-origin: left center;
-  transform: scaleX(0);
-  transition: transform 500ms var(--ease-out-expo);
+  transition: width 500ms var(--ease-out-expo);
   z-index: -1;
 }
 .btn-secondary:hover::before {
-  transform: scaleX(1);
+  width: 100%;
 }
 .btn-secondary:hover {
   color: var(--color-white);

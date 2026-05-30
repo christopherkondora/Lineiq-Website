@@ -16,6 +16,8 @@ export default function Hero() {
     const root = rootRef.current;
     if (!root) return;
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ delay: 0.2 });
       tl.fromTo(
@@ -77,20 +79,6 @@ export default function Hero() {
           },
         });
       }
-
-      const blob = root.querySelector("[data-hero-blob]");
-      if (blob) {
-        gsap.to(blob, {
-          yPercent: 20,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-      }
     }, root);
 
     return () => ctx.revert();
@@ -98,19 +86,6 @@ export default function Hero() {
 
   return (
     <section ref={rootRef} className={styles.hero} id="top">
-      <svg
-        className={styles.blob}
-        data-hero-blob
-        viewBox="0 0 900 720"
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden="true"
-      >
-        <path
-          className={styles.blobShape}
-          d="M 60 40 C 180 -20 340 -30 470 20 C 580 50 700 -10 820 30 C 920 60 900 220 880 340 C 860 460 830 580 720 640 C 600 700 430 690 300 650 C 180 610 60 670 -10 580 C -70 490 -30 360 10 260 C 40 170 -30 110 60 40 Z"
-        />
-      </svg>
-
       <div className={styles.ghostWrap} data-hero-ghost aria-hidden="true">
         <svg
           className={styles.ghostSvg}
@@ -154,10 +129,6 @@ export default function Hero() {
       </svg>
 
       <div className={`container ${styles.inner}`}>
-        <p className="text-label" data-hero-reveal>
-          ◆ Brand · Kód · Jel
-        </p>
-
         <h1 className={`text-hero ${styles.title}`} data-hero-reveal>
           Forget being
           <br />

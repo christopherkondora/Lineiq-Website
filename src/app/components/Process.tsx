@@ -46,6 +46,8 @@ export default function Process() {
     const root = rootRef.current;
     if (!root) return;
 
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         root.querySelectorAll("[data-reveal]"),

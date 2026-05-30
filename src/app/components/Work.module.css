@@ -110,6 +110,7 @@
   z-index: 50;
   overflow: hidden;
   background: var(--color-black);
+  display: none;
 }
 
 .floaterImg {
