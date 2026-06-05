@@ -3,63 +3,88 @@
   background: var(--color-white);
 }
 
-.inner {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: var(--space-2xl);
-  align-items: start;
+.composition {
+  max-width: 62rem;
+  margin: 0 auto;
+  text-align: center;
 }
 
-.label {
-  position: sticky;
-  top: 120px;
-}
-
-.body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
-}
-
-.statement {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3.5vw, var(--text-4xl));
-  line-height: var(--leading-snug);
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-  color: var(--color-black);
-}
-
-.statement em {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--color-red);
-}
-
-.copy {
+/* Running text is Wix; the larger inline words break the rhythm in Fraunces
+   SemiBold, and each highlighted line grows taller around them. */
+.lead {
   font-family: var(--font-body);
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
+  font-weight: 400;
+  font-size: clamp(1.05rem, 1.7vw, 1.55rem);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
   color: var(--color-black);
-  max-width: 60ch;
 }
 
-.line {
-  width: 64px;
-  height: 1px;
-  background: var(--color-black);
+/* First line sits off-centre, pushed left of the block, tucked close to the
+   line below it. */
+.firstLine {
+  display: block;
+  transform: translateX(-8rem);
+  margin-bottom: -0.85em;
+}
+
+.secondLine {
+  display: block;
+  margin-bottom: -0.45em;
+}
+
+.thirdLine {
+  display: block;
+  transform: translateX(2rem);
+  margin-bottom: -0.85em;
+}
+
+.fourthLine {
+  display: block;
+}
+
+/* "támogatunk meg." closes the previous sentence, so it sits on its own,
+   pushed left and detached from the ecosystem sentence beside it. */
+.support {
+  display: inline-block;
+  transform: translateX(-3rem);
+}
+
+.ecosystem {
+  display: inline-block;
+  transform: translateX(-2.5rem) translateY(0.6rem);
+}
+
+.highlight {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.6em;
+  letter-spacing: var(--tracking-tight);
+  font-variation-settings: "opsz" 75;
+}
+
+/* Red strike-through across "Ügynökség" — the brand crossing out the cliché. */
+.strike {
+  text-decoration-line: line-through;
+  text-decoration-color: var(--color-red);
+  text-decoration-thickness: 0.08em;
+}
+
+.closing {
   margin-top: var(--space-md);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 4.5vw, 3.4rem);
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-tight);
+  white-space: nowrap;
+  font-variation-settings: "opsz" 100;
+  color: var(--color-black);
 }
 
 @media (max-width: 768px) {
   .intro {
     padding: var(--space-2xl) 0;
-  }
-  .inner {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
-  }
-  .label {
-    position: static;
   }
 }

@@ -1,11 +1,16 @@
 .manifesto {
   position: relative;
   overflow: hidden;
+  min-height: 110vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .narrativeLine {
   position: absolute;
-  top: 30%;
+  top: 50%;
+  transform: translateY(-50%);
   left: 0;
   width: 100%;
   height: 200px;
@@ -18,9 +23,11 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: var(--space-2xl);
-  align-items: start;
+  /* copy gets the room it needs for the single-line composition; the studio
+     image sits in a fixed column beside it. */
+  grid-template-columns: 1fr 440px;
+  gap: var(--space-xl);
+  align-items: center;
 }
 
 .copy {
@@ -34,35 +41,76 @@
   max-width: 16ch;
 }
 
-.italic {
-  font-style: italic;
-  color: var(--color-red);
-  font-weight: 400;
+/* Each headline line sits in an overflow-clip mask so it can rise up from
+   behind on entrance. The padding/negative-margin pair keeps the clip from
+   shaving descenders (e.g. the "g" in "taught") at rest. */
+.headLine {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
 }
 
-.kranky {
-  align-self: flex-start;
-  transform: rotate(-3deg);
-  padding-left: 5vw;
-  color: var(--color-red);
-  margin-top: calc(-1 * var(--space-lg));
-  margin-bottom: var(--space-md);
+.headLine > span {
+  display: block;
 }
 
-.body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  max-width: 52ch;
+/* Running Wix copy with larger Fraunces keywords mixed in — compact, tightly
+   stacked lines on the dark background. */
+.lead {
   font-family: var(--font-body);
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
+  font-size: clamp(1rem, 1.2vw, 1.25rem);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--color-white);
+}
+
+.line1,
+.line2,
+.line3,
+.line4 {
+  display: block;
+}
+
+/* Lines 2 and 3 must stay on a single line (incl. "ízlés"); line 4 holds only
+   "szakértelemmel". On mid widths they fall back to wrapping (below). */
+.line2,
+.line3 {
+  white-space: nowrap;
+}
+
+/* Last two lines, marked with a vertical red bar and indented from the bar. */
+.lastBlock {
+  display: block;
+  position: relative;
+  padding-left: var(--space-md);
+  margin-top: 0.15em;
+}
+
+/* The bar is a touch shorter than the two lines and vertically centred on them. */
+.lastBlock::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 68%;
+  background: var(--color-red);
+}
+
+.highlight {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.7em;
+  line-height: 0.95;
+  letter-spacing: var(--tracking-tight);
+  font-variation-settings: "opsz" 75;
+  color: var(--color-white);
 }
 
 .imageWrap {
-  position: sticky;
-  top: 120px;
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
@@ -102,54 +150,21 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-.principles {
-  margin-top: var(--space-3xl);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-xl);
-  padding-top: var(--space-xl);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  position: relative;
-  z-index: 1;
-}
-
-.principle {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-.principleNum {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: var(--text-lg);
-  color: var(--color-red);
-}
-
-.principleTitle {
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-}
-
-.principleBody {
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: rgba(255, 255, 255, 0.7);
+/* Below this the copy column is too narrow to hold the single lines, so let
+   them wrap rather than overflow. */
+@media (max-width: 1100px) {
+  .line2,
+  .line3 {
+    white-space: normal;
+  }
 }
 
 @media (max-width: 900px) {
+  .manifesto {
+    min-height: 0;
+  }
   .grid {
     grid-template-columns: 1fr;
     gap: var(--space-xl);
-  }
-  .imageWrap {
-    position: static;
-  }
-  .principles {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
   }
 }

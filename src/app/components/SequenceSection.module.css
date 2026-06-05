@@ -1,0 +1,137 @@
+/* wrapper-nek NEM lehet overflow:hidden — az törné a sticky-t */
+.wrapper {
+  height: 350vh;
+  background: #000;
+}
+
+/* a sticky csak a wrapper scrollázása közben aktiválódik,
+   nem korábban — ez zárja ki a Manifesto-ba való vérzést */
+.sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ── End text ─────────────────────────────────────────── */
+.endText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  opacity: 0;
+  z-index: 2;
+}
+
+.endHeadline {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 7vw, 6rem);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-white);
+  line-height: 1.05;
+}
+
+/* dark háttéren: fehér box, fekete hover szöveg — megegyezik a navbar .onDark rule-jával */
+.endCta {
+  --cta-box-bg: var(--color-white);
+  --cta-hover-color: var(--color-black);
+  color: var(--color-white);
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── Footer overlay ───────────────────────────────────── */
+.footerOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.75) 40%,
+    rgba(0, 0, 0, 0.92) 100%
+  );
+  padding-top: 60px;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-xl);
+  padding: var(--space-lg) var(--container-pad) var(--space-md);
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.footerLabel {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: var(--space-sm);
+}
+
+.footerText {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.footerList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.footerList a {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.65);
+  transition: color 200ms ease;
+}
+
+.footerList a:hover {
+  color: var(--color-white);
+}
+
+.footerLegal {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  color: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  padding: var(--space-sm) var(--container-pad) var(--space-lg);
+}
+
+@media (max-width: 900px) {
+  .footerGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg);
+    padding: var(--space-md) var(--container-pad-mobile) var(--space-sm);
+  }
+}
+
+@media (max-width: 500px) {
+  .footerGrid {
+    grid-template-columns: 1fr;
+  }
+}

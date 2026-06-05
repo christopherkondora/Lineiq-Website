@@ -4,10 +4,70 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Hero.module.css";
-import SplashLink from "./SplashLink";
+
+type WaveComponent = { amp: number; k: number; speed: number; phase: number };
+type WaveLine = { baseline: number; comps: WaveComponent[] };
+
+const TAU = Math.PI * 2;
+const WAVE_X0 = -60;
+const WAVE_X1 = 1500;
+const WAVE_STEP = 60;
+
+// Each line is a sum of long, gentle sines with its own phases and speeds, so
+// the crests drift slowly and the two lines fall out of phase with each other.
+const LINE_A: WaveLine = {
+  baseline: 340,
+  comps: [
+    { amp: 30, k: TAU / 980, speed: 0.32, phase: 0 },
+    { amp: 9, k: TAU / 560, speed: -0.5, phase: 1.1 },
+  ],
+};
+
+const LINE_B: WaveLine = {
+  baseline: 366,
+  comps: [
+    { amp: 27, k: TAU / 1080, speed: 0.26, phase: 1.8 },
+    { amp: 8, k: TAU / 600, speed: 0.44, phase: 0.4 },
+  ],
+};
+
+// Smooth Catmull-Rom spline through the sampled points (rendered as cubic
+// beziers) so the line flows without visible breaking points.
+function buildWavePath(line: WaveLine, t: number): string {
+  const pts: number[] = [];
+  for (let x = WAVE_X0; x <= WAVE_X1; x += WAVE_STEP) {
+    let y = line.baseline;
+    for (const c of line.comps) {
+      y += c.amp * Math.sin(x * c.k + t * c.speed + c.phase);
+    }
+    pts.push(x, y);
+  }
+
+  const n = pts.length / 2;
+  const px = (i: number) => pts[Math.max(0, Math.min(n - 1, i)) * 2];
+  const py = (i: number) => pts[Math.max(0, Math.min(n - 1, i)) * 2 + 1];
+
+  let d = `M${px(0).toFixed(1)} ${py(0).toFixed(2)}`;
+  for (let i = 0; i < n - 1; i++) {
+    const c1x = px(i) + (px(i + 1) - px(i - 1)) / 6;
+    const c1y = py(i) + (py(i + 1) - py(i - 1)) / 6;
+    const c2x = px(i + 1) - (px(i + 2) - px(i)) / 6;
+    const c2y = py(i + 1) - (py(i + 2) - py(i)) / 6;
+    d += ` C${c1x.toFixed(1)} ${c1y.toFixed(2)} ${c2x.toFixed(1)} ${c2y.toFixed(2)} ${px(
+      i + 1
+    ).toFixed(1)} ${py(i + 1).toFixed(2)}`;
+  }
+  return d;
+}
+
+// Static frame used for SSR / first paint / reduced-motion.
+const STATIC_A = buildWavePath(LINE_A, 0);
+const STATIC_B = buildWavePath(LINE_B, 0);
 
 export default function Hero() {
   const rootRef = useRef<HTMLElement>(null);
+  const lineARef = useRef<SVGPathElement>(null);
+  const lineBRef = useRef<SVGPathElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -19,22 +79,48 @@ export default function Hero() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.2 });
-      tl.fromTo(
-        root.querySelectorAll("[data-hero-reveal]"),
-        { y: 80, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.1,
-          stagger: 0.12,
-          ease: "power3.out",
-        }
-      );
+      const words = root.querySelectorAll("[data-hero-word]");
+      const dot = root.querySelector("[data-hero-dot]");
+      const sig = root.querySelector("[data-hero-sig]");
+      const lineSvg = root.querySelector("[data-hero-line]");
 
-      const line = root.querySelector("[data-hero-line]");
-      if (line) {
-        gsap.to(line, {
+      // lines start hidden — they only breathe in once the type has landed
+      if (lineSvg) gsap.set(lineSvg, { autoAlpha: 0 });
+
+      const tl = gsap.timeline({ delay: 0.2 });
+
+      // 1) "Forget being ordinary" rises in word by word
+      tl.from(words, {
+        yPercent: 100,
+        autoAlpha: 0,
+        duration: 0.9,
+        ease: "power4.out",
+        stagger: 0.14,
+      });
+
+      // 2) the dot gets its own playful entrance — it drops in and bounces,
+      //    fading in quickly so the opacity doesn't inherit the bounce
+      if (dot) {
+        tl.from(dot, { autoAlpha: 0, duration: 0.3, ease: "power1.out" }, "-=0.35")
+          .from(dot, { y: -90, duration: 0.9, ease: "bounce.out" }, "<");
+      }
+
+      // 3) "noise off." writes itself in — a clip-path wipe left→right reveals
+      //    the cursive along its slant, like a pen signing it
+      if (sig) {
+        tl.fromTo(
+          sig,
+          { clipPath: "inset(0 100% 0 0)" },
+          { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power1.inOut" },
+          "-=0.3"
+        );
+      }
+
+      // 4) only now do the ambient lines fade in
+      if (lineSvg) {
+        tl.to(lineSvg, { autoAlpha: 1, duration: 2.4, ease: "power2.out" }, ">-0.15");
+
+        gsap.to(lineSvg, {
           yPercent: -25,
           ease: "none",
           scrollTrigger: {
@@ -45,65 +131,28 @@ export default function Hero() {
           },
         });
       }
-
-      const ghostWrap = root.querySelector("[data-hero-ghost]");
-      if (ghostWrap) {
-        gsap.to(ghostWrap, {
-          y: () => window.innerHeight * 0.7,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
-      }
-
-      const strike = root.querySelector<SVGPathElement>("[data-hero-strike]");
-      if (strike) {
-        const length = strike.getTotalLength();
-        gsap.set(strike, {
-          strokeDasharray: length,
-          strokeDashoffset: length,
-        });
-        gsap.to(strike, {
-          strokeDashoffset: 0,
-          ease: "none",
-          scrollTrigger: {
-            trigger: root,
-            start: "top top",
-            end: "30% top",
-            scrub: true,
-          },
-        });
-      }
     }, root);
 
-    return () => ctx.revert();
+    // Drive the ambient lines: recompute each path from layered sines so the
+    // waves ripple and the two lines drift out of phase with each other.
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = (now - start) / 1000;
+      lineARef.current?.setAttribute("d", buildWavePath(LINE_A, t));
+      lineBRef.current?.setAttribute("d", buildWavePath(LINE_B, t));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ctx.revert();
+    };
   }, []);
 
   return (
     <section ref={rootRef} className={styles.hero} id="top">
-      <div className={styles.ghostWrap} data-hero-ghost aria-hidden="true">
-        <svg
-          className={styles.ghostSvg}
-          viewBox="0 0 480 160"
-          preserveAspectRatio="xMidYMid meet"
-        >
-          <text x="0" y="118" className={styles.ghostText}>
-            átlagos
-          </text>
-          <path
-            data-hero-strike
-            className={styles.ghostStrike}
-            d="M 4 96 Q 100 82 200 90 T 380 86 T 476 92"
-            fill="none"
-          />
-        </svg>
-      </div>
-
       <svg
         className={styles.ambientLine}
         data-hero-line
@@ -112,14 +161,16 @@ export default function Hero() {
         aria-hidden="true"
       >
         <path
-          d="M -50 600 Q 200 500, 400 580 T 800 540 T 1200 600 T 1500 520"
+          ref={lineARef}
+          d={STATIC_A}
           stroke="var(--color-red)"
           strokeWidth="1.2"
           fill="none"
           className={styles.ambientPath}
         />
         <path
-          d="M -50 650 Q 250 580, 450 640 T 850 600 T 1250 660 T 1500 580"
+          ref={lineBRef}
+          d={STATIC_B}
           stroke="var(--color-red)"
           strokeWidth="0.8"
           fill="none"
@@ -129,55 +180,28 @@ export default function Hero() {
       </svg>
 
       <div className={`container ${styles.inner}`}>
-        <h1 className={`text-hero ${styles.title}`} data-hero-reveal>
-          Forget being
+        <h1 className={styles.title}>
+          <span className={styles.word} data-hero-word>
+            Forget
+          </span>{" "}
+          <span className={styles.word} data-hero-word>
+            being
+          </span>
           <br />
           <span className={styles.ordinaryWrap}>
-            ordinary<span className={styles.dot}>.</span>
+            {/* no whitespace between word and dot — they must read "ordinary." */}
+            <span className={styles.word} data-hero-word>
+              ordinary
+            </span>
+            <span className={styles.dot} data-hero-dot>
+              .
+            </span>
           </span>
         </h1>
 
-        <p className={styles.signature} data-hero-reveal>
+        <p className={styles.signature} data-hero-sig>
           <span className="text-signature">noise off.</span>
         </p>
-
-        <div className={styles.actions} data-hero-reveal>
-          <SplashLink
-            href="/kapcsolat"
-            className="btn-primary"
-            cursorText="Beszéljünk"
-            splashColor="var(--color-red)"
-          >
-            <span className="btn-label">Projektet indítok</span>
-          </SplashLink>
-          <SplashLink
-            href="/munkaink"
-            className="btn-secondary"
-            cursorText="Munkáink"
-          >
-            <span className="btn-label">Munkáink</span>
-          </SplashLink>
-        </div>
-
-        <div className={styles.meta} data-hero-reveal>
-          <div>
-            <span className="text-label">Stúdió</span>
-            <p className={styles.metaText}>Budapest · globálisan dolgozunk</p>
-          </div>
-          <div>
-            <span className="text-label">Indulás</span>
-            <p className={styles.metaText}>2026 Q3-tól</p>
-          </div>
-          <div>
-            <span className="text-label">Fókusz</span>
-            <p className={styles.metaText}>Brand · web · SaaS</p>
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.scrollHint} data-hero-reveal aria-hidden="true">
-        <span className="text-label">Görgess</span>
-        <span className={styles.scrollBar} />
       </div>
     </section>
   );

@@ -1,146 +1,162 @@
 .process {
-  background: var(--color-white);
+  background: var(--color-surface);
 }
 
 .head {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
   margin-bottom: var(--space-2xl);
   max-width: 900px;
 }
 
 .title {
-  max-width: 22ch;
+  max-width: 16ch;
+  font-weight: 600;
 }
 
-.italic {
-  font-style: italic;
-  color: var(--color-red);
-  font-weight: 400;
-}
-
-.phases {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-xl);
-  position: relative;
-}
-
-.phases::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 1px;
-  height: 100%;
-  background: var(--color-border);
-}
-
-.phase {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding: 0 var(--space-md);
-}
-
-.phaseHead {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--space-md);
-  padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.phaseNum {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 500;
-  color: var(--color-muted);
-}
-
-.phaseDuration {
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  letter-spacing: var(--tracking-widest);
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-.phaseTitle {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3.5vw, var(--text-4xl));
-  line-height: var(--leading-tight);
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-  color: var(--color-black);
-  margin-top: var(--space-sm);
-}
-
-.phaseSub {
-  font-family: var(--font-signature);
-  font-size: clamp(1.5rem, 3vw, var(--text-3xl));
-  color: var(--color-red);
-  transform: rotate(-2deg);
-  display: inline-block;
-  align-self: flex-start;
-  margin-top: calc(-1 * var(--space-xs));
-}
-
-.phaseBody {
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--color-black);
-}
-
-.deliverables {
+/* ── Service index ─────────────────────────────────────── */
+.list {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-  margin-top: var(--space-md);
-  padding-top: var(--space-md);
   border-top: 1px solid var(--color-border);
 }
 
-.deliverables li {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  line-height: var(--leading-snug);
-  color: var(--color-black);
-  display: flex;
-  gap: var(--space-sm);
+.rowItem {
+  display: block;
+}
+
+/* The row itself is the link to the category page. */
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: baseline;
+  gap: var(--space-lg);
+  padding: var(--space-lg) 0;
+  border-bottom: 1px solid var(--color-border);
+  color: inherit;
+  transition: opacity 400ms var(--ease-out-quad);
 }
 
-.deliverables li::before {
-  content: "◆";
+/* Dim the rows you are not pointing at, so the hovered one steps forward. */
+.list:hover .row:not(:hover) {
+  opacity: 0.32;
+}
+
+.num {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-muted);
+  transition: color 400ms var(--ease-out-quad);
+}
+
+.row:hover .num {
   color: var(--color-red);
-  font-size: 0.7em;
-  flex-shrink: 0;
 }
 
-.cta {
+.main {
   display: flex;
-  justify-content: center;
-  margin-top: var(--space-2xl);
+  flex-direction: column;
+  min-width: 0;
 }
 
-@media (max-width: 900px) {
-  .phases {
-    grid-template-columns: 1fr;
-    gap: var(--space-2xl);
+.serviceTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5.5vw, var(--text-6xl));
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 500;
+  color: var(--color-black);
+  transition: color 400ms var(--ease-out-quad),
+    transform 500ms var(--ease-out-expo);
+}
+
+.row:hover .serviceTitle {
+  color: var(--color-red);
+  transform: translateX(var(--space-md));
+}
+
+/* Teaser: collapsed by default, expands open on hover.
+   grid-template-rows 0fr → 1fr animates height with the rows below sliding
+   down smoothly. */
+.bodyWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 550ms var(--ease-out-expo);
+}
+
+.row:hover .bodyWrap {
+  grid-template-rows: 1fr;
+}
+
+.teaser {
+  overflow: hidden;
+  max-width: 60ch;
+  opacity: 0;
+  margin-top: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 500;
+  line-height: var(--leading-relaxed);
+  color: rgba(0, 0, 0, 0.72);
+  transition: opacity 400ms var(--ease-out-quad),
+    transform 500ms var(--ease-out-expo),
+    margin-top 550ms var(--ease-out-expo);
+}
+
+.etc {
+  color: var(--color-muted);
+}
+
+.row:hover .teaser {
+  opacity: 1;
+  margin-top: var(--space-md);
+  transform: translateX(var(--space-md));
+}
+
+/* Kranky English essence word — the signature flourish, reveals on hover. */
+.essence {
+  font-family: var(--font-signature);
+  font-size: clamp(1.5rem, 3vw, var(--text-4xl));
+  color: var(--color-red);
+  white-space: nowrap;
+  justify-self: end;
+  opacity: 0;
+  transform: rotate(-3deg) translateX(-12px);
+  transition: opacity 450ms var(--ease-out-quad),
+    transform 550ms var(--ease-out-expo);
+}
+
+.row:hover .essence {
+  opacity: 1;
+  transform: rotate(-3deg) translateX(0);
+}
+
+/* ── Touch / small screens: no hover, so show everything open ── */
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: auto 1fr;
+    column-gap: var(--space-md);
+    row-gap: var(--space-sm);
+    align-items: baseline;
   }
-  .phases::before {
-    display: none;
+  .list:hover .row:not(:hover) {
+    opacity: 1;
   }
-  .phase {
-    padding: 0;
+  .row:hover .serviceTitle,
+  .row:hover .teaser {
+    transform: none;
   }
-  .phase + .phase {
-    padding-top: var(--space-xl);
-    border-top: 1px solid var(--color-border);
+  .bodyWrap {
+    grid-template-rows: 1fr;
+    grid-column: 2;
+  }
+  .teaser {
+    opacity: 1;
+    margin-top: var(--space-sm);
+  }
+  .essence {
+    grid-column: 2;
+    justify-self: start;
+    opacity: 1;
+    transform: rotate(-3deg);
+    margin-top: var(--space-xs);
   }
 }

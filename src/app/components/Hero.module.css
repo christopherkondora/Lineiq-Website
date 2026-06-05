@@ -1,8 +1,10 @@
 .hero {
   position: relative;
   min-height: 100vh;
-  padding: 200px 0 var(--space-2xl);
-  display: block;
+  padding: var(--space-2xl) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   overflow: hidden;
 }
 
@@ -11,57 +13,33 @@
   z-index: 2;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
   gap: var(--space-lg);
 }
 
 .title {
   margin-top: var(--space-md);
   max-width: 14ch;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  font-size: clamp(2.75rem, 10vw, 9.2rem);
+  line-height: 0.98;
+}
+
+.word {
+  display: inline-block; /* so the per-word entrance transform applies */
 }
 
 .ordinaryWrap {
   position: relative;
   display: inline-block;
-}
-
-.ghostWrap {
-  position: absolute;
-  top: 14%;
-  right: -2vw;
-  width: clamp(320px, 42vw, 620px);
-  z-index: 1;
-  transform: rotate(-18deg);
-  transform-origin: right center;
-  pointer-events: none;
-  user-select: none;
-  opacity: 0.55;
-}
-
-.ghostSvg {
-  display: block;
-  width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
-.ghostText {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 132px;
-  letter-spacing: -0.01em;
-  fill: var(--color-muted);
-}
-
-.ghostStrike {
-  stroke: var(--color-muted);
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  margin-left: 1em;
 }
 
 .dot {
+  display: inline-block; /* transformable for its own playful entrance */
   color: var(--color-red);
 }
 
@@ -71,31 +49,11 @@
   transform: rotate(-2deg);
   display: inline-block;
   align-self: flex-start;
-  padding-left: 4vw;
+  padding-left: 0;
 }
 
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-md);
-  margin-top: var(--space-md);
-}
-
-.meta {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-lg);
-  margin-top: var(--space-2xl);
-  padding-top: var(--space-lg);
-  border-top: 1px solid var(--color-border);
-  max-width: 760px;
-}
-
-.metaText {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  margin-top: var(--space-xs);
-  color: var(--color-black);
+.signature :global(.text-signature) {
+  font-size: clamp(2.7rem, 8.1vw, 7.2rem);
 }
 
 .ambientLine {
@@ -104,93 +62,37 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  opacity: 0.45;
+  opacity: 1;
   pointer-events: none;
 }
 
+/* Shape motion is driven per-frame in Hero.tsx; CSS only breathes opacity. */
 .ambientPath {
-  animation: linebreath 4s var(--ease-in-out) infinite;
-  transform-origin: center;
+  animation: lineGlow 6s var(--ease-in-out) infinite;
 }
 
 .ambientPath2 {
-  animation: linebreath 5.5s var(--ease-in-out) infinite reverse;
-  transform-origin: center;
+  animation: lineGlow 8.5s var(--ease-in-out) infinite reverse;
 }
 
-@keyframes linebreath {
+@keyframes lineGlow {
   0%, 100% {
-    transform: translateY(0) scaleY(1);
-    opacity: 0.5;
+    opacity: 0.9;
   }
   50% {
-    transform: translateY(-12px) scaleY(1.05);
-    opacity: 0.85;
+    opacity: 1;
   }
-}
-
-.scrollHint {
-  position: absolute;
-  bottom: var(--space-lg);
-  right: var(--container-pad);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
-}
-
-.scrollBar {
-  display: block;
-  width: 48px;
-  height: 1px;
-  background: var(--color-black);
-  position: relative;
-  overflow: hidden;
-}
-
-.scrollBar::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--color-red);
-  transform-origin: left;
-  animation: scrollBar 2s var(--ease-in-out) infinite;
-}
-
-@keyframes scrollBar {
-  0% { transform: scaleX(0); transform-origin: left; }
-  50% { transform: scaleX(1); transform-origin: left; }
-  51% { transform: scaleX(1); transform-origin: right; }
-  100% { transform: scaleX(0); transform-origin: right; }
 }
 
 @media (max-width: 768px) {
   .hero {
-    padding: 140px 0 var(--space-xl);
-  }
-  .meta {
-    grid-template-columns: 1fr;
-    gap: var(--space-md);
-  }
-  .scrollHint {
-    display: none;
-  }
-  .ghostWrap {
-    width: clamp(220px, 70vw, 420px);
-    top: auto;
-    bottom: 10%;
-    right: -4vw;
-    opacity: 0.42;
-    transform: rotate(-14deg);
+    padding: var(--space-xl) 0;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ghostWrap {
-    transform: none !important;
-  }
-  .ghostStrike {
-    stroke-dasharray: none !important;
-    stroke-dashoffset: 0 !important;
+  .ambientPath,
+  .ambientPath2 {
+    animation: none !important;
   }
 }

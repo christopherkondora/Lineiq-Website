@@ -1,0 +1,337 @@
+.page {
+  background: var(--color-white);
+}
+
+/* ── Opening spread ────────────────────────────────────── */
+.hero {
+  padding-top: clamp(150px, 20vh, 240px);
+}
+
+.heroInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Breathing cascade a hero jobb oldalán — a styleguide Cascade vonalstílusa
+   függőlegesen. Lassabb, szinuszos lélegzés, fade nélkül: csak a hossz mozog,
+   a piros végig teljes erővel marad. */
+.cascade {
+  position: absolute;
+  /* A heroInner a tartalomnál véget ér, a szekció alja a section padding-jával
+     lejjebb van — a vonalak onnan, a szekcióhatárról indulnak felfelé. */
+  bottom: calc(-1 * var(--space-3xl));
+  right: 0;
+  height: clamp(260px, 46vh, 500px);
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(15px, 1.8vw, 27px);
+  pointer-events: none;
+}
+
+.cascade span {
+  display: block;
+  width: 2.5px;
+  background: var(--color-red);
+  transform-origin: bottom center;
+  animation: cascadeBreathe var(--duration-glacial) cubic-bezier(0.37, 0, 0.63, 1)
+    infinite;
+}
+
+/* Hullámprofil: középen a leghosszabb, a szélek felé rövidül. A lépcső nem
+   lineáris — a széleken alig nő a hossz, a közép felé egyre nagyobbat ugrik,
+   így a profil exponenciális ívet rajzol. A delay lépés végig 220ms, a hullám
+   egyenletes ütemben fut végig mind a 13 vonalon. */
+.cascade span:nth-child(1)  { height: 18%;  animation-delay: 0ms;    }
+.cascade span:nth-child(2)  { height: 22%;  animation-delay: 220ms;  }
+.cascade span:nth-child(3)  { height: 26%;  animation-delay: 440ms;  }
+.cascade span:nth-child(4)  { height: 31%;  animation-delay: 660ms;  }
+.cascade span:nth-child(5)  { height: 38%;  animation-delay: 880ms;  }
+.cascade span:nth-child(6)  { height: 47%;  animation-delay: 1100ms; }
+.cascade span:nth-child(7)  { height: 60%;  animation-delay: 1320ms; }
+.cascade span:nth-child(8)  { height: 75%;  animation-delay: 1540ms; }
+.cascade span:nth-child(9)  { height: 59%;  animation-delay: 1760ms; }
+.cascade span:nth-child(10) { height: 46%;  animation-delay: 1980ms; }
+.cascade span:nth-child(11) { height: 37%;  animation-delay: 2200ms; }
+.cascade span:nth-child(12) { height: 30%;  animation-delay: 2420ms; }
+.cascade span:nth-child(13) { height: 25%;  animation-delay: 2640ms; }
+.cascade span:nth-child(14) { height: 21%;  animation-delay: 2860ms; }
+.cascade span:nth-child(15) { height: 17%;  animation-delay: 3080ms; }
+
+@keyframes cascadeBreathe {
+  0%, 100% { transform: scaleY(0.72); }
+  50%      { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cascade span {
+    animation: none;
+  }
+}
+
+.heroMeta {
+  margin-bottom: var(--space-xl);
+}
+
+.back {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 400;
+  color: var(--color-black);
+  transition: color 300ms var(--ease-out-quad);
+}
+
+.back:hover {
+  color: var(--color-red);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 10vw, 9rem);
+  line-height: 0.98;
+  letter-spacing: var(--tracking-tight);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144;
+  max-width: 12ch;
+}
+
+/* Kranky aláírás a headline alatt — a Fraunces–Kranky pár. A dőlésszög
+   kategóriánként más, a komponens adja át custom propertyként. */
+.essence {
+  font-family: var(--font-signature);
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  line-height: 1;
+  color: var(--color-red);
+  transform: rotate(var(--essence-rotate, -3deg));
+  margin-top: clamp(0.25rem, 0.75vw, 0.75rem);
+  margin-left: clamp(1.75rem, 14vw, 12.5rem);
+}
+
+/* ── Chapters ──────────────────────────────────────────── */
+.chapters {
+  background: var(--color-surface);
+}
+
+.chaptersGrid {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) 2.6fr;
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.rail {
+  position: sticky;
+  top: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-lg);
+}
+
+.railLabel {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-black);
+}
+
+/* A kategória általános leírása — sima body szöveg, kiemelések nélkül. */
+.railIntro {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: var(--text-base);
+  line-height: 1.55;
+  color: var(--color-black);
+  max-width: 32ch;
+}
+
+.chapterList {
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.chapter {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-lg);
+  padding: var(--space-xl) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Magazin-ritmus: minden második fejezet beljebb kezdődik. */
+.chapter:nth-child(even) {
+  padding-left: clamp(0px, 5vw, 80px);
+}
+
+.chapterNum {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 1.6vw, 1.4rem);
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--color-red);
+}
+
+.chapterTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.6vw, 3.25rem);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 500;
+  font-variation-settings: "opsz" 100;
+  color: var(--color-black);
+}
+
+.chapterDesc {
+  margin-top: var(--space-md);
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 1.3vw, 1.2rem);
+  line-height: var(--leading-normal);
+  color: var(--color-black);
+  max-width: 50ch;
+}
+
+/* ── Next chapter handoff ──────────────────────────────── */
+.nextLabel {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  color: var(--color-black);
+  margin-bottom: var(--space-lg);
+}
+
+.diamond {
+  color: var(--color-red);
+}
+
+.nextLink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-lg);
+}
+
+.nextTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 8vw, 7rem);
+  line-height: 1;
+  letter-spacing: var(--tracking-tight);
+  font-weight: 600;
+  font-variation-settings: "opsz" 125;
+  color: var(--color-black);
+  transition: color 400ms var(--ease-out-quad),
+    transform 500ms var(--ease-out-expo);
+}
+
+.nextLink:hover .nextTitle {
+  color: var(--color-red);
+  transform: translateX(var(--space-md));
+}
+
+/* Kranky essence a hoverre lép elő — a Process sor idiómája. */
+.nextEssence {
+  font-family: var(--font-signature);
+  font-size: clamp(1.75rem, 3.5vw, 3rem);
+  color: var(--color-red);
+  white-space: nowrap;
+  opacity: 0;
+  transform: rotate(-3deg) translateX(-12px);
+  transition: opacity 450ms var(--ease-out-quad),
+    transform 550ms var(--ease-out-expo);
+}
+
+.nextLink:hover .nextEssence {
+  opacity: 1;
+  transform: rotate(-3deg) translateX(0);
+}
+
+.restRow {
+  margin-top: var(--space-xl);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--color-black);
+}
+
+.restLink {
+  font-family: var(--font-display);
+  font-size: 1.35em;
+  font-weight: 500;
+  letter-spacing: var(--tracking-tight);
+  transition: color 300ms var(--ease-out-quad);
+}
+
+.restLink:hover {
+  color: var(--color-red);
+}
+
+/* ── CTA ───────────────────────────────────────────────── */
+.ctaSection {
+  padding-bottom: var(--space-md);
+}
+
+.ctaInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* A "Kezdjük el." maga a gomb: statement-méretű CtaSwap, sötét háttéren
+   fehér box és fekete hover szöveg. */
+.ctaLink {
+  --cta-box-bg: var(--color-white);
+  --cta-hover-color: var(--color-black);
+  --cta-font: var(--font-display);
+  --cta-size: clamp(2.5rem, 7vw, var(--text-7xl));
+  --cta-weight: 500;
+  --cta-tracking: var(--tracking-tight);
+  --cta-case: none;
+  --cta-optical: "opsz" 125;
+  --cta-pad: 0.2em 0.16em;
+  color: var(--color-white);
+  display: inline-flex;
+  align-items: center;
+  margin-left: -0.16em;
+}
+
+/* ── Touch / small screens ─────────────────────────────── */
+@media (max-width: 900px) {
+  .cascade {
+    display: none;
+  }
+
+  .essence {
+    margin-left: clamp(1rem, 10vw, 6rem);
+  }
+
+  .chaptersGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+
+  .rail {
+    position: static;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .chapter:nth-child(even) {
+    padding-left: 0;
+  }
+
+  .nextLink {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .nextEssence {
+    opacity: 1;
+    transform: rotate(-3deg);
+  }
+}

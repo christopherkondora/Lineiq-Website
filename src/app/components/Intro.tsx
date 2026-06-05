@@ -19,14 +19,14 @@ export default function Intro() {
     const ctx = gsap.context(() => {
       gsap.fromTo(
         root.querySelectorAll("[data-reveal]"),
-        { y: 50, opacity: 0 },
+        { y: 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,
           duration: 1,
-          stagger: 0.1,
+          stagger: 0.15,
           ease: "power3.out",
-          scrollTrigger: { trigger: root, start: "top 75%" },
+          scrollTrigger: { trigger: root, start: "top 70%" },
         }
       );
     }, root);
@@ -37,26 +37,35 @@ export default function Intro() {
   return (
     <section ref={rootRef} className={styles.intro} id="intro">
       <div className="container">
-        <div className={styles.inner}>
-          <div className={styles.label}>
-            <p className="text-label" data-reveal>
-              ◆ 01 — Kik vagyunk
-            </p>
-            <div className={styles.line} data-reveal />
-          </div>
+        <div className={styles.composition}>
+          <p className={styles.lead} data-reveal>
+            <span className={styles.firstLine}>
+              Egy brandépítő stúdió{" "}
+              <span className={`${styles.highlight} ${styles.strike}`}>
+                Ügynökség
+              </span>{" "}
+              és szoftverház.
+            </span>
+            <span className={styles.secondLine}>
+              <span className={styles.highlight}>Nem csak</span> kivitelezünk, nem
+              különálló szolgáltatásokat nyújtunk.
+            </span>
+            <span className={styles.thirdLine}>
+              Nevet építünk, amit egyedi szoftveres megoldásokkal és marketing
+              rendszerrel
+            </span>
+            <span className={styles.fourthLine}>
+              <span className={styles.support}>támogatunk meg.</span>{" "}
+              <span className={styles.ecosystem}>
+                Egy <span className={styles.highlight}>ökoszisztéma,</span>{" "}
+                aminek egyetlen célja van:
+              </span>
+            </span>
+          </p>
 
-          <div className={styles.body}>
-            <h2 className={styles.statement} data-reveal>
-              Prémium brandépítő ügynökség és szoftverház, magyar piacra,{" "}
-              <em>nyugat-európai mércével.</em>
-            </h2>
-
-            <p className={styles.copy} data-reveal>
-              Egyetlen csomag, hat hónapos retainer minimum, egy kreatív kézből
-              brand, kód és tartalom. Nincs handoff, nincs ügynökségi színház,
-              nincs újrahasznosított deck.
-            </p>
-          </div>
+          <p className={styles.closing} data-reveal>
+            Hogy bemutatkozhass a világnak.
+          </p>
         </div>
       </div>
     </section>

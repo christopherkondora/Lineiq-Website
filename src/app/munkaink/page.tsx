@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Placeholder from "../components/Placeholder";
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "Munkáink — LineiQ",
@@ -25,6 +26,7 @@ export default function MunkainkPage() {
         lede="Részletes case study-k brand, web és marketing projektekről. Minden munka önálló entry: scope, folyamat, vizuális anyag, eredmény. Az oldal hamarosan."
         nextStep="Case study-k tartalmi feltöltése folyamatban."
       />
+      <Footer />
     </main>
   );
 }

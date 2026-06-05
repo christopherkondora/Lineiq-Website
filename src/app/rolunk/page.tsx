@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Placeholder from "../components/Placeholder";
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "Rólunk — LineiQ",
@@ -25,6 +26,7 @@ export default function RolunkPage() {
         lede="Kondora Kristóf és Sütő Áron társalapítók. Innen jönnek az elveink, és innen jönnek azok a gondolkodók, akikre felnézünk."
         nextStep="Bemutatkozók, elveink és az 'Akikre felnézünk' szekció készül."
       />
+      <Footer />
     </main>
   );
 }

@@ -3,7 +3,7 @@ import Intro from "./components/Intro";
 import Work from "./components/Work";
 import Process from "./components/Process";
 import Manifesto from "./components/Manifesto";
-import CtaBlock from "./components/CtaBlock";
+import SequenceSection from "./components/SequenceSection";
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
       <Work />
       <Process />
       <Manifesto />
-      <CtaBlock />
+      <SequenceSection />
     </main>
   );
 }

@@ -1,156 +1,192 @@
+/* ============================================================
+   Work — diagonal-scroll case sequence (minimal, light)
+   ============================================================ */
+
 .work {
-  background: var(--color-surface);
-}
-
-.head {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  margin-bottom: var(--space-2xl);
-  max-width: 900px;
-}
-
-.title {
-  max-width: 20ch;
-}
-
-.italic {
-  font-style: italic;
-  color: var(--color-red);
-  font-weight: 400;
-}
-
-.list {
-  list-style: none;
-  border-top: 1px solid var(--color-border);
-}
-
-.row {
-  display: grid;
-  grid-template-columns: 60px 1fr 280px 80px;
-  gap: var(--space-lg);
-  align-items: center;
-  padding: var(--space-xl) 0;
-  border-bottom: 1px solid var(--color-border);
-  cursor: none;
-  transition: padding-left var(--duration-base) var(--ease-out-expo),
-    background-color var(--duration-base) var(--ease-out-expo);
-}
-
-.row:hover {
-  padding-left: var(--space-md);
-}
-
-.row:hover .projectTitle {
-  color: var(--color-red);
-}
-
-.num {
-  font-family: var(--font-display);
-  font-size: var(--text-lg);
-  font-weight: 500;
-  color: var(--color-muted);
-}
-
-.titleCol {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-}
-
-.projectTitle {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, var(--text-5xl));
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: var(--tracking-tight);
-  transition: color var(--duration-fast) var(--ease-out-expo);
-}
-
-.projectSub {
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  color: var(--color-muted);
-}
-
-.tags {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.tags li {
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-widest);
-  color: var(--color-black);
-  padding: 4px 10px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
+  position: relative;
   background: var(--color-white);
+  color: var(--color-black);
 }
 
-.year {
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 500;
-  color: var(--color-muted);
-  text-align: right;
-}
-
-.floater {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 320px;
-  height: 400px;
-  pointer-events: none;
-  z-index: 50;
-  overflow: hidden;
-  background: var(--color-black);
-  display: none;
-}
-
-.floaterImg {
+/* ─── Shared bits ──────────────────────────────────────── */
+.featureImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(100%);
-  transition: filter var(--duration-slow) var(--ease-out-expo);
 }
 
-.floater:hover .floaterImg {
-  filter: grayscale(0%);
+.brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: var(--tracking-tight);
+  font-variation-settings: "opsz" 110;
+  color: var(--color-black);
 }
 
+.copy {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-relaxed);
+  color: rgba(0, 0, 0, 0.78);
+}
+
+/* ─── Fallback: stacked images (no JS / reduced motion) ── */
+.stage {
+  position: relative;
+}
+
+.brand,
+.copy,
+.cornerCta {
+  display: none; /* only meaningful inside the pinned stage */
+}
+
+/* Host for the CtaSwap highlight-swap label — same bare flex host the navbar
+   uses, so the button reads as the header CTA rather than a pill. */
+.cornerCtaLink {
+  display: inline-flex;
+  align-items: center;
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xl);
+  padding: var(--space-3xl) var(--container-pad);
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.feature {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+/* ============================================================
+   Diagonal mode (JS active)
+   ============================================================ */
+.isDiagonal {
+  /* step per page — keep in sync with STEP_X / STEP_Y in Work.tsx */
+  --stepx: 27vw;
+  --stepy: 72vh;
+}
+
+.isDiagonal .stage {
+  height: 100vh;
+  overflow: hidden;
+  background: var(--color-white);
+}
+
+.isDiagonal .track {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  z-index: 1;
+  will-change: transform;
+}
+
+.isDiagonal .page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  transform: translate3d(
+    calc(var(--i) * var(--stepx)),
+    calc(var(--i) * var(--stepy)),
+    0
+  );
+}
+
+/* transform-free wrapper so the intro/outro can translate the image without
+   clobbering the page's own diagonal-offset transform */
+.isDiagonal .inner {
+  position: absolute;
+  inset: 0;
+}
+
+/* feature image — centered, slightly left */
+.isDiagonal .feature {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-62%, -50%);
+  width: min(32vw, 414px);
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.isDiagonal .featureImg {
+  filter: grayscale(calc(var(--dim, 1) * 100%));
+  opacity: calc(1 - var(--dim, 0) * 0.6);
+}
+
+/* brand name — bottom-left, where the number used to be */
+.isDiagonal .brand {
+  display: block;
+  position: absolute;
+  left: var(--container-pad);
+  bottom: 16vh;
+  width: min(40vw, 520px);
+  z-index: 3;
+  pointer-events: none;
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+}
+
+/* description — right of the image, dropped to its vertical band */
+.isDiagonal .copy {
+  display: block;
+  position: absolute;
+  top: 33vh; /* lower: sits beside the image, not floating in the corner */
+  right: 16vw; /* pulled in from the edge, closer to the picture */
+  width: min(18vw, 260px); /* narrower → short, tidy block */
+  text-wrap: balance; /* even line lengths */
+  z-index: 3;
+  pointer-events: none;
+}
+
+.isDiagonal .cornerCta {
+  display: block;
+  position: absolute;
+  left: var(--container-pad);
+  /* tuck just under the brand name (its box bottom sits at 16vh) instead of
+     pinning to the viewport bottom — keeps a small, constant gap to the name. */
+  bottom: calc(16vh - 2.6rem);
+  z-index: 4;
+}
+
+/* ─── Responsive ───────────────────────────────────────── */
 @media (max-width: 900px) {
-  .row {
-    grid-template-columns: 50px 1fr 80px;
+  .isDiagonal {
+    --stepx: 30vw;
+    --stepy: 72vh;
   }
-  .tags {
-    grid-column: 1 / -1;
+  .isDiagonal .feature {
+    width: min(60vw, 345px);
+    transform: translate(-55%, -56%);
+  }
+  .isDiagonal .copy {
+    left: auto;
+    right: var(--container-pad);
+    top: 20vh;
+    transform: none;
+    width: min(56vw, 280px);
+  }
+  .isDiagonal .brand {
+    font-size: clamp(2rem, 9vw, 4rem);
   }
 }
 
 @media (max-width: 600px) {
-  .row {
-    grid-template-columns: 40px 1fr;
-  }
-  .year {
-    display: none;
-  }
-}
-
-.cta {
-  display: flex;
-  justify-content: center;
-  margin-top: var(--space-2xl);
-}
-
-@media (hover: none), (pointer: coarse) {
-  .floater {
-    display: none;
+  .page {
+    grid-template-columns: 1fr;
   }
 }

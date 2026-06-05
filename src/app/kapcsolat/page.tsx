@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Placeholder from "../components/Placeholder";
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: "Kapcsolat — LineiQ",
@@ -25,6 +26,7 @@ export default function KapcsolatPage() {
         lede="Lépéses intake folyamat, nem generikus űrlap. Cégnév kötelező, a többi kérdés a projekted alakja szerint. A folyamat végén megerősítő oldal és válaszidő."
         nextStep="Az intake form mezőinek véglegesítése Áronnal folyamatban."
       />
+      <Footer />
     </main>
   );
 }

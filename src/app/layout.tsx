@@ -4,13 +4,12 @@ import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import Cursor from "./components/Cursor";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
   variable: "--font-fraunces",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  axes: ["opsz"],
 });
 
 const wix = Wix_Madefor_Display({
@@ -45,7 +44,6 @@ export default function RootLayout({
         <Cursor />
         <Navbar />
         {children}
-        <Footer />
       </body>
     </html>
   );

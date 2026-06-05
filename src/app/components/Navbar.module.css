@@ -20,44 +20,20 @@
 
 .onDark {
   color: var(--color-white);
-}
-
-.onDark .dot {
-  background: var(--color-white);
+  /* Invert the CTA highlight on dark sections: white box, black hover text. */
+  --cta-box-bg: var(--color-white);
+  --cta-hover-color: var(--color-black);
 }
 
 .logo {
   display: inline-flex;
-  align-items: baseline;
-  font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-weight: 600;
-  letter-spacing: var(--tracking-tight);
-  position: relative;
-  gap: 2px;
+  align-items: center;
 }
 
-.logoMark {
-  font-style: italic;
-}
-
-.logoQ {
-  font-family: var(--font-signature);
-  font-weight: 400;
-  font-style: normal;
-  font-size: 1.35em;
-  letter-spacing: 0;
-  line-height: 0.8;
-  transform: translateY(0.04em);
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  background: var(--color-black);
-  border-radius: 50%;
-  margin-left: 4px;
-  align-self: center;
+.logoImg {
+  height: 28px;
+  width: auto;
+  display: block;
 }
 
 .toggle {
@@ -88,6 +64,19 @@
 
 .barOpenB {
   transform: translateY(-3.75px) rotate(-45deg);
+}
+
+/* ─── Header CTA ──────────────────────────────────────── */
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 /* ─── Overlay ─────────────────────────────────────────── */

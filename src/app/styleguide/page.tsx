@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import styles from "./styleguide.module.css";
+import CtaSwap from "../components/CtaSwap";
 
 export const metadata: Metadata = {
   title: "Styleguide — LineiQ",
@@ -23,18 +24,18 @@ const grayColors: Color[] = [
 ];
 
 const sizes = [
-  { token: "--text-xs", size: "0.75rem", px: "12px" },
-  { token: "--text-sm", size: "0.875rem", px: "14px" },
-  { token: "--text-base", size: "1rem", px: "16px" },
-  { token: "--text-lg", size: "1.125rem", px: "18px" },
-  { token: "--text-xl", size: "1.25rem", px: "20px" },
-  { token: "--text-2xl", size: "1.5rem", px: "24px" },
-  { token: "--text-3xl", size: "1.875rem", px: "30px" },
-  { token: "--text-4xl", size: "2.25rem", px: "36px" },
-  { token: "--text-5xl", size: "3rem", px: "48px" },
-  { token: "--text-6xl", size: "3.75rem", px: "60px" },
-  { token: "--text-7xl", size: "4.5rem", px: "72px" },
-  { token: "--text-8xl", size: "6rem", px: "96px" },
+  { token: "--text-xs", size: "0.75rem", px: "12px", opsz: 22 },
+  { token: "--text-sm", size: "0.875rem", px: "14px", opsz: 26 },
+  { token: "--text-base", size: "1rem", px: "16px", opsz: 32 },
+  { token: "--text-lg", size: "1.125rem", px: "18px", opsz: 38 },
+  { token: "--text-xl", size: "1.25rem", px: "20px", opsz: 42 },
+  { token: "--text-2xl", size: "1.5rem", px: "24px", opsz: 52 },
+  { token: "--text-3xl", size: "1.875rem", px: "30px", opsz: 62 },
+  { token: "--text-4xl", size: "2.25rem", px: "36px", opsz: 72 },
+  { token: "--text-5xl", size: "3rem", px: "48px", opsz: 90 },
+  { token: "--text-6xl", size: "3.75rem", px: "60px", opsz: 110 },
+  { token: "--text-7xl", size: "4.5rem", px: "72px", opsz: 125 },
+  { token: "--text-8xl", size: "6rem", px: "96px", opsz: 144 },
 ];
 
 const spaces = [
@@ -194,7 +195,7 @@ export default function StyleguidePage() {
             <div>
               <h2 className={styles.sectionTitle}>Méretskála</h2>
               <p className={styles.sectionNote}>
-                A teljes type scale Fraunces-ben szedve, hogy a karakter egyben látható legyen. Body szövegnél Wix Madefort használj, ugyanezzel a méretskálával.
+                A teljes type scale Fraunces-ben szedve, hogy a karakter egyben látható legyen. A Fraunces optikai tengelye (opsz) a mérettel együtt nő, a nagy display méret kapja a vékony, magas kontrasztú vonalakat, a kicsi marad testes és olvasható. Body szövegnél Wix Madefort használj, ugyanezzel a méretskálával.
               </p>
             </div>
           </div>
@@ -202,8 +203,16 @@ export default function StyleguidePage() {
           {sizes.map((s) => (
             <div key={s.token} className={styles.scaleRow}>
               <span className={styles.scaleToken}>{s.token}</span>
-              <span className={styles.scaleSize}>{s.size} · {s.px}</span>
-              <span className={styles.scaleSample} style={{ fontSize: `var(${s.token})` }}>
+              <span className={styles.scaleSize}>
+                {s.size} · {s.px} · opsz {s.opsz}
+              </span>
+              <span
+                className={styles.scaleSample}
+                style={{
+                  fontSize: `var(${s.token})`,
+                  fontVariationSettings: `"opsz" ${s.opsz}`,
+                }}
+              >
                 Aa Bb 123
               </span>
             </div>
@@ -263,7 +272,7 @@ export default function StyleguidePage() {
             <div>
               <h2 className={styles.sectionTitle}>Gombok</h2>
               <p className={styles.sectionNote}>
-                Két típus, két karakter. A primary mágneses és előre tol nyíllal, a secondary balról fellő töltéssel invertál. Vidd fölé a kurzort, hogy lásd a mozgást.
+                Három típus, három karakter. A primary mágneses és előre tol nyíllal, a secondary balról felfutó töltéssel invertál, a swap pedig egy fekete kihúzással takarja a szót, majd betűről betűre felhozza a másodlagos címkét. Vidd fölé a kurzort, hogy lásd a mozgást.
               </p>
             </div>
           </div>
@@ -277,6 +286,9 @@ export default function StyleguidePage() {
               <button className="btn-secondary">
                 <span className="btn-label">Munkáink</span>
               </button>
+              <a href="#" className={styles.swapButton}>
+                <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
+              </a>
             </div>
 
             <div className={`${styles.buttonRow} ${styles.buttonRowDark} section--dark`}>
@@ -287,6 +299,9 @@ export default function StyleguidePage() {
               <button className="btn-secondary">
                 <span className="btn-label">Munkáink</span>
               </button>
+              <a href="#" className={styles.swapButton}>
+                <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
+              </a>
             </div>
           </div>
         </section>

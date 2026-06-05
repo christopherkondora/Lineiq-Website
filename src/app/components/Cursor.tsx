@@ -30,27 +30,10 @@ export default function Cursor() {
       }
       xTo(e.clientX);
       yTo(e.clientY);
-
-      const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null;
-      dot.classList.toggle(styles.onDark, !!el?.closest(".section--dark, [data-dark]"));
     };
-
-    const hoverables = document.querySelectorAll<HTMLElement>("a, button, [data-cursor-hover]");
-    const onEnter = () => dot.classList.add(styles.hover);
-    const onLeave = () => dot.classList.remove(styles.hover);
-    hoverables.forEach((el) => {
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-    });
 
     window.addEventListener("mousemove", onMove);
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      hoverables.forEach((el) => {
-        el.removeEventListener("mouseenter", onEnter);
-        el.removeEventListener("mouseleave", onLeave);
-      });
-    };
+    return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
   return <div ref={dotRef} className={styles.cursor} aria-hidden="true" />;

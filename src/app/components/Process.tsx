@@ -1,41 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Process.module.css";
-import SplashLink from "./SplashLink";
-
-const phases = [
-  {
-    n: "01",
-    duration: "Egyszer · 6—10 hét",
-    title: "Setup fázis",
-    sub: "foundation.",
-    body:
-      "A brand alapjai a helyükre kerülnek. Pozicionálás, vizuális identitás, weboldal, narratíva. Egy kéz, egy throughline, nincs handoff a brand és a kód között.",
-    deliverables: [
-      "Brand stratégia és pozicionálás",
-      "Vizuális identitás és design rendszer",
-      "Awwwards-szintű weboldal",
-      "Indító kommunikációs anyagok",
-    ],
-  },
-  {
-    n: "02",
-    duration: "Havonta · min. 6 hónap",
-    title: "Retainer fázis",
-    sub: "compounding.",
-    body:
-      "A setup nem önmagában áll. A retainer alatt a brand él, hat és növekszik. Tartalom, kampány, optimalizáció, állandó kreatív partner egyetlen havi díjjal.",
-    deliverables: [
-      "Folyamatos kreatív és kampány output",
-      "Fizetett és organikus hirdetések",
-      "Havi riport és stratégiai felülvizsgálat",
-      "Klient portál hozzáférés",
-    ],
-  },
-];
+import { services } from "../data/services";
 
 export default function Process() {
   const rootRef = useRef<HTMLElement>(null);
@@ -58,72 +28,63 @@ export default function Process() {
           duration: 0.9,
           stagger: 0.08,
           ease: "power3.out",
+          // clear inline props once in place so the CSS hover states (which
+          // drive opacity/transform) aren't overridden by GSAP's leftover inline
+          // styles.
+          clearProps: "opacity,transform",
           scrollTrigger: { trigger: root, start: "top 75%" },
         }
       );
 
-      root.querySelectorAll<HTMLElement>("[data-phase]").forEach((phase) => {
-        gsap.fromTo(
-          phase,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            ease: "power3.out",
-            scrollTrigger: { trigger: phase, start: "top 80%" },
-          }
-        );
-      });
+      // One trigger on the list so the rows read as a single staggered sequence.
+      gsap.fromTo(
+        root.querySelectorAll("[data-row]"),
+        { y: 40, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.09,
+          ease: "power3.out",
+          clearProps: "opacity,transform",
+          scrollTrigger: { trigger: root.querySelector("[data-list]"), start: "top 80%" },
+        }
+      );
     }, root);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={rootRef} className={`section ${styles.process}`} id="folyamat">
+    <section ref={rootRef} className={`section ${styles.process}`} id="szolgaltatasok">
       <div className="container">
         <header className={styles.head}>
-          <p className="text-label" data-reveal>
-            ◆ 03 — Hogyan dolgozunk
-          </p>
           <h2 className={`text-section ${styles.title}`} data-reveal>
-            Két fázis,
-            <br />
-            <em className={styles.italic}>egy folyamat.</em>
+            Stratégiától a kódig.
           </h2>
         </header>
 
-        <div className={styles.phases}>
-          {phases.map((p) => (
-            <article key={p.n} className={styles.phase} data-phase>
-              <header className={styles.phaseHead}>
-                <span className={styles.phaseNum}>{p.n}</span>
-                <span className={styles.phaseDuration}>{p.duration}</span>
-              </header>
-
-              <h3 className={styles.phaseTitle}>{p.title}</h3>
-              <p className={styles.phaseSub}>{p.sub}</p>
-              <p className={styles.phaseBody}>{p.body}</p>
-
-              <ul className={styles.deliverables}>
-                {p.deliverables.map((d) => (
-                  <li key={d}>{d}</li>
-                ))}
-              </ul>
-            </article>
+        <ul className={styles.list} data-list>
+          {services.map((s, i) => (
+            <li key={s.slug} className={styles.rowItem} data-row>
+              <Link href={`/mit-nyujtunk/${s.slug}`} className={styles.row}>
+                <span className={styles.num}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div className={styles.main}>
+                  <h3 className={styles.serviceTitle}>{s.title}</h3>
+                  <div className={styles.bodyWrap}>
+                    <p className={styles.teaser}>
+                      {s.teaser.join(" · ")}
+                      <span className={styles.etc}> · stb.</span>
+                    </p>
+                  </div>
+                </div>
+                <span className={styles.essence}>{s.essence}</span>
+              </Link>
+            </li>
           ))}
-        </div>
-
-        <div className={styles.cta} data-reveal>
-          <SplashLink
-            href="/mit-nyujtunk"
-            className="btn-secondary"
-            cursorText="Részletes folyamat"
-          >
-            <span className="btn-label">Részletes folyamat ↗</span>
-          </SplashLink>
-        </div>
+        </ul>
       </div>
     </section>
   );

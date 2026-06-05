@@ -1,0 +1,62 @@
+/* Both labels share one grid cell so the slot width is fixed to the wider
+   label. On hover a black box wipes across the slot from the left using the
+   style guide's in-out · slow curve; the white hover label surfaces on top of
+   it letter by letter (driven by GSAP), while the default label disappears
+   underneath the black — a highlighter strike-through. */
+.swap {
+  position: relative;
+  display: inline-grid;
+  align-items: center;
+  line-height: 1;
+  isolation: isolate;
+}
+
+.default,
+.hover {
+  grid-area: 1 / 1;
+  text-align: center;
+  padding: var(--cta-pad, 7px 11px);
+  font-family: var(--cta-font, var(--font-body));
+  font-size: var(--cta-size, var(--text-xs));
+  font-weight: var(--cta-weight, 700);
+  letter-spacing: var(--cta-tracking, var(--tracking-wide));
+  text-transform: var(--cta-case, uppercase);
+  font-variation-settings: var(--cta-optical, normal);
+  white-space: nowrap;
+}
+
+.default {
+  z-index: 1;
+  color: inherit;
+}
+
+.box {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--cta-box-bg, var(--color-black));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--duration-slow) var(--ease-in-out);
+}
+
+.hover {
+  z-index: 3;
+  color: var(--cta-hover-color, var(--color-white));
+}
+
+.letter {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.swap[data-active="true"] .box {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .box {
+    transition: none;
+  }
+}

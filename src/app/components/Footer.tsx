@@ -8,12 +8,6 @@ export default function Footer() {
   return (
     <footer className={`section--dark ${styles.footer}`}>
       <div className="container">
-        <div className={styles.giant}>
-          <span className={styles.giantA}>Line</span>
-          <span className={styles.giantB}>iQ</span>
-          <span className={styles.giantDot}>.</span>
-        </div>
-
         <div className={styles.row}>
           <div className={styles.col}>
             <p className="text-label">Stúdió</p>

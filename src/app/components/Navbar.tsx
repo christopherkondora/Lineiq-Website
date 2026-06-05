@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import styles from "./Navbar.module.css";
+import SplashLink from "./SplashLink";
+import CtaSwap from "./CtaSwap";
 
 type MenuItem = {
   label: string;
@@ -23,22 +25,45 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [onDark, setOnDark] = useState(false);
+  const [hideCta, setHideCta] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const itemsRef = useRef<HTMLUListElement>(null);
   const lastY = useRef(0);
+  const forceHeaderRef = useRef(false);
+
+  // IntersectionObserver: [data-always-header] szekcióba lépéskor
+  // mindig mutatja a headert és elrejti a CTA-t.
+  useEffect(() => {
+    const els = document.querySelectorAll("[data-always-header]");
+    if (!els.length) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const anyVisible = entries.some((e) => e.isIntersecting);
+        forceHeaderRef.current = anyVisible;
+        setHideCta(anyVisible);
+        if (anyVisible) setHidden(false);
+      },
+      { rootMargin: "0px 0px -99% 0px", threshold: 0 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
-      if (y > 100 && y > lastY.current) {
+      if (forceHeaderRef.current) {
+        setHidden(false);
+      } else if (y > 100 && y > lastY.current) {
         setHidden(true);
       } else {
         setHidden(false);
       }
       lastY.current = y;
 
-      const probe = document.elementFromPoint(40, 80) as HTMLElement | null;
+      const navHeight = navRef.current?.offsetHeight ?? 92;
+      const probe = document.elementFromPoint(40, navHeight + 4) as HTMLElement | null;
       setOnDark(!!probe?.closest(".section--dark, [data-dark]"));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -91,20 +116,35 @@ export default function Navbar() {
         }`}
       >
         <Link href="/" className={styles.logo} aria-label="LineiQ főoldal">
-          <span className={styles.logoMark}>Line</span>
-          <span className={styles.logoQ}>iQ</span>
-          <span className={styles.dot} />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={onDark || open ? "/logo-white.svg" : "/logo-black.svg"}
+            alt="LineiQ"
+            className={styles.logoImg}
+          />
         </Link>
 
-        <button
-          className={styles.toggle}
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={open ? "Menü bezárása" : "Menü megnyitása"}
-        >
-          <span className={`${styles.bar} ${open ? styles.barOpenA : ""}`} />
-          <span className={`${styles.bar} ${open ? styles.barOpenB : ""}`} />
-        </button>
+        <div className={styles.right}>
+          {!hideCta && (
+            <SplashLink
+              href="/kapcsolat"
+              className={styles.cta}
+              onClick={closeMenu}
+            >
+              <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
+            </SplashLink>
+          )}
+
+          <button
+            className={styles.toggle}
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label={open ? "Menü bezárása" : "Menü megnyitása"}
+          >
+            <span className={`${styles.bar} ${open ? styles.barOpenA : ""}`} />
+            <span className={`${styles.bar} ${open ? styles.barOpenB : ""}`} />
+          </button>
+        </div>
       </header>
 
       <div
