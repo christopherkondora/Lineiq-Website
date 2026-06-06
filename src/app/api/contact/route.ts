@@ -39,6 +39,12 @@ export async function POST(req: Request) {
   if (!company) {
     return NextResponse.json({ error: "A cégnév kötelező." }, { status: 400 });
   }
+  if (services.length === 0) {
+    return NextResponse.json(
+      { error: "Legalább egy szolgáltatás kiválasztása kötelező." },
+      { status: 400 }
+    );
+  }
   if (!name) {
     return NextResponse.json({ error: "A név kötelező." }, { status: 400 });
   }
