@@ -21,18 +21,9 @@ export default function Footer() {
             <p className="text-label">Oldaltérkép</p>
             <ul className={styles.list}>
               <li><Link href="/munkaink">Munkáink</Link></li>
-              <li><Link href="/mit-nyujtunk">Mit nyújtunk?</Link></li>
+              <li><Link href="/#szolgaltatasok">Mit nyújtunk?</Link></li>
               <li><Link href="/rolunk">Rólunk</Link></li>
               <li><Link href="/kapcsolat">Kapcsolat</Link></li>
-              <li>
-                <a
-                  href="https://academy.lineiqgroup.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Academy ↗
-                </a>
-              </li>
             </ul>
           </div>
           <div className={styles.col}>

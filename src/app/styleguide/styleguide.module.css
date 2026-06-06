@@ -269,7 +269,8 @@
   cursor: pointer;
 }
 
-.buttonRowDark .swapButton {
+.buttonRowDark .swapButton,
+.swapButtonDark {
   color: var(--color-white);
   /* Invert the highlight on dark bg: white box, black hover text. */
   --cta-box-bg: var(--color-white);

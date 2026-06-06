@@ -1,5 +1,5 @@
 // Single source of truth for the service taxonomy. Drives the homepage index
-// (Process), the /mit-nyujtunk hub, and each /mit-nyujtunk/[slug] category page.
+// (Process) and each /mit-nyujtunk/[slug] category page.
 // Content mirrors vault/projects/lineiqgroup.com/szolgaltatas_taxonomia.md.
 //
 // Intro strings carry *kiemelés* markers: the category page renders the marked

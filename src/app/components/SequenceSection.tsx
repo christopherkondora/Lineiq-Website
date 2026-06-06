@@ -103,7 +103,7 @@ export default function SequenceSection() {
               <p className={styles.footerLabel}>Oldaltérkép</p>
               <ul className={styles.footerList}>
                 <li><Link href="/munkaink">Munkáink</Link></li>
-                <li><Link href="/mit-nyujtunk">Mit nyújtunk?</Link></li>
+                <li><Link href="/#szolgaltatasok">Mit nyújtunk?</Link></li>
                 <li><Link href="/rolunk">Rólunk</Link></li>
                 <li><Link href="/kapcsolat">Kapcsolat</Link></li>
               </ul>

@@ -80,7 +80,7 @@ export default function CategoryArticle({ index }: { index: number }) {
           </div>
 
           <div className={`reveal ${styles.heroMeta}`} data-hero>
-            <Link href="/mit-nyujtunk" className={styles.back}>
+            <Link href="/#szolgaltatasok" className={styles.back}>
               Minden szolgáltatás
             </Link>
           </div>

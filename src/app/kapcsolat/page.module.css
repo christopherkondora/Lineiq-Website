@@ -1,0 +1,407 @@
+/* Egyetlen viewportnyi intake képernyő — alatta csak a footer. A fejléc
+   (cím + Kranky) az oldal tetején ül a form fölött, a lépéses form a
+   maradék térben függőlegesen középre kerül. */
+
+.screen {
+  min-height: 100svh;
+  display: flex;
+  justify-content: center;
+  background: var(--color-white);
+  padding: clamp(110px, 14vh, 160px) 0 var(--space-lg);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+/* A stage a legszélesebb gyermekére (a címre) húzódik össze, így a bal éle
+   a cím bal éle — ehhez igazodik a vissza-nyíl. */
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 100%;
+}
+
+/* ── Fejléc ────────────────────────────────────────────── */
+.head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(28px, 4.5vh, 48px);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: var(--tracking-tight);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144;
+}
+
+/* ── Lépéses flow ──────────────────────────────────────── */
+.flowArea {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+/* Lépésjelző — a cascade vonalidiómát idéző piros tickek, szám nélkül. */
+.ticks {
+  display: flex;
+  align-items: flex-end;
+  gap: 7px;
+}
+
+.tick {
+  display: block;
+  width: 2.5px;
+  height: 13px;
+  background: var(--color-border);
+  transition: background 300ms var(--ease-out-quad),
+    height 300ms var(--ease-out-expo);
+}
+
+.tickActive {
+  background: var(--color-red);
+  height: 21px;
+}
+
+.questionRow {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.question {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 500;
+  font-variation-settings: "opsz" 100;
+  max-width: 24ch;
+}
+
+/* Vissza-nyíl a kérdés mellett balra, a nagy cím bal széléhez igazítva —
+   a questionRow a stage teljes szélességét felveszi, ezért a left: 0 a cím
+   bal élét jelenti. */
+.backArrow {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  color: var(--color-black);
+  transition: color 300ms var(--ease-out-quad);
+}
+
+.backArrow:hover {
+  color: var(--color-red);
+}
+
+/* A custom Fraunces nyíl fekvő (85:32) — szélességben méretezzük. */
+.backArrow svg {
+  width: clamp(24px, 2.4vw, 32px);
+  height: auto;
+}
+
+/* Aláhúzott szabadszöveges mező — Wix Madefor, rövid vonallal. */
+.inputWrap {
+  position: relative;
+  width: 100%;
+  max-width: 360px;
+}
+
+.input {
+  width: 100%;
+  max-width: 360px;
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  font-weight: 500;
+  color: var(--color-black);
+  text-align: center;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--color-black);
+  border-radius: 0;
+  padding: 0.25em 0;
+  outline: none;
+  caret-color: var(--color-red);
+  transition: border-color 300ms var(--ease-out-quad);
+}
+
+.input:focus {
+  border-color: var(--color-red);
+}
+
+.input::placeholder {
+  color: var(--color-muted);
+}
+
+/* Szolgáltatás-választó — Wix Madefor címkék elegáns, éles sarkú
+   checkboxokkal. Kiválasztáskor a doboz feketére telik és a pipa
+   vonalként rajzolódik be. */
+.options {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 16px 32px;
+}
+
+.option {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-black);
+  white-space: nowrap;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--color-black);
+  color: var(--color-white);
+  transition: background 300ms var(--ease-out-quad),
+    border-color 300ms var(--ease-out-quad);
+}
+
+.checkbox svg {
+  width: 11px;
+  height: auto;
+}
+
+/* A pipa vonalrajzként érkezik — dashoffset fut nullára. */
+.checkmark {
+  stroke-dasharray: 14;
+  stroke-dashoffset: 14;
+  transition: stroke-dashoffset 400ms var(--ease-out-expo);
+}
+
+.option:hover .checkbox {
+  border-color: var(--color-red);
+}
+
+.optionActive .checkbox,
+.optionActive:hover .checkbox {
+  background: var(--color-black);
+  border-color: var(--color-black);
+}
+
+.optionActive .checkmark {
+  stroke-dashoffset: 0;
+}
+
+/* ── Budget csúszka ── Vékony fekete vonal + piros kör thumb. A címkék a
+   megállók alatt ülnek, az aktív pirosra vált a thumb-bal szinkronban. */
+.sliderWrap {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin-top: var(--space-sm);
+  padding-bottom: 40px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 18px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 2px;
+  background: var(--color-black);
+}
+
+/* A natív thumb láthatatlan, de megtartja a méretét — ez adja a fogható
+   területet, a látható kört a .sliderThumb rajzolja. */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -7px;
+  opacity: 0;
+}
+
+.slider::-moz-range-track {
+  height: 2px;
+  background: var(--color-black);
+}
+
+.slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  opacity: 0;
+}
+
+/* A látható thumb — a sáv középvonalán ül, és transitionnel úszik a
+   megállók között. */
+.sliderThumb {
+  position: absolute;
+  top: 9px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-red);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: left 400ms var(--ease-out-expo);
+}
+
+.sliderLabel {
+  position: absolute;
+  top: 26px;
+  transform: translateX(-50%);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--color-muted);
+  transition: color 300ms var(--ease-out-quad);
+}
+
+.sliderLabel:hover {
+  color: var(--color-black);
+}
+
+.sliderLabelActive,
+.sliderLabelActive:hover {
+  color: var(--color-red);
+}
+
+.fields {
+  display: grid;
+  gap: var(--space-md);
+  width: 100%;
+  max-width: 360px;
+  justify-items: center;
+}
+
+.error {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-red);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+/* A megszokott highlight-swap gomb — fekete kihúzás, fehér hover szöveg. */
+.nextBtn {
+  --cta-font: var(--font-display);
+  --cta-size: clamp(1.5rem, 2.8vw, 2.25rem);
+  --cta-weight: 500;
+  --cta-tracking: var(--tracking-tight);
+  --cta-case: none;
+  --cta-optical: "opsz" 100;
+  --cta-pad: 0.18em 0.3em;
+  color: var(--color-black);
+  display: inline-flex;
+  align-items: center;
+}
+
+.nextBtn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ── Megerősítő képernyő ───────────────────────────────── */
+.doneTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 6.5vw, 5.5rem);
+  line-height: 0.98;
+  letter-spacing: var(--tracking-tight);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144;
+}
+
+.doneSignature {
+  font-family: var(--font-signature);
+  font-size: clamp(1.6rem, 3vw, 2.75rem);
+  line-height: 1;
+  color: var(--color-red);
+  transform: rotate(-4deg);
+  margin-top: clamp(0.2rem, 0.6vw, 0.5rem);
+  margin-left: clamp(3rem, 9vw, 8rem);
+}
+
+.doneGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-xl);
+  margin-top: var(--space-xl);
+  max-width: 760px;
+}
+
+.doneText {
+  margin-top: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.55;
+  max-width: 36ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Touch / small screens ─────────────────────────────── */
+@media (max-width: 768px) {
+  .screen {
+    padding: 100px 0 var(--space-lg);
+  }
+
+  /* Kis képernyőn a cím széle a konténerhez simul — a kérdés kap oldalsó
+     teret, hogy a nyíl ne lógjon rá. */
+  .question {
+    padding: 0 36px;
+  }
+
+  .options {
+    grid-template-columns: repeat(2, auto);
+  }
+
+  /* A szélső címkék fele kilóg a sávon túlra — kisebb betű, szűkebb sáv,
+     hogy keskeny képernyőn is beférjenek. */
+  .sliderWrap {
+    max-width: 78%;
+  }
+
+  .sliderLabel {
+    font-size: 11px;
+  }
+
+  .doneGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}

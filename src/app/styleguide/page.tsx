@@ -14,7 +14,6 @@ const baseColors: Color[] = [
   { token: "--color-white", hex: "#FFFFFF", name: "Fehér", note: "Alap háttér" },
   { token: "--color-black", hex: "#000000", name: "Fekete", note: "Szöveg, dark szekciók" },
   { token: "--color-red", hex: "#DA0303", name: "Piros", note: "Brand hang, vonalak, reveal" },
-  { token: "--color-green", hex: "#8CFF00", name: "Neonzöld", note: "Csak CTA és akcent" },
 ];
 
 const grayColors: Color[] = [
@@ -93,7 +92,7 @@ export default function StyleguidePage() {
             <div>
               <h2 className={styles.sectionTitle}>Színrendszer</h2>
               <p className={styles.sectionNote}>
-                A piros a brand hangja, a neonzöld kizárólag CTA és tudatos akcent. A kettő soha nem kerül egy elembe, kivéve a gomb click glitch pillanatot. A szürkék funkcionálisak, nem dekoratívak.
+                A piros a brand hangja és az egyetlen szín a fekete-fehér alap mellett. A szürkék funkcionálisak, nem dekoratívak.
               </p>
             </div>
           </div>
@@ -272,33 +271,19 @@ export default function StyleguidePage() {
             <div>
               <h2 className={styles.sectionTitle}>Gombok</h2>
               <p className={styles.sectionNote}>
-                Három típus, három karakter. A primary mágneses és előre tol nyíllal, a secondary balról felfutó töltéssel invertál, a swap pedig egy fekete kihúzással takarja a szót, majd betűről betűre felhozza a másodlagos címkét. Vidd fölé a kurzort, hogy lásd a mozgást.
+                Egy gomb van: a highlight-swap. Egy fekete kihúzás takarja a szót, majd betűről betűre felhozza a másodlagos címkét, sötét háttéren a kihúzás fehér és a hover szöveg fekete. Vidd fölé a kurzort, hogy lásd a mozgást.
               </p>
             </div>
           </div>
 
           <div className={styles.buttonStage}>
             <div className={styles.buttonRow}>
-              <button className="btn-primary">
-                <span className="btn-label">Kezdjük el</span>
-                <span className="btn-arrow">→</span>
-              </button>
-              <button className="btn-secondary">
-                <span className="btn-label">Munkáink</span>
-              </button>
               <a href="#" className={styles.swapButton}>
                 <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
               </a>
             </div>
 
             <div className={`${styles.buttonRow} ${styles.buttonRowDark} section--dark`}>
-              <button className="btn-primary">
-                <span className="btn-label">Kezdjük el</span>
-                <span className="btn-arrow">→</span>
-              </button>
-              <button className="btn-secondary">
-                <span className="btn-label">Munkáink</span>
-              </button>
               <a href="#" className={styles.swapButton}>
                 <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
               </a>
@@ -407,13 +392,9 @@ export default function StyleguidePage() {
               Felejtsd el az átlagost.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-md)" }}>
-              <button className="btn-primary">
-                <span className="btn-label">CTA</span>
-                <span className="btn-arrow">→</span>
-              </button>
-              <button className="btn-secondary">
-                <span className="btn-label">Részletek</span>
-              </button>
+              <a href="#" className={`${styles.swapButton} ${styles.swapButtonDark}`}>
+                <CtaSwap defaultLabel="Kezdjük el." hoverLabel="Beszéljünk!" />
+              </a>
             </div>
           </div>
         </section>

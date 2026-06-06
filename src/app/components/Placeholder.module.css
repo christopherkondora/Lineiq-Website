@@ -59,8 +59,36 @@
 .actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-md);
+  align-items: center;
+  gap: var(--space-lg);
   margin-top: var(--space-md);
+}
+
+/* Highlight-swap CTA — fekete kihúzás, fehér hover szöveg. */
+.ctaLink {
+  --cta-font: var(--font-display);
+  --cta-size: clamp(1.4rem, 2.4vw, 2rem);
+  --cta-weight: 500;
+  --cta-tracking: var(--tracking-tight);
+  --cta-case: none;
+  --cta-optical: "opsz" 100;
+  --cta-pad: 0.18em 0.3em;
+  color: var(--color-black);
+  display: inline-flex;
+  align-items: center;
+  margin-left: -0.3em;
+}
+
+.backLink {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-black);
+  transition: color 300ms var(--ease-out-quad);
+}
+
+.backLink:hover {
+  color: var(--color-red);
 }
 
 @media (max-width: 768px) {

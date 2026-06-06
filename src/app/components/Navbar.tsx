@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import styles from "./Navbar.module.css";
 import SplashLink from "./SplashLink";
@@ -10,18 +11,17 @@ import CtaSwap from "./CtaSwap";
 type MenuItem = {
   label: string;
   href: string;
-  external?: boolean;
 };
 
 const menuItems: MenuItem[] = [
   { label: "Munkáink", href: "/munkaink" },
-  { label: "Mit nyújtunk?", href: "/mit-nyujtunk" },
+  { label: "Mit nyújtunk?", href: "/#szolgaltatasok" },
   { label: "Rólunk", href: "/rolunk" },
   { label: "Kapcsolat", href: "/kapcsolat" },
-  { label: "Academy", href: "https://academy.lineiqgroup.com", external: true },
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [onDark, setOnDark] = useState(false);
@@ -125,7 +125,8 @@ export default function Navbar() {
         </Link>
 
         <div className={styles.right}>
-          {!hideCta && (
+          {/* A kapcsolat oldalon a CTA önmagára mutatna — ott nem jelenik meg. */}
+          {!hideCta && pathname !== "/kapcsolat" && (
             <SplashLink
               href="/kapcsolat"
               className={styles.cta}
@@ -155,49 +156,19 @@ export default function Navbar() {
       >
         <nav className={styles.menuInner}>
           <ul ref={itemsRef} className={styles.menuList}>
-            {menuItems.map((item) =>
-              item.external ? (
-                <li key={item.href}>
-                  <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={closeMenu}
-                    className={styles.menuLink}
-                  >
-                    <span>{item.label}</span>
-                    <span className={styles.menuArrow}>↗</span>
-                  </a>
-                </li>
-              ) : (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={closeMenu}
-                    className={styles.menuLink}
-                  >
-                    <span>{item.label}</span>
-                    <span className={styles.menuArrow}>↗</span>
-                  </Link>
-                </li>
-              )
-            )}
+            {menuItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  onClick={closeMenu}
+                  className={styles.menuLink}
+                >
+                  <span>{item.label}</span>
+                  <span className={styles.menuArrow}>↗</span>
+                </Link>
+              </li>
+            ))}
           </ul>
-
-          <div className={styles.menuFooter}>
-            <div>
-              <p className="text-label">Stúdió</p>
-              <p className={styles.menuFooterText}>Budapest, HU</p>
-            </div>
-            <div>
-              <p className="text-label">Kapcsolat</p>
-              <p className={styles.menuFooterText}>hello@lineiq.hu</p>
-            </div>
-            <div>
-              <p className="text-label">Közösség</p>
-              <p className={styles.menuFooterText}>Instagram — LinkedIn</p>
-            </div>
-          </div>
         </nav>
       </div>
     </>

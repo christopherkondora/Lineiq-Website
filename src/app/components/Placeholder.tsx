@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import SplashLink from "./SplashLink";
+import CtaSwap from "./CtaSwap";
 import styles from "./Placeholder.module.css";
 
 interface PlaceholderProps {
@@ -35,14 +36,11 @@ export default function Placeholder({
         <p className={styles.lede}>{lede}</p>
 
         <div className={styles.actions}>
-          <SplashLink
-            href="/kapcsolat"
-            className="btn-primary"
-          >
-            <span className="btn-label">Beszéljünk</span>
+          <SplashLink href="/kapcsolat" className={styles.ctaLink}>
+            <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
           </SplashLink>
-          <SplashLink href="/" className="btn-secondary">
-            <span className="btn-label">Vissza a főoldalra</span>
+          <SplashLink href="/" className={styles.backLink}>
+            Vissza a főoldalra
           </SplashLink>
         </div>
 
