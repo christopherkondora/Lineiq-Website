@@ -4,20 +4,14 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { gsap } from "gsap";
 import CtaSwap from "../components/CtaSwap";
 import styles from "./page.module.css";
+import { services } from "../data/services";
 
 // Kurált intake folyamat — egy kérdés egy képernyő, minden középre rendezve,
 // a teljes oldal egyetlen viewport. A cégnév az egyetlen kötelező mező (plusz
 // az email, hogy legyen hova válaszolni), a többi lépés kihagyható.
 // A mezőkészlet Áronnal véglegesítés alatt, a struktúra már él.
 
-const SERVICE_OPTIONS = [
-  "Brand építés",
-  "Web fejlesztés",
-  "eCommerce",
-  "Szoftveres megoldások",
-  "Telefonos alkalmazások",
-  "Marketing",
-];
+const SERVICE_OPTIONS = services.map((s) => s.title);
 
 // Csúszka-skála: balról jobbra növekvő keret, a középső a kiindulópont.
 const BUDGET_OPTIONS = ["1 M Ft alatt", "1–5 M Ft", "5 M Ft felett"];

@@ -136,12 +136,12 @@ export const services: ServiceCategory[] = [
     ],
   },
   {
-    slug: "web-es-mobil-alkalmazasok",
-    title: "Web & telefonos alkalmazások",
+    slug: "szoftveres-megoldasok",
+    title: "Szoftveres megoldások",
     essence: "ship.",
     intro:
-      "Egyedi szoftver és mobilappok ugyanabból a *DNS-ből*, amiből a saját *Klient* platformunkat építettük.",
-    teaser: ["Webalkalmazás", "App UI/UX design", "Mobilapp"],
+      "Egyedi szoftver, SaaS és belső rendszerek ugyanabból a *DNS-ből*, amiből a saját *Klient* platformunkat építettük.",
+    teaser: ["Webalkalmazás", "App UI/UX design", "MVP fejlesztés"],
     subServices: [
       {
         title: "Webalkalmazás fejlesztés",
@@ -150,10 +150,6 @@ export const services: ServiceCategory[] = [
       {
         title: "App UI/UX design",
         desc: "A termék felülete, ami magától érthető.",
-      },
-      {
-        title: "Mobilalkalmazás (iOS és Android)",
-        desc: "Egy kódbázis, két platform.",
       },
       {
         title: "MVP fejlesztés",
@@ -166,6 +162,40 @@ export const services: ServiceCategory[] = [
       {
         title: "Karbantartás és továbbfejlesztés",
         desc: "A termék nem áll meg a launchnél.",
+      },
+    ],
+  },
+  {
+    slug: "telefonos-alkalmazasok",
+    title: "Telefonos alkalmazások",
+    essence: "touch.",
+    intro:
+      "Mobilappok iOS-re és Androidra *egy kódbázisból*, az ötlettől a *store megjelenésig* és azon túl.",
+    teaser: ["Mobilapp (iOS és Android)", "Mobil UI/UX design", "Store megjelenés"],
+    subServices: [
+      {
+        title: "Mobilalkalmazás fejlesztés (iOS és Android)",
+        desc: "Egy kódbázis, két platform.",
+      },
+      {
+        title: "Mobil UI/UX design",
+        desc: "Hüvelykujjra tervezett felület, ami magától érthető.",
+      },
+      {
+        title: "MVP fejlesztés",
+        desc: "A működő első verzió, gyorsan a store-ban.",
+      },
+      {
+        title: "Store megjelenés (App Store, Google Play)",
+        desc: "Megfelelés, beküldés és launch mindkét áruházban.",
+      },
+      {
+        title: "Push és értesítési stratégia",
+        desc: "Értesítések, amik visszahozzák a felhasználót, nem elnémíttatják magukat.",
+      },
+      {
+        title: "Karbantartás és továbbfejlesztés",
+        desc: "Az app él, frissül és követi az új OS-verziókat.",
       },
     ],
   },
