@@ -1,0 +1,353 @@
+.section {
+  position: relative;
+  height: 100vh;
+  min-height: 700px;
+  background: #f2ece0;
+  color: #1a1a1a;
+  overflow: hidden;
+}
+
+/* ── Background title ───────────────────────────────── */
+
+.bgTitle {
+  position: absolute;
+  top: 8%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 11vw, 14rem);
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 0.9;
+  letter-spacing: var(--tracking-tight);
+  z-index: 0;
+  pointer-events: none;
+  padding: 0 5%;
+}
+
+/* ── Stage ──────────────────────────────────────────── */
+
+.stage {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 0;
+}
+
+/* ── Shelf ──────────────────────────────────────────── */
+
+.shelf {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  position: relative;
+}
+
+/* ── Book Wrapper ───────────────────────────────────── */
+
+.bookWrapper {
+  flex-shrink: 0;
+  cursor: pointer;
+  perspective: 1400px;
+  perspective-origin: center bottom;
+  position: relative;
+  will-change: transform, opacity;
+}
+
+/* ── Book 3D container ──────────────────────────────── */
+
+.book3d {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* ── Faces ──────────────────────────────────────────── */
+
+.face {
+  position: absolute;
+  top: 0;
+  left: 0;
+  backface-visibility: hidden;
+}
+
+/* ── Cover ──────────────────────────────────────────── */
+
+.coverFace {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 32px;
+  gap: 10px;
+  border-radius: 0 3px 3px 0;
+}
+
+.coverFace::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.2), transparent);
+  pointer-events: none;
+}
+
+.coverTitle {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.coverAuthor {
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* ── Spine ──────────────────────────────────────────── */
+
+.spineFace {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  gap: 14px;
+  overflow: hidden;
+  padding: 20px 0;
+}
+
+.spineFace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.07) 35%,
+    rgba(255, 255, 255, 0.07) 65%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.spineTitle {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spineAuthor {
+  font-family: var(--font-body);
+  font-size: 13px;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* ── Pages edges ────────────────────────────────────── */
+
+.pagesEdge {
+  background: linear-gradient(
+    90deg,
+    #e8e3d6 0%,
+    #f5f0e6 20%,
+    #f5f0e6 80%,
+    #e8e3d6 100%
+  );
+}
+
+.pagesTop {
+  background: linear-gradient(
+    180deg,
+    #e8e3d6 0%,
+    #f5f0e6 30%,
+    #f5f0e6 70%,
+    #e8e3d6 100%
+  );
+}
+
+/* ── Detail Panel ───────────────────────────────────── */
+
+.detail {
+  position: absolute;
+  right: 6%;
+  top: 0;
+  bottom: 0;
+  width: 42vw;
+  max-width: 560px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 22vh;
+}
+
+/* ── Section-level background: red line ──────────────── */
+
+.sectionLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  transform: translateY(-50%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Section-level background: author name ──────────── */
+
+.sectionBgAuthor {
+  position: absolute;
+  top: 35%;
+  right: 5%;
+  font-family: var(--font-body);
+  font-size: clamp(7rem, 12vw, 15rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ebe5da;
+  line-height: 0.82;
+  letter-spacing: var(--tracking-tight);
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  opacity: 0;
+}
+
+.detailTitle {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 4vw, var(--text-5xl));
+  font-weight: 600;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  margin-bottom: var(--space-md);
+}
+
+/* ── Quote block with floating marks ────────────────── */
+
+.quoteBlock {
+  position: relative;
+  z-index: 1;
+  margin-bottom: var(--space-lg);
+}
+
+.quoteMarkFloat {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 5vw, 5.5rem);
+  font-weight: 700;
+  line-height: 0.6;
+  color: var(--color-red);
+  opacity: 0.8;
+  will-change: transform;
+  user-select: none;
+  pointer-events: none;
+}
+
+.quoteMarkClose {
+  text-align: right;
+  margin-top: var(--space-xs);
+}
+
+.detailQuote {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.3vw, var(--text-xl));
+  font-style: italic;
+  line-height: var(--leading-relaxed);
+  color: #3a3a3a;
+  padding: var(--space-xs) 0;
+}
+
+.detailDivider {
+  position: relative;
+  z-index: 1;
+  width: 40px;
+  height: 2px;
+  background: var(--color-red);
+  margin-top: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.detailCommentary {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: #4a4a4a;
+  margin-bottom: var(--space-md);
+}
+
+.detailCommentaryAuthor {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-red);
+  margin-left: var(--space-lg);
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .section {
+    min-height: 500px;
+  }
+
+  .bgTitle {
+    font-size: clamp(2.5rem, 10vw, 5rem);
+    top: 5%;
+  }
+
+  .stage {
+    padding-bottom: 0;
+  }
+
+  .shelf {
+    gap: 6px;
+  }
+
+  .detail {
+    position: absolute;
+    right: 4%;
+    width: 50vw;
+    max-width: none;
+  }
+
+  .sectionBgAuthor {
+    font-size: clamp(4rem, 14vw, 8rem);
+    top: 40%;
+  }
+
+  .spineTitle {
+    font-size: 12px;
+  }
+
+  .spineAuthor {
+    font-size: 10px;
+  }
+}

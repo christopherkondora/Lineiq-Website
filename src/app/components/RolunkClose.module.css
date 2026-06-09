@@ -1,0 +1,36 @@
+.close {
+  text-align: center;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.heading {
+  color: var(--color-white);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+/* Highlight-swap CTA — fehér alapszöveg, sötét panelen. A CtaSwap a CSS
+   változókból olvas, ezért itt hangoljuk a tipográfiát és a színt. */
+.ctaLink {
+  --cta-font: var(--font-display);
+  --cta-size: clamp(1.6rem, 3vw, 2.4rem);
+  --cta-weight: 500;
+  --cta-tracking: var(--tracking-tight);
+  --cta-case: none;
+  --cta-optical: "opsz" 100;
+  --cta-pad: 0.18em 0.3em;
+  --cta-box-bg: var(--color-white);
+  --cta-hover-color: var(--color-black);
+  color: var(--color-white);
+  display: inline-flex;
+  align-items: center;
+}

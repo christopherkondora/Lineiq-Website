@@ -1,0 +1,31 @@
+.intro {
+  min-height: 75vh;
+  display: flex;
+  align-items: center;
+  padding: 180px 0 var(--space-2xl);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144;
+  letter-spacing: var(--tracking-tight);
+  font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+  line-height: var(--leading-tight);
+  color: var(--color-black);
+}
+
+/* Az "iQ" a brand jegyében Kranky, piros akcentszínnel — azonos méret. */
+.iq {
+  font-family: var(--font-signature);
+  font-weight: 400;
+  color: var(--color-red);
+}
+
+@media (max-width: 768px) {
+  .intro {
+    min-height: 70vh;
+    padding: 140px 0 var(--space-xl);
+  }
+}

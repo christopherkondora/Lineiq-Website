@@ -1,0 +1,91 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import styles from "./RolunkMentors.module.css";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// "Akikre felnézünk" — külön szekció emberekről, nem a könyvespolc. Egy
+// mondat arról, mit jelent az adott személy a LineiQ munkájában. Dalio és Suby
+// megerősítve, a lista bővül; a placeholder kártya ezt jelzi.
+const MENTORS = [
+  {
+    initials: "RD",
+    name: "Ray Dalio",
+    line: "A vállalkozás rendszerében és kultúrájában él tovább — az elveket le kell írni és következetesen alkalmazni.",
+  },
+  {
+    initials: "SS",
+    name: "Sabri Suby",
+    line: "A marketingszemléletünk gerince — a figyelem megérdemlése, nem a megvásárlása.",
+  },
+  {
+    initials: "—",
+    name: "Hamarosan",
+    line: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. A lista bővül, a végleges névsor készül.",
+    placeholder: true,
+  },
+];
+
+export default function RolunkMentors() {
+  const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
+    const root = rootRef.current;
+    if (!root) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        root.querySelectorAll("[data-reveal]"),
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          stagger: 0.12,
+          ease: "power3.out",
+          clearProps: "opacity,transform",
+          scrollTrigger: { trigger: root, start: "top 72%" },
+        }
+      );
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={rootRef} className={`section ${styles.mentors}`} id="akikre-felnezunk">
+      <div className="container">
+        <header className={styles.head}>
+          <h2 className={`text-section ${styles.title}`} data-reveal>
+            Akik megelőztek minket.
+          </h2>
+          <p className={styles.lead} data-reveal>
+            Nem életrajz és nem idézetfal. Egy mondat arról, mit jelent az adott
+            gondolkodó a LineiQ munkájában.
+          </p>
+        </header>
+
+        <ul className={styles.grid}>
+          {MENTORS.map((m) => (
+            <li
+              key={m.name}
+              className={`${styles.card} ${m.placeholder ? styles.cardPlaceholder : ""}`}
+              data-reveal
+            >
+              <div className={styles.photo} aria-hidden="true">
+                <span className={styles.initials}>{m.initials}</span>
+              </div>
+              <h3 className={styles.name}>{m.name}</h3>
+              <p className={styles.line}>{m.line}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}

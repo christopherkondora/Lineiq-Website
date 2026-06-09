@@ -1,0 +1,104 @@
+.founders {
+  background: var(--color-surface);
+  padding: var(--space-3xl) 0 0;
+}
+
+.head {
+  max-width: 720px;
+  margin-bottom: var(--space-2xl);
+}
+
+.title {
+  margin: 0;
+}
+
+/* Minden alapító egy saját, közel teljes magasságú blokk — ezeken görgetve
+   játszódik le a kép → név beanimálás. */
+.founder {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.inner {
+  position: relative;
+  width: min(460px, 78vw);
+}
+
+.left .inner {
+  margin-left: 8vw;
+}
+
+.right .inner {
+  margin-left: auto;
+  margin-right: 8vw;
+}
+
+.photo {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: linear-gradient(150deg, #e6e6e6, #d2d2d2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.initials {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  color: rgba(0, 0, 0, 0.12);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* A névdoboz a fotó alsó élén ül, félig rálógva — a wrapper kezeli az
+   átfedést, a benne lévő név pedig szabadon animálható. */
+.nameWrap {
+  position: absolute;
+  bottom: 0;
+  z-index: 2;
+  transform: translateY(50%);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.left .nameWrap {
+  left: -0.1em;
+}
+
+.right .nameWrap {
+  right: -0.1em;
+  text-align: right;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  font-weight: 500;
+  font-variation-settings: "opsz" 90;
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-black);
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 768px) {
+  .founder {
+    min-height: 90vh;
+  }
+  .left .inner,
+  .right .inner {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .name {
+    font-size: clamp(1.85rem, 9vw, 2.75rem);
+  }
+}
