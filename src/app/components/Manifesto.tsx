@@ -19,36 +19,68 @@ export default function Manifesto() {
       // The slide-over itself is pure CSS: the previous section ("Stratégiától a
       // kódig") is sticky, so it parks at the top of the viewport while this
       // opaque panel scrolls up over it (see page.tsx + .manifesto z-index).
-      // Here we only animate the Manifesto's own content as it arrives.
+      // Here we animate the Manifesto's content — headline, copy, narrative
+      // line and the red wipe — all scrubbed to scroll. The range must extend
+      // PAST the full cover ("top top"): the content is centred in the 110vh
+      // panel, so during the approach it sits below the fold — a range ending
+      // at the cover would play everything off-screen. From top 60% to top
+      // -20% the composition rides on screen the whole way, and scrub: 1
+      // smooths fast flicks into a soft catch-up instead of a snap.
+      // Durations below are relative weights of that range (total ≈ 2).
       const tl = gsap.timeline({
-        scrollTrigger: { trigger: root, start: "top 70%" },
+        scrollTrigger: {
+          trigger: root,
+          start: "top 60%",
+          end: "top -20%",
+          scrub: 1,
+        },
       });
 
+      // 1) Headline rises line by line from behind its overflow mask as it
+      //    enters from below.
+      tl.from(
+        root.querySelectorAll("[data-head-line] > span"),
+        { yPercent: 120, duration: 0.5, ease: "none", stagger: 0.15 },
+        0
+      );
+
+      // 2) The running copy fades up line by line, just behind the headline.
+      tl.from(
+        root.querySelectorAll("[data-lead-line]"),
+        { y: 24, autoAlpha: 0, duration: 0.4, ease: "none", stagger: 0.1 },
+        0.3
+      );
+
+      // 3) Narrative line draws across the whole range; linear, the scroll
+      //    itself is the ease.
       const line = root.querySelector<SVGPathElement>("[data-narrative-line]");
       if (line) {
         const length = line.getTotalLength();
         line.style.strokeDasharray = `${length}`;
         line.style.strokeDashoffset = `${length}`;
-        tl.to(line, { strokeDashoffset: 0, duration: 2, ease: "power3.out" }, 0.2);
+        tl.to(line, { strokeDashoffset: 0, duration: 2, ease: "none" }, 0);
       }
 
+      // 4) Red bar sweeps across the photo and back — the closing accent,
+      //    placed in the second half so it plays after the panel has arrived.
       const block = root.querySelector("[data-red-block]");
-      const image = root.querySelector("[data-reveal-image]");
-      if (block && image) {
-        // Red bar sweeps across the photo and back, uncovering the image.
-        tl.set(image, { opacity: 1 }, 0);
+      if (block) {
         tl.fromTo(
           block,
           { scaleX: 0, transformOrigin: "left center" },
-          { scaleX: 1, duration: 0.6, ease: "power3.inOut" },
-          0.3
+          { scaleX: 1, duration: 0.5, ease: "power2.inOut" },
+          0.9
         );
-        tl.to(block, {
-          scaleX: 0,
-          transformOrigin: "right center",
-          duration: 0.7,
-          ease: "power3.inOut",
-        });
+        tl.to(
+          block,
+          {
+            scaleX: 0,
+            transformOrigin: "right center",
+            duration: 0.6,
+            ease: "power2.inOut",
+          },
+          1.4
+        );
       }
     }, root);
 
