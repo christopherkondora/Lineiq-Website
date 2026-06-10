@@ -16,68 +16,32 @@ export default function Manifesto() {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const ctx = gsap.context(() => {
-      // One entrance choreography for the whole panel. The section is 110vh
-      // tall with its content centred, so it fires off the SECTION's midpoint:
-      // "center 85%" starts the sequence the moment the middle of the section
-      // becomes visible (its centre crossing 85% down the viewport), which is
-      // exactly when the centred composition arrives on screen. Everything then
-      // plays as a single beat: the headline rises line by line, the copy fades
-      // up line by line, the studio panel arrives, then the narrative line
-      // draws and the red bar wipes across the photo.
-      const headLines = root.querySelectorAll("[data-head-line] > span");
-      const leadLines = root.querySelectorAll("[data-lead-line]");
-      const imageWrap = root.querySelector("[data-reveal]");
-
+      // The slide-over itself is pure CSS: the previous section ("Stratégiától a
+      // kódig") is sticky, so it parks at the top of the viewport while this
+      // opaque panel scrolls up over it (see page.tsx + .manifesto z-index).
+      // Here we only animate the Manifesto's own content as it arrives.
       const tl = gsap.timeline({
-        scrollTrigger: { trigger: root, start: "center center", invalidateOnRefresh: true },
+        scrollTrigger: { trigger: root, start: "top 70%" },
       });
-
-      // 1) headline rises line by line from behind its mask
-      tl.from(headLines, {
-        yPercent: 120,
-        duration: 0.9,
-        ease: "power4.out",
-        stagger: 0.12,
-      });
-
-      // 2) the running copy fades up line by line, just behind the headline
-      tl.from(
-        leadLines,
-        { y: 24, autoAlpha: 0, duration: 0.8, ease: "power3.out", stagger: 0.1 },
-        "-=0.5"
-      );
-
-      // 3) the studio panel arrives alongside the copy
-      if (imageWrap) {
-        tl.from(
-          imageWrap,
-          { y: 60, autoAlpha: 0, duration: 1, ease: "power3.out" },
-          "-=0.7"
-        );
-      }
 
       const line = root.querySelector<SVGPathElement>("[data-narrative-line]");
       if (line) {
         const length = line.getTotalLength();
         line.style.strokeDasharray = `${length}`;
         line.style.strokeDashoffset = `${length}`;
-        tl.to(
-          line,
-          { strokeDashoffset: 0, duration: 2, ease: "power3.out" },
-          "-=0.6"
-        );
+        tl.to(line, { strokeDashoffset: 0, duration: 2, ease: "power3.out" }, 0.2);
       }
 
       const block = root.querySelector("[data-red-block]");
       const image = root.querySelector("[data-reveal-image]");
       if (block && image) {
-        // Red bar sweeps across the photo and back, uncovering the image as it
-        // retreats. Overlapped with the line draw so the whole panel feels live.
+        // Red bar sweeps across the photo and back, uncovering the image.
+        tl.set(image, { opacity: 1 }, 0);
         tl.fromTo(
           block,
           { scaleX: 0, transformOrigin: "left center" },
           { scaleX: 1, duration: 0.6, ease: "power3.inOut" },
-          "-=1.0"
+          0.3
         );
         tl.to(block, {
           scaleX: 0,
@@ -85,7 +49,6 @@ export default function Manifesto() {
           duration: 0.7,
           ease: "power3.inOut",
         });
-        tl.fromTo(image, { opacity: 0 }, { opacity: 1, duration: 0.1 }, "-=0.6");
       }
     }, root);
 

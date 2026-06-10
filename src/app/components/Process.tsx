@@ -10,6 +10,21 @@ import { services } from "../data/services";
 export default function Process() {
   const rootRef = useRef<HTMLElement>(null);
 
+  // The home page parks this section sticky while the Manifesto rises over it
+  // (page.module.css .stackSticky). The sticky wrapper needs its own rendered
+  // height as --stack-sticky-h so it can park bottom-aligned to the viewport;
+  // CSS alone can't reference an element's own height. Runs regardless of
+  // reduced motion — this is positioning, not animation.
+  useEffect(() => {
+    const sticky = rootRef.current?.parentElement;
+    if (!sticky) return;
+    const ro = new ResizeObserver(() => {
+      sticky.style.setProperty("--stack-sticky-h", `${sticky.offsetHeight}px`);
+    });
+    ro.observe(sticky);
+    return () => ro.disconnect();
+  }, []);
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);

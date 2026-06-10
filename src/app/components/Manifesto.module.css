@@ -1,5 +1,9 @@
 .manifesto {
   position: relative;
+  /* Upper layer in the stacking-cards hand-off: as it scrolls up it slides over
+     the previous section (which drifts down and fades beneath it), so it must
+     stack above and carry an opaque background (inherited from .section--dark). */
+  z-index: 2;
   overflow: hidden;
   min-height: 110vh;
   display: flex;

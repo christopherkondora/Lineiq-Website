@@ -1,0 +1,20 @@
+/* Stacking hand-off between "Stratégiától a kódig" (Process) and the Manifesto.
+   The wrapper bounds the sticky range; the previous section parks while the
+   Manifesto — the upper, opaque layer — scrolls up over it, so the next section
+   reads as rising from below to cover the previous. */
+.stack {
+  position: relative;
+}
+
+.stackSticky {
+  position: sticky;
+  /* Park with the section's BOTTOM at the viewport bottom (negative top when
+     the section is taller than the viewport). The Process section is taller
+     than most viewports, so a plain top: 0 would pin it with the last service
+     row at the fold and its breathing room / hover-expansion clipped below.
+     --stack-sticky-h (own rendered height) is measured by Process at runtime;
+     until it's set, or where dvh is unsupported, the top: 0 fallback applies. */
+  top: 0;
+  top: min(0px, calc(100dvh - var(--stack-sticky-h, 0px)));
+  z-index: 1;
+}
