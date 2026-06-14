@@ -1,20 +1,25 @@
-/* Stacking hand-off between "Stratégiától a kódig" (Process) and the Manifesto.
-   The wrapper bounds the sticky range; the previous section parks while the
-   Manifesto — the upper, opaque layer — scrolls up over it, so the next section
-   reads as rising from below to cover the previous. */
+/* Stacking-cards hand-off: a szolgáltatás-szekció (WhatWeDo) parkol a viewport
+   aljára igazítva, miközben a Manifesto átlátszatlan panelje fölé csúszik.
+   A .stack wrapper HATÁROLJA a sticky tartományt (a WhatWeDo csak ezen belül
+   parkol, utána kiold), különben a sticky az egész <main>-re ragadna és a
+   Manifesto után újra előbukkanna, eltakarva a SequenceSectiont. */
 .stack {
   position: relative;
 }
 
+/* A wrapper a saját rendert magasságát --stack-sticky-h-ban kapja meg (WhatWeDo
+   ResizeObserver-e állítja), így magas szekció esetén az alsó éle simul a
+   viewport aljához, mielőtt a Manifesto rákúszna. */
 .stackSticky {
   position: sticky;
-  /* Park with the section's BOTTOM at the viewport bottom (negative top when
-     the section is taller than the viewport). The Process section is taller
-     than most viewports, so a plain top: 0 would pin it with the last service
-     row at the fold and its breathing room / hover-expansion clipped below.
-     --stack-sticky-h (own rendered height) is measured by Process at runtime;
-     until it's set, or where dvh is unsupported, the top: 0 fallback applies. */
-  top: 0;
-  top: min(0px, calc(100dvh - var(--stack-sticky-h, 0px)));
+  top: calc(100vh - var(--stack-sticky-h, 100vh));
   z-index: 1;
+}
+
+/* A Manifesto a parkoló szekció FÖLÉ kerül: magasabb stacking + saját
+   átlátszatlan sötét háttér, így felfelé gördülve eltakarja az alatta
+   parkoló szolgáltatás-listát. */
+.rise {
+  position: relative;
+  z-index: 3;
 }

@@ -1,0 +1,108 @@
+/* Partners — az ashleybrookecs.com "trusted Referrals" szekció LineiQ-újraalkotása.
+   Fehér szekció: óriás Wix Madefor verzál fejléc, jobb alsó sarkában piros Kranky
+   script-szó, alatta két hasáb folyószöveg, jobbra-középre tolva. */
+.partners {
+  position: relative;
+  background: var(--color-white);
+  overflow: clip;
+  padding: clamp(96px, 14vh, 200px) 0 clamp(96px, 12vh, 180px);
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+}
+
+.headingWrap {
+  position: relative;
+}
+
+.heading {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.75rem, 12vw, 12rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--color-black);
+  /* a JS xPercent-tel csúsztatja a helyére; a transzformot ne hagyja "remegni" */
+  will-change: transform;
+}
+
+/* A script-szó a fejléc utolsó sorai fölé lóg, jobbra kicsordulva — a referencia
+   "Referrals" kézírásának megfelelője. Kranky, piros, enyhén megdöntve. A JS
+   balról jobbra "rajzolja be" egy clip-path wipe-pal; nyugalmi állapotban a
+   negatív inset óvja a hurkok/szárak levágását. */
+.script {
+  position: absolute;
+  right: 0;
+  bottom: 0.4em;
+  z-index: 2;
+  font-family: var(--font-signature);
+  font-weight: 400;
+  font-size: clamp(4.5rem, 16vw, 17rem);
+  line-height: 0.9;
+  color: var(--color-red);
+  white-space: nowrap;
+  pointer-events: none;
+  transform: rotate(-7deg);
+  transform-origin: right bottom;
+  clip-path: inset(-25% 0% -25% 0%);
+  will-change: clip-path;
+}
+
+.paras {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 320px));
+  gap: clamp(32px, 6vw, 110px);
+  margin-top: clamp(80px, 12vh, 180px);
+  margin-left: clamp(0px, 26vw, 400px);
+}
+
+.col p {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  color: var(--color-black);
+}
+
+.col p + p {
+  margin-top: 1.4em;
+}
+
+/* SplitText artifaktumok. mask:"lines" miatt a sor önmaga blokk; a szavak/sorok
+   a saját maszkjuk alól emelkednek. */
+.line {
+  display: block;
+}
+
+.word {
+  will-change: transform;
+}
+
+@media (max-width: 900px) {
+  .paras {
+    grid-template-columns: 1fr;
+    margin-left: 0;
+    max-width: 480px;
+    gap: clamp(28px, 5vw, 48px);
+  }
+  .script {
+    font-size: clamp(3.5rem, 18vw, 9rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .script {
+    will-change: auto;
+  }
+  .word {
+    will-change: auto;
+  }
+}
