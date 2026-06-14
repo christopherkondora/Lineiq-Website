@@ -1,0 +1,185 @@
+/* WhatWeDo — bymonolog.com "what we can help with" receptje, fehér szekción,
+   LineiQ tipográfiával. Jobb oldalt óriás, egymásra rakott Fraunces
+   szolgáltatás-nevek (a nem-aktívak 0.3-ra halványulnak); a nevek mellett egyetlen
+   4:5 noir fotó ÚSZIK függőlegesen az aktív névhez (a ripelt MONOLOG ut()
+   függvény: translateY tween ease-transition-nel, kép-crossfade). Bal oldalt
+   egy beszédes mondat + egy egyszerű, átsuhanó vonal-animáció.
+   A szekció 110vh, és a home page .stackSticky wrapperében parkol, miközben a
+   Manifesto fölé csúszik (--stack-sticky-h a ResizeObserverből). */
+
+.whatwedo {
+  position: relative;
+  background: var(--color-white);
+  color: var(--color-black);
+  /* A szekció 110vh; tartalom függőlegesen középen (grid + align-content,
+     mert a .container margin:0 auto-ja flexben felülírná a stretch-et). */
+  min-height: 110vh;
+  display: grid;
+  align-content: center;
+  padding: var(--space-xl) 0;
+  overflow: hidden;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Kétoszlopos elrendezés ────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: clamp(220px, 26vw, 360px) 1fr;
+  gap: clamp(32px, 6vw, 110px);
+  align-items: start;
+}
+
+/* ─── Bal: egy mondat + egyszerű vonal-animáció ─────────── */
+.rail {
+  position: relative;
+}
+
+.statement {
+  max-width: 22ch;
+}
+
+/* A vonal: vékony szabály, rajta egy piros szegmens suhan át és vissza. */
+.line {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  margin-bottom: var(--space-lg);
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.line span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 32%;
+  background: var(--color-red);
+  transform: translateX(-100%);
+  animation: lineSweep 4s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+
+@keyframes lineSweep {
+  0%   { transform: translateX(-100%); }
+  50%  { transform: translateX(312%); }
+  100% { transform: translateX(-100%); }
+}
+
+.statementText {
+  font-family: var(--font-display);
+  font-size: clamp(1.65rem, 2.42vw, 2.31rem);
+  line-height: 1.25;
+  font-weight: 400;
+  font-variation-settings: "opsz" 55;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-black);
+}
+
+/* ─── Jobb: szolgáltatás-lista + úszó fotó ──────────────── */
+.main {
+  position: relative;
+}
+
+.content {
+  position: relative;
+}
+
+.list {
+  position: relative;
+  z-index: 2;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.2vw, 20px);
+  /* a neveket a jobb szélen úszó fotó sávja előtt tartja */
+  padding-right: clamp(150px, 18vw, 260px);
+}
+
+.rowItem {
+  display: block;
+}
+
+.row {
+  position: relative;
+  display: block;
+  padding: clamp(4px, 0.6vw, 10px) 0;
+  color: inherit;
+}
+
+.rowTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.09rem, 5.06vw, 3.96rem);
+  line-height: 1.04;
+  font-weight: 500;
+  font-variation-settings: "opsz" 100;
+  letter-spacing: var(--tracking-tight);
+  /* a szolgáltatás-nevek sosem törnek */
+  white-space: nowrap;
+  color: var(--color-black);
+}
+
+/* Az egyetlen úszó fotó — a translateY-ját a JS az aktív névhez tweeneli. */
+.card {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: clamp(150px, 18vw, 260px);
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.cardCenterer {
+  transform: translateY(-50%);
+}
+
+.cardInner {
+  position: relative;
+  display: grid;
+}
+
+.img {
+  grid-area: 1 / 1;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 6px;
+  filter: grayscale(1) contrast(1.06);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+}
+
+/* ─── Touch / kis kijelző: nincs úszó fotó, minden statikus ── */
+@media (max-width: 900px) {
+  .whatwedo {
+    min-height: auto;
+    padding: var(--space-2xl) 0;
+  }
+  .layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+  .rail {
+    order: 2;
+  }
+  .main {
+    order: 1;
+  }
+  .list {
+    padding-right: 0;
+    gap: var(--space-lg);
+  }
+  /* a nevek mobilon is egy sorban maradnak; ha kell, a felhasználó görget */
+  .card {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line span {
+    animation: none;
+  }
+}
