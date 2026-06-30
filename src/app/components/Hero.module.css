@@ -24,6 +24,9 @@
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: var(--tracking-tight);
+  /* opsz-t fixen pinneljük, nem bízzuk az auto optical sizingra: a cím nagy, így
+     a vékony, magas-kontrasztú display karaktert akarjuk (mint a többi fejléc). */
+  font-variation-settings: "opsz" 144;
   font-size: clamp(2.75rem, 10vw, 9.2rem);
   line-height: 0.98;
 }
@@ -87,6 +90,21 @@
 @media (max-width: 768px) {
   .hero {
     padding: var(--space-xl) 0;
+  }
+
+  /* Mobilon a hero balra rendezve áll, a típus nagyobb és átereszti a teljes
+     szélességet — a "noise off." marad alatta, balra húzva. */
+  .inner {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .title {
+    max-width: none;
+    /* Mobilon a cím ~54–62px: a brand size→opsz görbe (~54px→100) szerint pinnelve,
+       hogy konzisztens legyen a többi fejléccel, ne az auto ~56 zömök változatát kapjuk. */
+    font-variation-settings: "opsz" 100;
+    font-size: clamp(3.5rem, 15vw, 9.2rem);
   }
 }
 

@@ -3,28 +3,28 @@ import Placeholder from "../components/Placeholder";
 import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
-  title: "Munkáink — LineiQ",
+  title: "Work — LineiQ",
   description:
-    "Kiválasztott case study-k a LineiQ portfólióból. Brand, web, marketing.",
+    "Selected case studies from the LineiQ portfolio. Brand, web, marketing.",
 };
 
 export default function MunkainkPage() {
   return (
     <main>
       <Placeholder
-        label="◆ Portfólió"
+        label="◆ Portfolio"
         title={
           <>
-            A munka, amire
+            The work we
             <br />
             <em style={{ fontStyle: "italic", fontWeight: 400 }}>
-              ráírjuk a nevünk.
+              put our name on.
             </em>
           </>
         }
         signature="proof."
-        lede="Részletes case study-k brand, web és marketing projektekről. Minden munka önálló entry: scope, folyamat, vizuális anyag, eredmény. Az oldal hamarosan."
-        nextStep="Case study-k tartalmi feltöltése folyamatban."
+        lede="Detailed case studies on brand, web and marketing projects. Each piece is its own entry: scope, process, visuals, results. The page is coming soon."
+        nextStep="Case study content is being added."
       />
       <Footer />
     </main>

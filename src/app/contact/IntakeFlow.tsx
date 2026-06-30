@@ -14,13 +14,13 @@ import { services } from "../data/services";
 const SERVICE_OPTIONS = services.map((s) => s.title);
 
 // Csúszka-skála: balról jobbra növekvő keret, a középső a kiindulópont.
-const BUDGET_OPTIONS = ["1 M Ft alatt", "1–5 M Ft", "5 M Ft felett"];
+const BUDGET_OPTIONS = ["Under 1M Ft", "1–5M Ft", "Over 5M Ft"];
 
 const QUESTIONS = [
-  "Melyik cégről van szó?",
-  "Mire van szükségetek?",
-  "Mekkora kerettel terveztek?",
-  "Kihez szóljon a válasz?",
+  "Which company is this about?",
+  "What do you need?",
+  "What budget are you planning with?",
+  "Who should we reply to?",
 ];
 
 const STEP_COUNT = QUESTIONS.length;
@@ -85,11 +85,11 @@ export default function IntakeFlow() {
   // Minden kérdés kötelező — lépni csak kitöltve lehet.
   const advance = () => {
     if (step === 0 && !company.trim()) {
-      setError("Cégnév nélkül nem tudunk felkészülni.");
+      setError("Without a company name we can't prepare.");
       return;
     }
     if (step === 1 && picked.length === 0) {
-      setError("Válassz legalább egy területet.");
+      setError("Pick at least one area.");
       return;
     }
     goTo(step + 1);
@@ -103,11 +103,11 @@ export default function IntakeFlow() {
 
   const submit = async () => {
     if (!name.trim()) {
-      setError("A neved is kell — tudnunk kell, kinek válaszolunk.");
+      setError("We need your name too — we have to know who we're replying to.");
       return;
     }
     if (!EMAIL_RE.test(email.trim())) {
-      setError("Érvényes email cím kell, hogy legyen hova válaszolnunk.");
+      setError("We need a valid email address so we have somewhere to reply.");
       return;
     }
     setError("");
@@ -128,12 +128,12 @@ export default function IntakeFlow() {
         const data = (await res.json().catch(() => null)) as {
           error?: string;
         } | null;
-        setError(data?.error ?? "A beküldés nem sikerült, próbáld újra.");
+        setError(data?.error ?? "Submission failed, please try again.");
         return;
       }
       setDone(true);
     } catch {
-      setError("A beküldés nem sikerült, próbáld újra.");
+      setError("Submission failed, please try again.");
     } finally {
       setSending(false);
     }
@@ -154,7 +154,7 @@ export default function IntakeFlow() {
         <div className={styles.stage}>
         <header className={styles.head}>
           <h1 className={`reveal ${styles.title}`} data-hero>
-            Beszéljünk komolyan.
+            Let&apos;s talk for real.
           </h1>
         </header>
 
@@ -162,23 +162,24 @@ export default function IntakeFlow() {
           {done ? (
             <>
               <h2 className={styles.doneTitle} data-reveal>
-                Megvan.
+                Got it.
               </h2>
               <p className={styles.doneSignature} data-reveal aria-hidden="true">
                 talk soon.
               </p>
               <div className={styles.doneGrid} data-reveal>
                 <div>
-                  <p className="text-label">Következő lépés</p>
+                  <p className="text-label">Next step</p>
                   <p className={styles.doneText}>
-                    Átnézzük a cégedet és a piacodat, és úgy érkezünk az első
-                    hívásra, hogy már van miről beszélnünk.
+                    We&apos;ll review your company and your market, and arrive at
+                    the first call already having something to talk about.
                   </p>
                 </div>
                 <div>
-                  <p className="text-label">Válaszidő</p>
+                  <p className="text-label">Response time</p>
                   <p className={styles.doneText}>
-                    Munkanapokon 48 órán belül jelentkezünk emailben.
+                    We&apos;ll get back to you by email within 48 hours on business
+                    days.
                   </p>
                 </div>
               </div>
@@ -192,7 +193,7 @@ export default function IntakeFlow() {
                 aria-valuemin={1}
                 aria-valuemax={STEP_COUNT}
                 aria-valuenow={step + 1}
-                aria-label="Lépések"
+                aria-label="Steps"
               >
                 {Array.from({ length: STEP_COUNT }).map((_, i) => (
                   <span
@@ -208,7 +209,7 @@ export default function IntakeFlow() {
                     type="button"
                     className={styles.backArrow}
                     onClick={() => goTo(step - 1)}
-                    aria-label="Vissza"
+                    aria-label="Back"
                   >
                     {/* Custom Fraunces nyíl — az "l" betű talpából rajzolt jel. */}
                     <svg viewBox="0 0 85 32" fill="none" aria-hidden="true">
@@ -229,7 +230,7 @@ export default function IntakeFlow() {
                     type="text"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
-                    placeholder="Cégnév"
+                    placeholder="Company name"
                     autoComplete="organization"
                     aria-required="true"
                     autoFocus
@@ -278,7 +279,7 @@ export default function IntakeFlow() {
                       onChange={(e) =>
                         setBudget(BUDGET_OPTIONS[Number(e.target.value)])
                       }
-                      aria-label="Keret"
+                      aria-label="Budget"
                       aria-valuetext={budget}
                     />
                     {/* A natív thumb rejtve van — ez a kör mozog helyette,
@@ -317,7 +318,7 @@ export default function IntakeFlow() {
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      placeholder="Neved"
+                      placeholder="Your name"
                       autoComplete="name"
                       aria-required="true"
                     />
@@ -326,7 +327,7 @@ export default function IntakeFlow() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Email címed"
+                      placeholder="Your email"
                       autoComplete="email"
                       aria-required="true"
                     />
@@ -347,11 +348,11 @@ export default function IntakeFlow() {
                   disabled={sending}
                 >
                   {step < STEP_COUNT - 1 ? (
-                    <CtaSwap defaultLabel="Tovább" hoverLabel="Tovább" />
+                    <CtaSwap defaultLabel="Next" hoverLabel="Next" />
                   ) : (
                     <CtaSwap
-                      defaultLabel={sending ? "Küldés…" : "Beküldöm"}
-                      hoverLabel="Mehet!"
+                      defaultLabel={sending ? "Sending…" : "Submit"}
+                      hoverLabel="Let's go!"
                     />
                   )}
                 </button>

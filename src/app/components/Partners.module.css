@@ -1,11 +1,17 @@
-/* Partners — az ashleybrookecs.com "trusted Referrals" szekció LineiQ-újraalkotása.
-   Fehér szekció: óriás Wix Madefor verzál fejléc, jobb alsó sarkában piros Kranky
-   script-szó, alatta két hasáb folyószöveg, jobbra-középre tolva. */
+/* Partners — full-viewport "tagadás → állítás" sequence.
+   BASE (mobile-first / reduced-motion): statikus, egymás alá folyó kompozíció,
+   minden egyszerre látszik. A pinnelt, görgetésre vezérelt színpad csak desktopon
+   ÉS engedélyezett mozgásnál kapcsol be (lentebbi enhancement media query) — így
+   a JS-gate és a layout sosem csúszik szét. */
 .partners {
   position: relative;
+  z-index: 1;
   background: var(--color-white);
-  overflow: clip;
-  padding: clamp(96px, 14vh, 200px) 0 clamp(96px, 12vh, 180px);
+  padding: clamp(72px, 12vh, 140px) 0;
+}
+
+.stage {
+  position: relative;
 }
 
 .inner {
@@ -13,54 +19,79 @@
   width: 100%;
 }
 
-.headingWrap {
+.stageHead {
   position: relative;
 }
 
-.heading {
-  position: relative;
-  z-index: 1;
+/* Közös fejléc-tipográfia a tagadás és az állítás sorához. */
+.lineOne,
+.lineTwoHead {
   margin: 0;
   font-family: var(--font-display);
   font-weight: 600;
   font-variation-settings: "opsz" 144;
-  font-size: clamp(2.75rem, 12vw, 12rem);
-  line-height: 0.9;
+  font-size: clamp(3rem, 13vw, 7rem);
+  line-height: 0.95;
   letter-spacing: -0.03em;
-  text-transform: uppercase;
   color: var(--color-black);
-  /* a JS xPercent-tel csúsztatja a helyére; a transzformot ne hagyja "remegni" */
+  text-align: left;
+}
+
+.word {
+  display: inline-block;
   will-change: transform;
 }
 
-/* A script-szó a fejléc utolsó sorai fölé lóg, jobbra kicsordulva — a referencia
-   "Referrals" kézírásának megfelelője. Kranky, piros, enyhén megdöntve. A JS
-   balról jobbra "rajzolja be" egy clip-path wipe-pal; nyugalmi állapotban a
-   negatív inset óvja a hurkok/szárak levágását. */
-.script {
+/* A "clients" szó relatív konténer, hogy a piros redaction ráfeküdhessen. */
+.clients {
+  position: relative;
+}
+
+/* A piros redaction-sáv: a JS scaleX 0→1-re húzza balról jobbra (scroll-synced),
+   átlátszatlanul eltüntetve a "clients" szót. Nyugalmi (és reduced-motion)
+   állapotban scaleX(0) — a szó látszik. */
+.clientsHighlight {
   position: absolute;
-  right: 0;
-  bottom: 0.4em;
-  z-index: 2;
+  top: -0.05em;
+  bottom: 0.05em;
+  left: -0.08em;
+  right: -0.08em;
+  background: var(--color-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.lineTwo {
+  position: relative;
+  margin-top: 0.5em;
+}
+
+/* A Kranky "partners" script, piros. Base-ben blokként a "We take on" alatt. */
+.script {
+  display: block;
+  margin-top: 0.05em;
   font-family: var(--font-signature);
   font-weight: 400;
-  font-size: clamp(4.5rem, 16vw, 17rem);
+  font-size: clamp(2.75rem, 12vw, 6rem);
   line-height: 0.9;
   color: var(--color-red);
   white-space: nowrap;
   pointer-events: none;
-  transform: rotate(-7deg);
-  transform-origin: right bottom;
-  clip-path: inset(-25% 0% -25% 0%);
-  will-change: clip-path;
+}
+
+.scriptInner {
+  display: inline-block;
+  will-change: transform, opacity;
 }
 
 .paras {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 320px));
-  gap: clamp(32px, 6vw, 110px);
-  margin-top: clamp(80px, 12vh, 180px);
-  margin-left: clamp(0px, 26vw, 400px);
+  grid-template-columns: 1fr;
+  gap: clamp(28px, 5vw, 48px);
+  margin-top: clamp(40px, 8vh, 80px);
+  max-width: 480px;
 }
 
 .col p {
@@ -76,33 +107,108 @@
   margin-top: 1.4em;
 }
 
-/* SplitText artifaktumok. mask:"lines" miatt a sor önmaga blokk; a szavak/sorok
-   a saját maszkjuk alól emelkednek. */
-.line {
-  display: block;
-}
+/* ─── Engedélyezett mozgás: pinnelt, görgetésre vezérelt színpad (minden
+   szélességen, telefonon is). Reduced-motion mellett a fenti statikus base marad. ── */
+@media (prefers-reduced-motion: no-preference) {
+  /* A magas wrapper adja a sequence scroll-budgetjét; a színpad benne sticky.
+     A nagy magasság a végállapot hosszú STOP-ját is tartalmazza (tartás-farok): a
+     420vh úgy van méretezve, hogy a tartás-farok scroll-része (≈140vh) meghaladja a
+     Manifesto 100vh-s takarási ablakát, így marad ≈40vh tiszta statikus hold, mielőtt
+     a fekete panel takarni kezd. */
+  .partners {
+    min-height: 420vh;
+    padding: 0;
+  }
 
-.word {
-  will-change: transform;
-}
+  .stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
 
-@media (max-width: 900px) {
+  .inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  /* A tagadás és az állítás UGYANABBAN a rácscellában áll egymáson, így a swap
+     helyben történik, layout-ugrás nélkül; középre rendezve. */
+  .stageHead {
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+
+  .lineOne,
+  .lineTwo {
+    grid-area: 1 / 1;
+  }
+
+  .lineOne,
+  .lineTwoHead {
+    text-align: center;
+    font-size: clamp(3.5rem, 8.5vw, 9rem);
+    line-height: 0.9;
+  }
+
+  .lineTwo {
+    margin-top: 0;
+  }
+
+  /* A script a "We take on" alá, középre, kissé ráúszva. */
+  .script {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    margin-top: 0;
+    transform: translate(-50%, -42%);
+    font-size: clamp(3rem, 8vw, 8.5rem);
+  }
+
+  /* A hasábok a színpad jobb-alsó sarkába, a konténer jobb széléhez igazítva. */
   .paras {
-    grid-template-columns: 1fr;
-    margin-left: 0;
-    max-width: 480px;
-    gap: clamp(28px, 5vw, 48px);
-  }
-  .script {
-    font-size: clamp(3.5rem, 18vw, 9rem);
+    position: absolute;
+    right: 0;
+    bottom: clamp(48px, 8vh, 110px);
+    grid-template-columns: repeat(2, minmax(0, 300px));
+    gap: clamp(32px, 5vw, 90px);
+    margin-top: 0;
+    max-width: none;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .script {
-    will-change: auto;
+/* ─── Mobil finomhangolás az animált színpadhoz ───
+   Kompaktabb tipó; a script és a hasábok a fejléc alatt FOLYNAK (nem abszolút),
+   hogy elférjenek a 100vh-ban és ne fedjék egymást a swap után. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 900px) {
+  /* A mobil viewport rövidebb, ezért a takarás 100vh-s ablaka a teljes scroll
+     nagyobb hányada — a wrappert 400vh-ra emeljük, hogy itt is maradjon ≈30vh
+     tiszta statikus hold a hasábok beállása és a Manifesto takarása közt. */
+  .partners {
+    min-height: 400vh;
   }
-  .word {
-    will-change: auto;
+  .lineOne,
+  .lineTwoHead {
+    font-size: clamp(2.5rem, 11vw, 5rem);
+    line-height: 0.95;
+  }
+  .script {
+    position: static;
+    margin-top: 0.08em;
+    transform: none;
+    font-size: clamp(2.3rem, 10.5vw, 4.2rem);
+  }
+  .paras {
+    position: static;
+    margin: clamp(28px, 5vh, 52px) auto 0;
+    grid-template-columns: 1fr;
+    gap: clamp(18px, 3.2vh, 28px);
+    max-width: 360px;
+  }
+  .col p {
+    font-size: clamp(0.9rem, 3.6vw, 1.05rem);
+    line-height: 1.4;
   }
 }

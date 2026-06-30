@@ -3,135 +3,174 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
 import styles from "./Partners.module.css";
 
-// A WeAre után: az ashleybrookecs.com "most of our client work comes from
-// trusted Referrals" szekciójának újraalkotása LineiQ nyelven. Óriás Wix Madefor
-// verzál fejléc, jobb alsó sarkában egy piros Kranky script-szó, alatta két
-// hasáb folyószöveg. Az animáció a példaoldal receptje, scroll-synced (scrub):
-// a fejléc SZAVAI sor-maszk alól emelkednek (yPercent 110), a script-szó balról
-// jobbra "rajzolódik be" (clip-path wipe — a referencia DrawSVG kézírásának
-// font-megfelelője), a hasábok sorai pedig szintén maszk alól úsznak fel.
+// Full-viewport, görgetésre vezérelt "tagadás → állítás" sequence. A szekció egy
+// magas wrapper (scroll-budget), benne egy sticky 100vh színpad. A scrub-idővonal
+// beatjei: (1) "We don't take on clients" szóról szóra felúszik (hero-recept),
+// (2) piros wipe KIZÁRÓLAG a "clients" szón (redaction), (3) az egész sor eltűnik,
+// (4) "We take on" + a Kranky "partners" script beíródik, (5) a két hasáb magyarázat
+// felúszik, végül a végállapot kitart, amíg a Manifesto fölécsúszik. Mobilon és
+// reduced-motion mellett a színpad statikus, minden egyszerre látszik (a CSS base
+// layout, JS nélkül).
 export default function Partners() {
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    gsap.registerPlugin(ScrollTrigger, SplitText);
+    gsap.registerPlugin(ScrollTrigger);
 
     const root = rootRef.current;
     if (!root) return;
 
-    const heading = root.querySelector<HTMLElement>("[data-heading]");
-    const script = root.querySelector<HTMLElement>("[data-script]");
-    const cols = gsap.utils.toArray<HTMLElement>("[data-col]", root);
-
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return; // statikusan a helyén marad
-
     const mm = gsap.matchMedia();
-    const splits: SplitText[] = [];
 
-    mm.add("(min-width: 768px)", () => {
-      // Ashley-féle kétütem, scroll-synced (scrub): (1) a fekete Fraunces verzál
-      // szöveg oldalról (jobbról) a helyére csúszik, majd (2) a piros Kranky
-      // script-szó balról jobbra "beíródik" egy clip-path wipe-pal.
-      if (heading) {
+    // A pinnelt sequence minden szélességen fut (telefonon is), kivéve ha a
+    // felhasználó csökkentett mozgást kért; a query pontosan egyezik a CSS
+    // enhancement feltételével, így a JS-gate és a layout nem csúszik szét.
+    mm.add(
+      "(prefers-reduced-motion: no-preference)",
+      () => {
+        const lineOne = root.querySelector<HTMLElement>("[data-line-one]");
+        const lineTwo = root.querySelector<HTMLElement>("[data-line-two]");
+        const w1 = gsap.utils.toArray<HTMLElement>("[data-word]", root);
+        const w2 = gsap.utils.toArray<HTMLElement>("[data-word2]", root);
+        const highlight = root.querySelector<HTMLElement>("[data-clients-highlight]");
+        const scriptInner = root.querySelector<HTMLElement>("[data-script-inner]");
+        const paras = gsap.utils.toArray<HTMLElement>("[data-paras] p", root);
+
+        // Az állítás-blokk kezdetben rejtve, hogy ne fedje át a tagadást; a (4)
+        // beatben a tl.set kapcsolja láthatóra (visszafelé görgetve újra elrejti).
+        if (lineTwo) gsap.set(lineTwo, { autoAlpha: 0 });
+
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: heading,
-            start: "top 82%",
-            end: "top 30%",
+            trigger: root,
+            start: "top top",
+            end: "bottom bottom",
             scrub: 1,
           },
         });
-        tl.from(heading, { xPercent: 14, ease: "none", duration: 1 });
-        if (script) {
-          tl.from(
-            script,
-            {
-              clipPath: "inset(-25% 100% -25% 0%)",
-              ease: "none",
-              duration: 1,
-            },
-            0.55
+
+        // (1) tagadás — szóról szóra felúszik (hero-recept)
+        tl.from(
+          w1,
+          { yPercent: 115, autoAlpha: 0, ease: "none", stagger: 0.12, duration: 1 },
+          0
+        );
+
+        // (2) piros wipe CSAK a "clients" szón — redaction balról jobbra
+        if (highlight) {
+          tl.to(highlight, { scaleX: 1, ease: "power2.inOut", duration: 0.6 }, 1.5);
+        }
+
+        // (3) az egész tagadás-sor eltűnik (felfelé + fade)
+        if (lineOne) {
+          tl.to(
+            lineOne,
+            { yPercent: -35, autoAlpha: 0, ease: "power2.in", duration: 0.7 },
+            2.4
           );
         }
+
+        // (4) állítás — "We take on" beúszik, majd a "partners" script
+        if (lineTwo) tl.set(lineTwo, { autoAlpha: 1 }, 3.0);
+        tl.from(
+          w2,
+          { yPercent: 115, autoAlpha: 0, ease: "none", stagger: 0.12, duration: 1 },
+          3.0
+        );
+        if (scriptInner) {
+          tl.from(
+            scriptInner,
+            { yPercent: 115, autoAlpha: 0, ease: "none", duration: 1 },
+            3.6
+          );
+        }
+
+        // (5) magyarázat — a hasábok felúsznak
+        tl.from(
+          paras,
+          { yPercent: 40, autoAlpha: 0, ease: "none", stagger: 0.12, duration: 1 },
+          4.4
+        );
+
+        // Tartás-farok (STOP): a végállapot hosszan kitart, mielőtt a Manifesto
+        // fölécsúszik. KRITIKUS: a tartás-faroknak több görgetést kell lefoglalnia,
+        // mint a Manifesto 100vh-s takarási ablaka (a .rise -100vh margója), különben
+        // a fekete panel már a hasábok beállása közben kezdene takarni. A 4.2-es
+        // duration + a 420vh wrapper (CSS) együtt ≈40vh tiszta, statikus holdot hagy
+        // a hasábok olvashatóságához, MIELŐTT a takarás elindul.
+        tl.to({}, { duration: 4.2 }, 5.4);
+
+        return () => {
+          tl.scrollTrigger?.kill();
+          tl.kill();
+        };
       }
-
-      // Hasábok: minden oszlop sorai külön maszk alól emelkednek, a hasábok
-      // nézetbe érésére húzva (scrub), enyhén késleltetve egymáshoz képest.
-      cols.forEach((col) => {
-        SplitText.create(col, {
-          type: "lines",
-          mask: "lines",
-          autoSplit: true,
-          linesClass: styles.line,
-          onSplit(self) {
-            splits.push(self);
-            const tl = gsap.timeline({
-              scrollTrigger: {
-                trigger: col,
-                start: "top 88%",
-                end: "top 50%",
-                scrub: 1,
-              },
-            });
-            tl.from(self.lines, {
-              yPercent: 110,
-              ease: "none",
-              stagger: { each: 0.12 },
-            });
-            return tl;
-          },
-        });
-      });
-
-      return () => splits.forEach((s) => s.revert());
-    });
+    );
 
     return () => mm.revert();
   }, []);
 
   return (
-    <section ref={rootRef} className={styles.partners} id="partnerek">
-      <div className={`container ${styles.inner}`}>
-        <div className={styles.headingWrap}>
-          <h2 className={styles.heading} data-heading>
-            WE DON&apos;T
-            <br />
-            TAKE ON
-            <br />
-            CLIENTS. WE
-            <br />
-            TAKE ON
-          </h2>
-          <span className={styles.script} data-script aria-hidden="true">
-            partners
-          </span>
-        </div>
+    <section ref={rootRef} className={styles.partners} id="partners">
+      <div className={styles.stage}>
+        <div className={`container ${styles.inner}`}>
+          <div className={styles.stageHead}>
+            {/* (1–3) tagadás */}
+            <h2 className={styles.lineOne} data-line-one>
+              <span className={styles.word} data-word>We</span>{" "}
+              <span className={styles.word} data-word>don&apos;t</span>{" "}
+              <span className={styles.word} data-word>take</span>{" "}
+              <span className={styles.word} data-word>on</span>{" "}
+              <span className={`${styles.word} ${styles.clients}`} data-word>
+                clients
+                <span
+                  className={styles.clientsHighlight}
+                  data-clients-highlight
+                  aria-hidden="true"
+                />
+              </span>
+            </h2>
 
-        <div className={styles.paras}>
-          <div className={styles.col} data-col>
-            <p>
-              That&apos;s the difference: a studio you keep, not a vendor you
-              replace. Built on trust, consistency, and a point of view.
-            </p>
-            <p>
-              Curious, transparent, ambitious — and a little obsessed with the
-              details most people never notice.
-            </p>
+            {/* (4) állítás */}
+            <div className={styles.lineTwo} data-line-two>
+              <h2 className={styles.lineTwoHead}>
+                <span className={styles.word} data-word2>We</span>{" "}
+                <span className={styles.word} data-word2>take</span>{" "}
+                <span className={styles.word} data-word2>on</span>
+              </h2>
+              <span className={styles.script}>
+                <span className={styles.scriptInner} data-script-inner>
+                  partners
+                </span>
+              </span>
+            </div>
           </div>
-          <div className={styles.col} data-col>
-            <p>
-              Setup, a retainer, and a real relationship behind both. We pick up
-              the phone, and we show up in person.
-            </p>
-            <p>
-              Western-European craft, Hungarian roots. Do the work right, and the
-              work sells itself.
-            </p>
+
+          {/* (5) magyarázat */}
+          <div className={styles.paras} data-paras>
+            <div className={styles.col}>
+              <p>
+                That&apos;s the difference: a studio you keep, not a vendor you
+                replace. Built on trust, consistency, and a point of view.
+              </p>
+              <p>
+                Curious, transparent, ambitious — and a little obsessed with the
+                details most people never notice.
+              </p>
+            </div>
+            <div className={styles.col}>
+              <p>
+                Setup, a retainer, and a real relationship behind both. We pick up
+                the phone, and we show up in person.
+              </p>
+              <p>
+                Western-European craft, Hungarian roots. Do the work right, and the
+                work sells itself.
+              </p>
+            </div>
           </div>
         </div>
       </div>

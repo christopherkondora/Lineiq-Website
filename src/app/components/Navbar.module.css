@@ -25,17 +25,6 @@
   --cta-hover-color: var(--color-black);
 }
 
-.logo {
-  display: inline-flex;
-  align-items: center;
-}
-
-.logoImg {
-  height: 28px;
-  width: auto;
-  display: block;
-}
-
 .toggle {
   position: relative;
   width: 44px;
@@ -67,12 +56,6 @@
 }
 
 /* ─── Header CTA ──────────────────────────────────────── */
-.right {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-}
-
 .cta {
   display: inline-flex;
   align-items: center;
@@ -89,6 +72,14 @@
   clip-path: inset(0 0 100% 0);
   display: flex;
   flex-direction: column;
+  /* Csukott állapotban semmiképp ne fogjon el kattintást az oldal fölött
+     (a clip-path vizuálisan elrejti, ez pedig a hit-testet is biztosra zárja);
+     nyitva a .overlayOpen visszakapcsolja. */
+  pointer-events: none;
+}
+
+.overlayOpen {
+  pointer-events: auto;
 }
 
 .menuInner {

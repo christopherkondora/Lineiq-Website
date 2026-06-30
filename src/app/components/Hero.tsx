@@ -31,6 +31,27 @@ const LINE_B: WaveLine = {
   ],
 };
 
+// The SVG stretches a 1440-wide viewBox across a ~390px phone (preserveAspectRatio
+// "none"), which squeezes the desktop wavelengths into many crests and reads as
+// busy. On mobile we stretch the wavelengths ~3x and soften the amplitude and
+// drift so only a gentle curve or two crosses the screen — the same calm the
+// desktop has.
+const LINE_A_MOBILE: WaveLine = {
+  baseline: 340,
+  comps: [
+    { amp: 20, k: TAU / 2900, speed: 0.18, phase: 0 },
+    { amp: 6, k: TAU / 1680, speed: -0.28, phase: 1.1 },
+  ],
+};
+
+const LINE_B_MOBILE: WaveLine = {
+  baseline: 366,
+  comps: [
+    { amp: 18, k: TAU / 3200, speed: 0.15, phase: 1.8 },
+    { amp: 5, k: TAU / 1800, speed: 0.25, phase: 0.4 },
+  ],
+};
+
 // Smooth Catmull-Rom spline through the sampled points (rendered as cubic
 // beziers) so the line flows without visible breaking points.
 function buildWavePath(line: WaveLine, t: number): string {
@@ -76,7 +97,16 @@ export default function Hero() {
     const root = rootRef.current;
     if (!root) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const lineA = isMobile ? LINE_A_MOBILE : LINE_A;
+    const lineB = isMobile ? LINE_B_MOBILE : LINE_B;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // Still pick the right (calmer) frame for mobile when motion is off.
+      lineARef.current?.setAttribute("d", buildWavePath(lineA, 0));
+      lineBRef.current?.setAttribute("d", buildWavePath(lineB, 0));
+      return;
+    }
 
     const ctx = gsap.context(() => {
       const words = root.querySelectorAll("[data-hero-word]");
@@ -139,8 +169,8 @@ export default function Hero() {
     const start = performance.now();
     const tick = (now: number) => {
       const t = (now - start) / 1000;
-      lineARef.current?.setAttribute("d", buildWavePath(LINE_A, t));
-      lineBRef.current?.setAttribute("d", buildWavePath(LINE_B, t));
+      lineARef.current?.setAttribute("d", buildWavePath(lineA, t));
+      lineBRef.current?.setAttribute("d", buildWavePath(lineB, t));
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);

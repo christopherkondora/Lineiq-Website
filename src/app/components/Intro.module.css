@@ -63,11 +63,70 @@
   font-variation-settings: "opsz" 75;
 }
 
-/* Red strike-through across "Ügynökség" — the brand crossing out the cliché. */
-.strike {
-  text-decoration-line: line-through;
-  text-decoration-color: var(--color-red);
-  text-decoration-thickness: 0.08em;
+/* Scroll-synced redaction-reveal: "Agency" (a klisé) alaphelyzetben látszik, a
+   piros sáv balról jobbra rásöpör (clip-path wipe), és rajta fehérrel a "Studio".
+   A swap inline-block, az "Agency" a normál flow-ban ül (ő adja a baseline-t és a
+   doboz-szélességet), a piros redaction abszolút ráfekszik, függőlegesen középre. */
+.swap {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+/* Közös tipográfia a két szóhoz — a korábbi .highlight nagy Fraunces receptje. */
+.swapWord {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.6em;
+  letter-spacing: var(--tracking-tight);
+  font-variation-settings: "opsz" 75;
+  white-space: nowrap;
+}
+
+.agency {
+  color: var(--color-black);
+}
+
+/* A piros marker: min-width 100% (legalább az "Agency" szélessége, hogy teljesen
+   eltakarja), de max-content, hogy a "Studio"-ra is ránőjön, ha az szélesebb. A
+   clip-path right oldala 100% (rejtve) → a JS scrub húzza 0-ra (balról jobbra). */
+.redaction {
+  position: absolute;
+  left: -0.12em;
+  top: 50%;
+  transform: translateY(-50%);
+  box-sizing: border-box;
+  /* min-width: az "Agency" teljes szélessége + kétoldali bleed (a jobb szélén az
+     "Agency" 'y'-farka különben kilógna a piros alól); max-content, hogy a
+     "Studio"-ra is ránőjön, ha valaha az lenne a szélesebb. */
+  min-width: calc(100% + 0.3em);
+  width: max-content;
+  padding: 0.06em 0.1em;
+  background: var(--color-red);
+  clip-path: inset(0% 100% 0% 0%);
+}
+
+.studio {
+  color: var(--color-white);
+}
+
+/* A "Studio" betűi a sweep UTÁN úsznak fel egyenként (2. fázis); alaphelyzetben
+   rejtve, a JS staggereli az opacityt. */
+.studioLetter {
+  display: inline-block;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* JS nélkül / csökkentett mozgásnál a feltárt végállapot a helyes üzenet: a piros
+   highlight feltárva ÉS a "Studio" betűi láthatók (az "Agency" alatta, eltakarva). */
+@media (prefers-reduced-motion: reduce) {
+  .redaction {
+    clip-path: inset(0% 0% 0% 0%);
+  }
+  .studioLetter {
+    opacity: 1;
+  }
 }
 
 .closing {
@@ -83,8 +142,73 @@
   color: var(--color-black);
 }
 
+/* Desktopon mindkettő rejtve — a "system." a .fourthLine-ban, az ecosystem
+   mondat a .lead-ben él. Mobilon kapcsolnak be (lásd a media query). */
+.systemMobile,
+.kicker {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .intro {
     padding: var(--space-2xl) 0;
+  }
+  /* A desktop-hangolt vízszintes eltolások és a nowrap szétverik a keskeny
+     viewportet. Mobilon az első három mondat középre zárt blokk, az eltolások
+     nullázva, a mondatok közt levegő. A 3. mondat egyben marad (a "system."-ot
+     a thirdLine végén jelenítjük meg), a desktop 4. sor pedig rejtve. */
+  .firstLine,
+  .secondLine,
+  .thirdLine {
+    transform: none;
+  }
+  .firstLine,
+  .secondLine {
+    margin-bottom: 0.9em;
+  }
+  .thirdLine {
+    margin-bottom: 0;
+  }
+  .fourthLine {
+    display: none;
+  }
+  .systemMobile {
+    display: inline;
+  }
+  .highlight {
+    font-size: 1.45em;
+    /* A nagyobb Fraunces szó jobb széle a szóköz ellenére a következő szóhoz
+       tapad ("justexecute") — egy hajszálnyi levegő elválasztja. */
+    margin-right: 0.12em;
+  }
+  /* A swap szavai követik a highlight mobil méretét; a térközt a swap utáni
+     valódi szóköz adja, nincs szükség extra margóra. */
+  .swapWord {
+    font-size: 1.45em;
+  }
+  .lead {
+    font-size: clamp(1.15rem, 4.9vw, 1.5rem);
+    line-height: 1.65;
+  }
+
+  /* Az ecosystem mondat külön bekezdés, balra rendezve, a záró nagybetűs sorral
+     közös bal éllel (mindkettő a konténer bal széléhez zár). */
+  .kicker {
+    display: block;
+    text-align: left;
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: clamp(1.15rem, 4.9vw, 1.5rem);
+    line-height: 1.5;
+    letter-spacing: -0.01em;
+    color: var(--color-black);
+    margin-top: 1.4em;
+    margin-bottom: 0.3em;
+  }
+  .closing {
+    white-space: normal;
+    text-align: left;
+    margin-top: 0;
+    font-size: clamp(1.6rem, 7.5vw, 2.6rem);
   }
 }

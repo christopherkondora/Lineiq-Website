@@ -1,8 +1,8 @@
 // Single source of truth for the service taxonomy. Drives the homepage index
-// (Process) and each /mit-nyujtunk/[slug] category page.
+// (Process) and each /services/[slug] category page.
 // Content mirrors vault/projects/lineiqgroup.com/szolgaltatas_taxonomia.md.
 //
-// Intro strings carry *kiemelés* markers: the category page renders the marked
+// Intro strings carry *highlight* markers: the category page renders the marked
 // words as oversized Fraunces inline (the Intro/Manifesto mixed-typography
 // idiom). Everywhere plain text is needed, run them through plainIntro().
 
@@ -22,82 +22,82 @@ export interface ServiceCategory {
 
 export const services: ServiceCategory[] = [
   {
-    slug: "brand-epites",
-    title: "Brand építés",
+    slug: "brand-building",
+    title: "Brand building",
     essence: "soul.",
     intro:
-      "A márka *alapjai* a stratégiától a vizuális rendszerig, egy kézben, hogy *felismerhető* és elkerülhetetlen legyen.",
-    teaser: ["Pozicionálás és stratégia", "Brand narratíva", "Logó és arculat"],
+      "The *foundations* of a brand, from strategy to the visual system, in one hand, so it becomes *recognizable* and inevitable.",
+    teaser: ["Positioning and strategy", "Brand narrative", "Logo and identity"],
     subServices: [
       {
-        title: "Pozicionálás és stratégia",
-        desc: "Hol állsz a piacon, és milyen egy mondatban megfogalmazható okból válasszanak téged.",
+        title: "Positioning and strategy",
+        desc: "Where you stand in the market, and the one-sentence reason to choose you.",
       },
       {
-        title: "Célcsoport és piackutatás",
-        desc: "Kinek beszélsz, mit akar hallani, és hol éred el.",
+        title: "Audience and market research",
+        desc: "Who you're talking to, what they want to hear, and where to reach them.",
       },
       {
-        title: "Brand narratíva és hangvétel",
-        desc: "A történet és a hang, amin a márka mindenhol megszólal.",
+        title: "Brand narrative and tone of voice",
+        desc: "The story and the voice the brand speaks with everywhere.",
       },
       {
         title: "Naming",
-        desc: "Cég-, termék- és kampánynevek, amik megragadnak.",
+        desc: "Company, product and campaign names that stick.",
       },
       {
-        title: "Logó és arculat",
-        desc: "Az elsődleges jel és a köré épülő teljes rendszer.",
+        title: "Logo and identity",
+        desc: "The primary mark and the entire system built around it.",
       },
       {
-        title: "Vizuális nyelv és design rendszer",
-        desc: "Színek, tipográfia, grid és komponensek egységben, arculati kézikönyvvel.",
+        title: "Visual language and design system",
+        desc: "Colors, typography, grid and components as one, with a brand guidelines book.",
       },
       {
-        title: "Csomagolásdesign",
-        desc: "A termék, ami a polcon is elad.",
+        title: "Packaging design",
+        desc: "The product that sells on the shelf too.",
       },
       {
-        title: "Újrabrandelés",
-        desc: "Meglévő márka újrapozicionálása és felfrissítése.",
+        title: "Rebranding",
+        desc: "Repositioning and refreshing an existing brand.",
       },
     ],
   },
   {
-    slug: "web-fejlesztes",
-    title: "Web fejlesztés",
+    slug: "web-development",
+    title: "Web development",
     essence: "craft.",
     intro:
-      "Next.js-re épített, animált, *awwwards-szintű* oldalak, amik villámgyorsak és *élnek* a kéz alatt.",
-    teaser: ["Egyedi weboldal", "Webdesign (UI/UX)", "Awwwards animáció"],
+      "Animated, *awwwards-grade* sites built on Next.js, lightning fast and *alive* under your hands.",
+    teaser: ["Custom website", "Web design (UI/UX)", "Awwwards animation"],
     subServices: [
       {
-        title: "Egyedi weboldal fejlesztés",
-        desc: "Sablonmentes, a márkádra szabott oldal.",
+        title: "Custom website development",
+        desc: "Template-free, tailored to your brand.",
       },
       {
-        title: "Webdesign (UI/UX)",
-        desc: "A felület megtervezése, ami érthető és konvertál.",
+        title: "Web design (UI/UX)",
+        desc: "An interface that's clear and converts.",
       },
       {
-        title: "Awwwards-szintű animáció",
-        desc: "GSAP, Lenis, mozgás, ami megkülönböztet.",
+        title: "Awwwards-grade animation",
+        desc: "GSAP, Lenis, motion that sets you apart.",
       },
       {
-        title: "Landing page és kampányoldal",
-        desc: "Egy cél, egy üzenet, maximális konverzió.",
+        title: "Landing page and campaign site",
+        desc: "One goal, one message, maximum conversion.",
       },
       {
-        title: "CMS integráció",
-        desc: "Tartalom, amit magad kezelsz, fejlesztő nélkül.",
+        title: "CMS integration",
+        desc: "Content you manage yourself, without a developer.",
       },
       {
-        title: "Teljesítmény és technikai SEO",
-        desc: "Gyors betöltés, Core Web Vitals, kereshető szerkezet.",
+        title: "Performance and technical SEO",
+        desc: "Fast loading, Core Web Vitals, a searchable structure.",
       },
       {
-        title: "Karbantartás és support",
-        desc: "Az oldal él, frissül és biztonságban van.",
+        title: "Maintenance and support",
+        desc: "The site stays live, updated and secure.",
       },
     ],
   },
@@ -106,96 +106,96 @@ export const services: ServiceCategory[] = [
     title: "eCommerce",
     essence: "sell.",
     intro:
-      "Webshopok, amik nem csak jól néznek ki, hanem *konvertálnak*, a kosártól a *visszatérő* vásárlóig.",
-    teaser: ["Webshop fejlesztés", "Webshop UX design", "Shopify setup"],
+      "Online stores that don't just look good but *convert*, from the cart to the *returning* customer.",
+    teaser: ["Online store development", "Store UX design", "Shopify setup"],
     subServices: [
       {
-        title: "Webshop fejlesztés",
-        desc: "Egyedi vagy platformra épített bolt, ami elad.",
+        title: "Online store development",
+        desc: "A custom or platform-based store that sells.",
       },
       {
-        title: "Webshop UX és termékoldal design",
-        desc: "A vásárlási út és a termékoldalak, amik a kosárig vezetnek.",
+        title: "Store UX and product page design",
+        desc: "The buying journey and product pages that lead to the cart.",
       },
       {
-        title: "Shopify és platform setup",
-        desc: "Gyors indulás bevált alapokon.",
+        title: "Shopify and platform setup",
+        desc: "A fast launch on proven foundations.",
       },
       {
-        title: "Fizetés és szállítás integráció",
-        desc: "Magyar és nemzetközi megoldások bekötve.",
+        title: "Payment and shipping integration",
+        desc: "Hungarian and international solutions wired in.",
       },
       {
-        title: "Számlázási integráció",
-        desc: "Számlázz.hu, Billingo és más rendszerek automata bekötése.",
+        title: "Invoicing integration",
+        desc: "Automatic hookup of Számlázz.hu, Billingo and other systems.",
       },
       {
-        title: "Konverzióoptimalizálás (CRO)",
-        desc: "Adatból fakadó finomítás, folyamatosan.",
+        title: "Conversion optimization (CRO)",
+        desc: "Data-driven refinement, continuously.",
       },
     ],
   },
   {
-    slug: "szoftveres-megoldasok",
-    title: "Szoftveres megoldások",
+    slug: "software-solutions",
+    title: "Software solutions",
     essence: "ship.",
     intro:
-      "Egyedi szoftver, SaaS és belső rendszerek ugyanabból a *DNS-ből*, amiből a saját *Klient* platformunkat építettük.",
-    teaser: ["Webalkalmazás", "App UI/UX design", "MVP fejlesztés"],
+      "Custom software, SaaS and internal systems from the same *DNA* we built our own *Klient* platform from.",
+    teaser: ["Web application", "App UI/UX design", "MVP development"],
     subServices: [
       {
-        title: "Webalkalmazás fejlesztés",
-        desc: "SaaS, belső eszköz vagy ügyfélportál, amire szükséged van.",
+        title: "Web application development",
+        desc: "The SaaS, internal tool or client portal you need.",
       },
       {
         title: "App UI/UX design",
-        desc: "A termék felülete, ami magától érthető.",
+        desc: "A product interface that's self-explanatory.",
       },
       {
-        title: "MVP fejlesztés",
-        desc: "A működő első verzió, gyorsan piacra.",
+        title: "MVP development",
+        desc: "A working first version, fast to market.",
       },
       {
-        title: "API és integráció",
-        desc: "A rendszereid, amik végre beszélnek egymással.",
+        title: "API and integration",
+        desc: "Your systems, finally talking to each other.",
       },
       {
-        title: "Karbantartás és továbbfejlesztés",
-        desc: "A termék nem áll meg a launchnél.",
+        title: "Maintenance and further development",
+        desc: "The product doesn't stop at launch.",
       },
     ],
   },
   {
-    slug: "telefonos-alkalmazasok",
-    title: "Telefonos alkalmazások",
+    slug: "mobile-apps",
+    title: "Mobile apps",
     essence: "touch.",
     intro:
-      "Mobilappok iOS-re és Androidra *egy kódbázisból*, az ötlettől a *store megjelenésig* és azon túl.",
-    teaser: ["Mobilapp (iOS és Android)", "Mobil UI/UX design", "Store megjelenés"],
+      "Mobile apps for iOS and Android from *one codebase*, from idea to *store launch* and beyond.",
+    teaser: ["Mobile app (iOS and Android)", "Mobile UI/UX design", "Store launch"],
     subServices: [
       {
-        title: "Mobilalkalmazás fejlesztés (iOS és Android)",
-        desc: "Egy kódbázis, két platform.",
+        title: "Mobile app development (iOS and Android)",
+        desc: "One codebase, two platforms.",
       },
       {
-        title: "Mobil UI/UX design",
-        desc: "Hüvelykujjra tervezett felület, ami magától érthető.",
+        title: "Mobile UI/UX design",
+        desc: "A thumb-first interface that's self-explanatory.",
       },
       {
-        title: "MVP fejlesztés",
-        desc: "A működő első verzió, gyorsan a store-ban.",
+        title: "MVP development",
+        desc: "A working first version, fast in the store.",
       },
       {
-        title: "Store megjelenés (App Store, Google Play)",
-        desc: "Megfelelés, beküldés és launch mindkét áruházban.",
+        title: "Store launch (App Store, Google Play)",
+        desc: "Compliance, submission and launch in both stores.",
       },
       {
-        title: "Push és értesítési stratégia",
-        desc: "Értesítések, amik visszahozzák a felhasználót, nem elnémíttatják magukat.",
+        title: "Push and notification strategy",
+        desc: "Notifications that bring users back, not ones they mute.",
       },
       {
-        title: "Karbantartás és továbbfejlesztés",
-        desc: "Az app él, frissül és követi az új OS-verziókat.",
+        title: "Maintenance and further development",
+        desc: "The app stays live, updated and current with new OS versions.",
       },
     ],
   },
@@ -204,28 +204,28 @@ export const services: ServiceCategory[] = [
     title: "Marketing",
     essence: "grow.",
     intro:
-      "A márka él, hat és *növekszik*, fizetett és organikus csatornákon, *mérhető* célokkal.",
-    teaser: ["Fizetett hirdetések", "Organikus közösségi média", "SEO"],
+      "The brand lives, resonates and *grows*, across paid and organic channels, with *measurable* goals.",
+    teaser: ["Paid advertising", "Organic social media", "SEO"],
     subServices: [
       {
-        title: "Fizetett hirdetések (Meta, Google)",
-        desc: "A hirdetések, amik bevételt hoznak, nem csak kattintást.",
+        title: "Paid advertising (Meta, Google)",
+        desc: "Ads that bring revenue, not just clicks.",
       },
       {
-        title: "Organikus közösségi média",
-        desc: "Tartalom és jelenlét, ami közösséget épít.",
+        title: "Organic social media",
+        desc: "Content and presence that builds a community.",
       },
       {
-        title: "SEO és tartalommarketing",
-        desc: "Folyamatos kereshetőség és tartalom, ami behoz.",
+        title: "SEO and content marketing",
+        desc: "Ongoing discoverability and content that brings people in.",
       },
       {
         title: "Email marketing",
-        desc: "A lista, ami a tiéd marad, és vásárlóvá tesz.",
+        desc: "The list that stays yours, and turns into buyers.",
       },
       {
-        title: "Kampánystratégia",
-        desc: "Egységes terv a csatornák fölött, mérhető célokkal.",
+        title: "Campaign strategy",
+        desc: "A unified plan across channels, with measurable goals.",
       },
     ],
   },

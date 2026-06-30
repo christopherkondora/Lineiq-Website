@@ -80,8 +80,8 @@ export default function CategoryArticle({ index }: { index: number }) {
           </div>
 
           <div className={`reveal ${styles.heroMeta}`} data-hero>
-            <Link href="/#szolgaltatasok" className={styles.back}>
-              Minden szolgáltatás
+            <Link href="/#services" className={styles.back}>
+              All services
             </Link>
           </div>
 
@@ -108,7 +108,7 @@ export default function CategoryArticle({ index }: { index: number }) {
       <section className={`section ${styles.chapters}`}>
         <div className={`container ${styles.chaptersGrid}`}>
           <aside className={styles.rail}>
-            <p className={styles.railLabel}>Amit tartalmaz</p>
+            <p className={styles.railLabel}>What it includes</p>
             <p className={styles.railIntro}>{plainIntro(service.intro)}</p>
           </aside>
 
@@ -132,11 +132,11 @@ export default function CategoryArticle({ index }: { index: number }) {
       <section className={`section ${styles.nextSection}`}>
         <div className="container">
           <p className={styles.nextLabel} data-reveal>
-            <span className={styles.diamond}>◆</span> Következő
+            <span className={styles.diamond}>◆</span> Next
           </p>
           <div data-reveal>
             <Link
-              href={`/mit-nyujtunk/${next.slug}`}
+              href={`/services/${next.slug}`}
               className={styles.nextLink}
             >
               <span className={styles.nextTitle}>{next.title}</span>
@@ -146,11 +146,11 @@ export default function CategoryArticle({ index }: { index: number }) {
             </Link>
           </div>
           <p className={styles.restRow} data-reveal>
-            Vagy:{" "}
+            Or:{" "}
             {rest.map((o, i) => (
               <span key={o.slug}>
                 <Link
-                  href={`/mit-nyujtunk/${o.slug}`}
+                  href={`/services/${o.slug}`}
                   className={styles.restLink}
                 >
                   {o.title}
@@ -166,8 +166,8 @@ export default function CategoryArticle({ index }: { index: number }) {
       <section className={`section section--dark ${styles.ctaSection}`}>
         <div className={`container ${styles.ctaInner}`}>
           <div data-reveal>
-            <SplashLink href="/kapcsolat" className={styles.ctaLink}>
-              <CtaSwap defaultLabel="Kezdjük el." hoverLabel="Beszéljünk!" />
+            <SplashLink href="/contact" className={styles.ctaLink}>
+              <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's talk!" />
             </SplashLink>
           </div>
         </div>

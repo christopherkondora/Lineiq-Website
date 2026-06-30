@@ -8,9 +8,18 @@ export default function Footer() {
   return (
     <footer className={`section--dark ${styles.footer}`}>
       <div className="container">
+        {/* Brand anchor — gives the footer a clear top before the link columns. */}
+        <div className={styles.brand}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-white.svg" alt="LineiQ" className={styles.logo} />
+          <p className={styles.tagline}>
+            Forget being ordinary<span className={styles.dot}>.</span>
+          </p>
+        </div>
+
         <div className={styles.row}>
           <div className={styles.col}>
-            <p className="text-label">Stúdió</p>
+            <p className={styles.label}>Studio</p>
             <p className={styles.text}>
               LineiQ Kft.
               <br />
@@ -18,35 +27,35 @@ export default function Footer() {
             </p>
           </div>
           <div className={styles.col}>
-            <p className="text-label">Oldaltérkép</p>
+            <p className={styles.label}>Sitemap</p>
             <ul className={styles.list}>
-              <li><Link href="/munkaink">Munkáink</Link></li>
-              <li><Link href="/#szolgaltatasok">Mit nyújtunk?</Link></li>
-              <li><Link href="/rolunk">Rólunk</Link></li>
-              <li><Link href="/kapcsolat">Kapcsolat</Link></li>
+              <li><Link href="/">Home</Link></li>
+              <li><Link href="/#services">Services</Link></li>
+              <li><Link href="/about">About</Link></li>
+              <li><Link href="/contact">Contact</Link></li>
             </ul>
           </div>
           <div className={styles.col}>
-            <p className="text-label">Közösség</p>
+            <p className={styles.label}>Connect</p>
+            {/* Channels without a live URL render as plain text — no dead links. */}
             <ul className={styles.list}>
-              <li><a href="#">Instagram</a></li>
-              <li><a href="#">LinkedIn</a></li>
-              <li><a href="#">Are.na</a></li>
+              <li><span className={styles.soon}>Instagram</span></li>
+              <li><span className={styles.soon}>LinkedIn</span></li>
+              <li><span className={styles.soon}>Are.na</span></li>
             </ul>
           </div>
           <div className={styles.col}>
-            <p className="text-label">Ökoszisztéma</p>
+            <p className={styles.label}>Legal</p>
             <ul className={styles.list}>
-              <li><a href="#">Klient — SaaS</a></li>
-              <li><a href="#">Miért? — Podcast</a></li>
-              <li><a href="#">Kova — Tanfolyam</a></li>
+              <li><Link href="/aszf">ÁSZF</Link></li>
+              <li><Link href="/adatkezelesi-tajekoztato">Adatkezelési tájékoztató</Link></li>
             </ul>
           </div>
         </div>
 
         <div className={styles.legal}>
-          <span>© {year} LineiQ. Minden jog fenntartva.</span>
-          <span>Felejtsd el az átlagost.</span>
+          <span>© {year} LineiQ. All rights reserved.</span>
+          <span>Brand. Code. Signal.</span>
         </div>
       </div>
     </footer>

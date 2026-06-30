@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   try {
     raw = await req.json();
   } catch {
-    return NextResponse.json({ error: "Érvénytelen kérés." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
   const body = (raw ?? {}) as Partial<IntakePayload>;
@@ -37,27 +37,27 @@ export async function POST(req: Request) {
     : [];
 
   if (!company) {
-    return NextResponse.json({ error: "A cégnév kötelező." }, { status: 400 });
+    return NextResponse.json({ error: "Company name is required." }, { status: 400 });
   }
   if (services.length === 0) {
     return NextResponse.json(
-      { error: "Legalább egy szolgáltatás kiválasztása kötelező." },
+      { error: "At least one service must be selected." },
       { status: 400 }
     );
   }
   if (!name) {
-    return NextResponse.json({ error: "A név kötelező." }, { status: 400 });
+    return NextResponse.json({ error: "Name is required." }, { status: 400 });
   }
   if (!EMAIL_RE.test(email)) {
     return NextResponse.json(
-      { error: "Érvényes email cím szükséges." },
+      { error: "A valid email address is required." },
       { status: 400 }
     );
   }
 
   if (!process.env.RESEND_API_KEY) {
     return NextResponse.json(
-      { error: "Az email szolgáltatás nincs konfigurálva." },
+      { error: "The email service is not configured." },
       { status: 500 }
     );
   }
@@ -67,12 +67,12 @@ export async function POST(req: Request) {
     from: process.env.CONTACT_FROM ?? "LineiQ Intake <onboarding@resend.dev>",
     to: [process.env.CONTACT_TO ?? "hello@lineiq.hu"],
     replyTo: email,
-    subject: `Új projekt intake — ${company}`,
+    subject: `New project intake — ${company}`,
     text: [
-      `Cégnév: ${company}`,
-      `Szolgáltatások: ${services.length ? services.join(", ") : "—"}`,
-      `Keret: ${budget || "—"}`,
-      `Név: ${name}`,
+      `Company: ${company}`,
+      `Services: ${services.length ? services.join(", ") : "—"}`,
+      `Budget: ${budget || "—"}`,
+      `Name: ${name}`,
       `Email: ${email}`,
     ].join("\n"),
   });
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
   if (error) {
     console.error("Intake email send failed:", error.message);
     return NextResponse.json(
-      { error: "A beküldés nem sikerült, próbáld újra." },
+      { error: "Submission failed, please try again." },
       { status: 502 }
     );
   }

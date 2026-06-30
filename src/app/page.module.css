@@ -1,25 +1,37 @@
-/* Stacking-cards hand-off: a szolgáltatás-szekció (WhatWeDo) parkol a viewport
-   aljára igazítva, miközben a Manifesto átlátszatlan panelje fölé csúszik.
-   A .stack wrapper HATÁROLJA a sticky tartományt (a WhatWeDo csak ezen belül
-   parkol, utána kiold), különben a sticky az egész <main>-re ragadna és a
-   Manifesto után újra előbukkanna, eltakarva a SequenceSectiont. */
-.stack {
-  position: relative;
-}
-
-/* A wrapper a saját rendert magasságát --stack-sticky-h-ban kapja meg (WhatWeDo
-   ResizeObserver-e állítja), így magas szekció esetén az alsó éle simul a
-   viewport aljához, mielőtt a Manifesto rákúszna. */
-.stackSticky {
-  position: sticky;
-  top: calc(100vh - var(--stack-sticky-h, 100vh));
-  z-index: 1;
-}
-
-/* A Manifesto a parkoló szekció FÖLÉ kerül: magasabb stacking + saját
-   átlátszatlan sötét háttér, így felfelé gördülve eltakarja az alatta
-   parkoló szolgáltatás-listát. */
+/* Stacking-cards hand-off: a Manifesto sötét, átlátszatlan panele fölécsúszik a
+   Partners sequence kitartott végállapotára. A negatív margó behúzza a Manifestót
+   a Partners utolsó frame-jére, a magas z-index + saját átlátszatlan háttér miatt
+   eltakarja azt. A Partners színpada épp ekkor tart ki (a sequence tartás-farka),
+   így nem villan be üres rész. */
 .rise {
   position: relative;
   z-index: 3;
+}
+
+/* Az átfedés csak akkor él, ha a Partners sequence is fut (engedélyezett mozgás) —
+   desktopon és telefonon egyaránt. Reduced-motion mellett a Partners statikus, ott
+   nincs negatív margó, a Manifesto egyszerűen alá folyik.
+
+   A margó pontosan -100vh: a Partners sticky színpada a wrapper aljáig (≈ release)
+   parkol, a Manifesto teljes letakarása egy teljes viewportnyi (100vh) úthossz. Ha
+   a Manifesto teteje a release pillanatában ér a viewport tetejére, akkor végig a
+   PARKOLÓ színpadra csúszik rá (nem tolja fel) — ehhez kell a -100vh. Kevesebbnél
+   (pl. -35vh) a Manifesto csak részben fedi le a parkoló színpadot, a maradékot
+   normál görgetésként tolja fel. */
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    margin-top: -100vh;
+  }
+}
+
+/* A statikus footer csak mobilon jelenik meg (a SequenceSection overlay footere
+   ott rejtve); desktopon az overlay footer az élő, ezt elrejtjük. */
+.mobileFooter {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobileFooter {
+    display: block;
+  }
 }

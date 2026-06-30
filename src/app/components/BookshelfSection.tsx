@@ -41,7 +41,7 @@ const BOOKS: BookData[] = [
     quote:
       "Pain plus reflection equals progress. The most important thing is that you develop your own principles and ideally write them down.",
     commentary:
-      "A LineiQ nem feltételezésekre, hanem elvekre alapul. Minden belső döntés, ügyféltől az árazásig, egy rendszer része. Dalio hozta el azt a gondolkodást, hogy az elveket le kell írni és következetesen alkalmazni.",
+      "LineiQ is built on principles, not assumptions. Every internal decision, from clients to pricing, is part of a system. Dalio brought us the idea that principles must be written down and applied consistently.",
     commentaryAuthor: "Kondora Kristóf",
     coverImage: "/books/elvek-front.webp",
     spineImage: "/books/elvek-side.webp",
@@ -58,7 +58,7 @@ const BOOKS: BookData[] = [
     quote:
       "You do not rise to the level of your goals. You fall to the level of your systems.",
     commentary:
-      "Ez a mondat a LineiQ rendszerszemléletének magja. Nem a cél számít, hanem a napi rutin, a folyamat, az automatizmusok. Ezt építjük az ügyfeleinknek is: rendszereket, nem egyszeri kampányokat.",
+      "This sentence is the core of LineiQ's systems thinking. It's not the goal that matters but the daily routine, the process, the automatisms. That's what we build for our clients too: systems, not one-off campaigns.",
     commentaryAuthor: "Sütő Áron",
     coverImage: "/books/atomic-front.webp",
     spineImage: "/books/atomic-side.webp",
@@ -75,7 +75,7 @@ const BOOKS: BookData[] = [
     quote:
       "Competition is for losers. Every moment in business happens only once. The next Bill Gates will not build an operating system.",
     commentary:
-      "A LineiQ nem 'még egy ügynökség'. Awwwards-szintű minőség a magyar piacon — ez a nulláról egyből. Thiel megtanította, hogy a cél nem a verseny megnyerése, hanem egy új kategória létrehozása.",
+      "LineiQ isn't 'just another agency'. Awwwards-grade quality on the Hungarian market — that's zero to one. Thiel taught us that the goal isn't to win the competition but to create a new category.",
     commentaryAuthor: "Kondora Kristóf",
     coverImage: "/books/zero-front.webp",
     spineImage: "/books/zero-side.webp",
@@ -92,7 +92,7 @@ const BOOKS: BookData[] = [
     quote:
       "Hard things are hard because there are no easy answers or recipes. They are hard because your emotions are at odds with your logic.",
     commentary:
-      "Cégépítés közben nincsenek jó válaszok, csak kevésbé rossz döntések. Horowitz őszintesége a kudarc pillanatairól adta a bátorságot, hogy a nehéz beszélgetéseket ne kerüljük ki.",
+      "While building a company there are no good answers, only less bad decisions. Horowitz's honesty about the moments of failure gave us the courage not to avoid the hard conversations.",
     commentaryAuthor: "Sütő Áron",
     coverImage: "/books/hard-front.webp",
     spineImage: "/books/hard-side.webp",
@@ -109,7 +109,7 @@ const BOOKS: BookData[] = [
     quote:
       "The ability to perform deep work is becoming increasingly rare at exactly the same time it is becoming increasingly valuable in our economy.",
     commentary:
-      "A LineiQ-nál nincs Slack-áradat és meeting-maraton. A mélymunka nem luxus, hanem alapkövetelmény. Minden kreatív és fejlesztési sprint ennek a gondolatnak a közvetlen leszármazottja.",
+      "At LineiQ there's no Slack flood or meeting marathon. Deep work isn't a luxury but a baseline requirement. Every creative and development sprint is a direct descendant of this idea.",
     commentaryAuthor: "Kondora Kristóf",
     coverImage: "/books/deep-front.webp",
     spineImage: "/books/deep-side.webp",
@@ -119,11 +119,15 @@ const BOOKS: BookData[] = [
 export default function BookshelfSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const shelfRef = useRef<HTMLDivElement>(null);
   const wrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const entranceRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const shadowRefs = useRef<(HTMLDivElement | null)[]>([]);
   const book3dRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const flatCoverRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const shelfLineRef = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
   const bgTitleRef = useRef<HTMLDivElement>(null);
+  const bgTitleInnerRef = useRef<HTMLSpanElement>(null);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   const detailBgAuthorRef = useRef<HTMLSpanElement>(null);
@@ -143,48 +147,106 @@ export default function BookshelfSection() {
   const [activeBook, setActiveBook] = useState<number | null>(null);
   const [displayBook, setDisplayBook] = useState<number | null>(null);
   const isAnimating = useRef(false);
+  const reducedRef = useRef(false);
+  const openIndexRef = useRef<number | null>(null);
+
+  // Mely lapok renderelődnek: nyugalomban csak a gerinc, interakció közben
+  // mind, kinyitva csak a borító. A kamerára merőleges (élben álló) lapok
+  // raszterizálása hajszálvékony vonal-artifaktokat hagy animáció közben —
+  // ezért ami az adott állapotban nem látszhat, az ténylegesen rejtve van.
+  const setFaceMode = useCallback(
+    (index: number, mode: "spine" | "all" | "cover") => {
+      const book3d = book3dRefs.current[index];
+      if (!book3d) return;
+      book3d.querySelectorAll<HTMLElement>("[data-face]").forEach((f) => {
+        const visible =
+          mode === "all" ||
+          f.dataset.face === (mode === "spine" ? "spine" : "cover");
+        f.style.visibility = visible ? "visible" : "hidden";
+      });
+    },
+    []
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     gsap.registerPlugin(ScrollTrigger);
 
-    book3dRefs.current.forEach((el) => {
+    reducedRef.current = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    // A polcon a könyvek élükkel állnak (gerinc látszik) — ez a nyugalmi
+    // elrendezés, nem mozgás, így reduced-motion mellett is megmarad.
+    book3dRefs.current.forEach((el, i) => {
       if (el) gsap.set(el, { rotateY: 90, xPercent: -50 });
+      setFaceMode(i, "spine");
     });
 
     const section = sectionRef.current;
     if (!section) return;
 
+    // Reduced motion: a polc és a háttércím alapból látható (CSS opacity 1),
+    // így a scroll-belépő fade/slide kihagyható.
+    if (reducedRef.current) return;
+
     const ctx = gsap.context(() => {
-      if (shelfRef.current) {
-        gsap.fromTo(
-          shelfRef.current,
-          { opacity: 0, y: 80 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.2,
-            ease: "power3.out",
-            scrollTrigger: { trigger: section, start: "top 90%" },
-          }
+      // Scroll-szinkronizált belépő: a polcvonal kirajzolódik, majd a könyvek
+      // egyenként emelkednek a helyükre, a scroll pozíciójához kötve (scrub).
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 85%",
+          end: "top 10%",
+          scrub: 1,
+        },
+      });
+
+      if (shelfLineRef.current) {
+        tl.fromTo(
+          shelfLineRef.current,
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.8, ease: "power1.inOut" },
+          0
         );
       }
-      if (bgTitleRef.current) {
-        gsap.fromTo(
-          bgTitleRef.current,
-          { opacity: 0 },
-          {
-            opacity: 1,
-            duration: 1,
-            ease: "power2.out",
-            scrollTrigger: { trigger: section, start: "top 90%" },
-          }
+
+      if (bgTitleInnerRef.current) {
+        tl.fromTo(
+          bgTitleInnerRef.current,
+          { opacity: 0, yPercent: 25 },
+          { opacity: 1, yPercent: 0, duration: 1.1, ease: "power1.out" },
+          0.1
         );
       }
+
+      entranceRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const at = 0.25 + i * 0.14;
+        tl.fromTo(
+          el,
+          {
+            yPercent: 112,
+            rotation: i % 2 === 0 ? -5 : 5,
+            transformOrigin: "50% 100%",
+          },
+          { yPercent: 0, rotation: 0, duration: 0.9, ease: "power2.out" },
+          at
+        );
+        const shadow = shadowRefs.current[i];
+        if (shadow) {
+          tl.fromTo(
+            shadow,
+            { opacity: 0 },
+            { opacity: 0.6, duration: 0.3, ease: "none" },
+            at + 0.55
+          );
+        }
+      });
     }, section);
 
     return () => ctx.revert();
-  }, []);
+  }, [setFaceMode]);
 
   const animateTextIn = useCallback(() => {
     if (textTlRef.current) textTlRef.current.kill();
@@ -265,6 +327,8 @@ export default function BookshelfSection() {
       isAnimating.current = true;
       setActiveBook(index);
       setDisplayBook(index);
+      openIndexRef.current = index;
+      setFaceMode(index, "all");
 
       if (tlRef.current) tlRef.current.kill();
       if (floatTweenRef.current) {
@@ -308,26 +372,38 @@ export default function BookshelfSection() {
         tl.to(bgTitle, { opacity: 0, duration: 0.5, ease: "power2.in" }, 0);
       }
 
+      // a kiemelt könyv kontakt-árnyéka elhalványul, ahogy a könyv elemelkedik
+      const shadow = shadowRefs.current[index];
+      if (shadow) {
+        tl.to(shadow, { opacity: 0, duration: 0.35, ease: "power2.out", overwrite: "auto" }, 0);
+      }
+
+      // autoAlpha: az elhalványult könyv visibility: hidden-t is kap, így a
+      // szétszórt könyvek teljesen kikerülnek a kompozitálásból
       wrapperRefs.current.forEach((el, i) => {
         if (i === index || !el) return;
         const dir = i < index ? -1 : 1;
         const dist = Math.abs(i - index) * 150 + 300;
         tl.to(
           el,
-          { x: dir * dist, opacity: 0, duration: 0.7, ease: "power3.out" },
+          {
+            x: dir * dist,
+            rotation: dir * 4,
+            autoAlpha: 0,
+            duration: 0.7,
+            ease: "power3.out",
+          },
           0
         );
       });
 
-      tl.to(
-        wrapper,
-        { x: centerX, y: centerY, duration: 0.8, ease: "power3.out" },
-        0
-      );
+      // külön ease az x és y tengelyen — enyhe ív a középre repülésben
+      tl.to(wrapper, { x: centerX, duration: 0.8, ease: "power3.out" }, 0);
+      tl.to(wrapper, { y: centerY, duration: 0.8, ease: "power2.inOut" }, 0);
 
       tl.to(
         book3d,
-        { rotateY: 25, duration: 0.9, ease: "power3.out" },
+        { z: 0, rotateY: 25, duration: 0.9, ease: "power3.out", overwrite: "auto" },
         0.25
       );
       tl.to(
@@ -336,9 +412,16 @@ export default function BookshelfSection() {
         0.25
       );
 
+      // A z: -thickness/2 a borító síkját pontosan z=0-ra hozza, így a
+      // megálláskor a flat-váltás pixelre azonos képet ad (nincs ugrás).
       tl.to(
         book3d,
-        { rotateY: 0, duration: 0.5, ease: "power3.inOut" },
+        {
+          rotateY: 0,
+          z: -BOOKS[index].thickness / 2,
+          duration: 0.5,
+          ease: "power3.inOut",
+        },
         0.9
       );
 
@@ -346,18 +429,34 @@ export default function BookshelfSection() {
       tl.set(detail, { opacity: 1 }, 1.0);
       tl.add(() => animateTextIn(), 1.0);
 
-      // start book floating after settle
+      // Megálláskor a 3D dobozt egy sima 2D borító-réteg váltja le, pixelre
+      // azonos pozícióban (a borító síkja épp z=0-n áll) — a lebegés alatt
+      // így nincs 3D raszterizálás, a kép éles marad.
       tl.add(() => {
-        floatTweenRef.current = gsap.to(wrapper, {
-          y: "+=10",
-          duration: 2.8,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
+        const flat = flatCoverRefs.current[index];
+        if (flat) {
+          gsap.set(book3d, { display: "none" });
+          gsap.set(flat, { display: "flex" });
+        }
       }, 1.4);
+
+      // start book floating after settle — a végtelen lebegés reduced-motion
+      // mellett kimarad (folyamatos automatikus mozgás).
+      if (!reducedRef.current) {
+        tl.add(() => {
+          // csak y tengelyen lebeg — folyamatos rotation a preserve-3d
+          // rétegen GPU tile-repedéseket (átlátszó csíkokat) okoz
+          floatTweenRef.current = gsap.to(wrapper, {
+            y: "+=10",
+            duration: 2.8,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+          });
+        }, 1.4);
+      }
     },
-    [animateTextIn]
+    [animateTextIn, setFaceMode]
   );
 
   const closeBook = useCallback(() => {
@@ -371,10 +470,32 @@ export default function BookshelfSection() {
       floatTweenRef.current = null;
     }
 
+    // A 2D borító-réteg visszaadja a helyét a 3D doboznak a visszaforgatáshoz
+    // — a borító síkja z=0-n áll, így a csere itt is pixelre azonos.
+    const openIdx = openIndexRef.current;
+    const openBook3d = openIdx !== null ? book3dRefs.current[openIdx] : null;
+    const openFlat = openIdx !== null ? flatCoverRefs.current[openIdx] : null;
+    const openWrapper = openIdx !== null ? wrapperRefs.current[openIdx] : null;
+    if (openIdx !== null) setFaceMode(openIdx, "all");
+    if (openBook3d) gsap.set(openBook3d, { clearProps: "display" });
+    if (openFlat) gsap.set(openFlat, { clearProps: "display" });
+
     const detail = detailRef.current;
     const bgTitle = bgTitleRef.current;
     const tl = gsap.timeline({
       onComplete: () => {
+        wrapperRefs.current.forEach((el, i) => {
+          if (!el) return;
+          // minden maradék inline transform/opacity törlése — a nyugalmi
+          // állapot így bitre azonos az első renderrel, nem maradhat
+          // "animálódó" render-állapot a rétegeken
+          gsap.set(el, { clearProps: "transform,opacity,visibility" });
+          // a hover által megemelt z-index visszaáll az eredeti sorrendre
+          gsap.set(el, { zIndex: BOOKS.length - i });
+        });
+        // minden könyv újra gerinc-nézetben áll — csak a gerinc renderelődik
+        BOOKS.forEach((_, i) => setFaceMode(i, "spine"));
+        openIndexRef.current = null;
         setActiveBook(null);
         setDisplayBook(null);
         isAnimating.current = false;
@@ -391,31 +512,40 @@ export default function BookshelfSection() {
     if (bgAuthor) tl.to(bgAuthor, { opacity: 0, duration: 0.3, ease: "power3.in" }, 0);
     if (lineSvg) tl.to(lineSvg, { opacity: 0, duration: 0.3, ease: "power3.in" }, 0);
 
-    wrapperRefs.current.forEach((el) => {
-      if (!el) return;
-      tl.to(
-        el,
-        {
-          x: 0,
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.7,
-          ease: "power3.out",
-        },
-        0.2
-      );
+    // A szétszórt (láthatatlan) könyvek mozgatás nélkül kerülnek vissza a
+    // helyükre, és ott úsznak elő — mozgó ÉS áttetsző 3D rétegek együtt
+    // GPU-artifaktokat (beragadt tile-okat, "vastag" gerincet) hagytak.
+    wrapperRefs.current.forEach((el, i) => {
+      if (!el || i === openIdx) return;
+      tl.set(el, { x: 0, y: 0, rotation: 0, scale: 1 }, 0.15);
+      tl.to(el, { autoAlpha: 1, duration: 0.45, ease: "power2.out" }, 0.25);
     });
 
-    book3dRefs.current.forEach((el) => {
+    // egyedül az aktív könyv animál: visszarepül a polcra és visszafordul
+    if (openWrapper) {
+      tl.to(
+        openWrapper,
+        { x: 0, y: 0, rotation: 0, scale: 1, duration: 0.7, ease: "power3.out" },
+        0.2
+      );
+    }
+    if (openBook3d) {
+      tl.to(
+        openBook3d,
+        { z: 0, rotateY: 90, duration: 0.7, ease: "power3.out", overwrite: "auto" },
+        0.2
+      );
+    }
+
+    shadowRefs.current.forEach((el) => {
       if (!el) return;
-      tl.to(el, { rotateY: 90, duration: 0.7, ease: "power3.out" }, 0.2);
+      tl.to(el, { opacity: 0.6, scale: 1, duration: 0.5, ease: "power2.out", overwrite: "auto" }, 0.35);
     });
 
     if (bgTitle) {
       tl.to(bgTitle, { opacity: 1, duration: 0.6, ease: "power2.out" }, 0.4);
     }
-  }, []);
+  }, [setFaceMode]);
 
   const handleBookClick = useCallback(
     (index: number) => {
@@ -439,22 +569,51 @@ export default function BookshelfSection() {
     [activeBook, closeBook]
   );
 
+  // Hover: a könyv előrébb csúszik a polcról (z tengelyen, a néző felé),
+  // csak egészen enyhe elfordulással — így nem lóg át a szomszédokba.
+  // A kihúzott könyv z-index-e felugrik, különben a balra álló (magasabb
+  // z-index-ű) szomszéd levágja a kifordult borító szélét.
   const handleMouseEnter = useCallback(
     (index: number) => {
-      if (activeBook !== null) return;
-      const el = wrapperRefs.current[index];
-      if (el) gsap.to(el, { y: -12, duration: 0.3, ease: "power2.out" });
+      if (activeBook !== null || isAnimating.current || reducedRef.current)
+        return;
+      const wrapper = wrapperRefs.current[index];
+      const book3d = book3dRefs.current[index];
+      const shadow = shadowRefs.current[index];
+      setFaceMode(index, "all");
+      if (wrapper) gsap.set(wrapper, { zIndex: 20 });
+      if (book3d)
+        gsap.to(book3d, { z: 50, rotateY: 84, duration: 0.45, ease: "power2.out", overwrite: "auto" });
+      if (shadow)
+        gsap.to(shadow, { opacity: 0.42, scale: 0.96, duration: 0.4, ease: "power2.out", overwrite: "auto" });
     },
-    [activeBook]
+    [activeBook, setFaceMode]
   );
 
   const handleMouseLeave = useCallback(
     (index: number) => {
-      if (activeBook !== null) return;
-      const el = wrapperRefs.current[index];
-      if (el) gsap.to(el, { y: 0, duration: 0.3, ease: "power2.out" });
+      if (activeBook !== null || isAnimating.current || reducedRef.current)
+        return;
+      const book3d = book3dRefs.current[index];
+      const shadow = shadowRefs.current[index];
+      if (book3d)
+        gsap.to(book3d, {
+          z: 0,
+          rotateY: 90,
+          duration: 0.5,
+          ease: "power3.out",
+          overwrite: "auto",
+          onComplete: () => {
+            const wrapper = wrapperRefs.current[index];
+            if (wrapper) gsap.set(wrapper, { zIndex: BOOKS.length - index });
+            // a könyv visszaállt 90°-ra — megint csak a gerinc renderelődik
+            setFaceMode(index, "spine");
+          },
+        });
+      if (shadow)
+        gsap.to(shadow, { opacity: 0.6, scale: 1, duration: 0.45, ease: "power3.out", overwrite: "auto" });
     },
-    [activeBook]
+    [activeBook, setFaceMode]
   );
 
   useEffect(() => {
@@ -470,7 +629,9 @@ export default function BookshelfSection() {
   return (
     <section ref={sectionRef} className={styles.section}>
       <div ref={bgTitleRef} className={styles.bgTitle}>
-        Irodalom, ami formál minket.
+        <span ref={bgTitleInnerRef} className={styles.bgTitleInner}>
+          The literature that shapes us.
+        </span>
       </div>
 
       <svg
@@ -501,7 +662,7 @@ export default function BookshelfSection() {
         className={styles.stage}
         onClick={handleStageClick}
       >
-        <div ref={shelfRef} className={styles.shelf}>
+        <div className={styles.shelf}>
           {BOOKS.map((book, i) => (
             <div
               key={book.title}
@@ -524,12 +685,25 @@ export default function BookshelfSection() {
             >
               <div
                 ref={(el) => {
+                  shadowRefs.current[i] = el;
+                }}
+                className={styles.contactShadow}
+              />
+              <div
+                ref={(el) => {
+                  entranceRefs.current[i] = el;
+                }}
+                className={styles.entrance}
+              >
+              <div
+                ref={(el) => {
                   book3dRefs.current[i] = el;
                 }}
                 className={styles.book3d}
                 style={{ width: COVER_W, height: book.height }}
               >
                 <div
+                  data-face="cover"
                   className={`${styles.face} ${styles.coverFace}`}
                   style={{
                     width: COVER_W,
@@ -553,6 +727,7 @@ export default function BookshelfSection() {
                 </div>
 
                 <div
+                  data-face="spine"
                   className={`${styles.face} ${styles.spineFace}`}
                   style={{
                     width: book.thickness,
@@ -576,7 +751,12 @@ export default function BookshelfSection() {
                   )}
                 </div>
 
+                {/* A lapozat-síkok pontosan a doboz élein futnak — beljebb tolt
+                    sík a Chromium BSP plane-splitting miatt hajszálvékony
+                    repedéseket vág a gerincbe/borítóba. A borítóperem-hatást
+                    a face-eken belüli inset árnyékolás adja. */}
                 <div
+                  data-face="pages"
                   className={`${styles.face} ${styles.pagesEdge}`}
                   style={{
                     width: book.thickness,
@@ -587,6 +767,7 @@ export default function BookshelfSection() {
                 />
 
                 <div
+                  data-face="pages"
                   className={`${styles.face} ${styles.pagesTop}`}
                   style={{
                     width: COVER_W,
@@ -596,17 +777,18 @@ export default function BookshelfSection() {
                 />
 
                 <div
-                  className={styles.face}
+                  data-face="pages"
+                  className={`${styles.face} ${styles.pagesBottom}`}
                   style={{
                     width: COVER_W,
                     height: book.thickness,
-                    backgroundColor: "#d8d3c8",
                     transform: `rotateX(-90deg) translateZ(${book.height / 2}px)`,
                   }}
                 />
 
                 <div
-                  className={styles.face}
+                  data-face="back"
+                  className={`${styles.face} ${styles.backFace}`}
                   style={{
                     width: COVER_W,
                     height: book.height,
@@ -615,9 +797,40 @@ export default function BookshelfSection() {
                   }}
                 />
               </div>
+
+              {/* 2D borító-réteg a kinyitott, lebegő állapothoz — ugyanazok
+                  az osztályok adják a kinézetet, mint a 3D borítónak */}
+              <div
+                ref={(el) => {
+                  flatCoverRefs.current[i] = el;
+                }}
+                aria-hidden="true"
+                className={`${styles.face} ${styles.coverFace} ${styles.flatCover}`}
+                style={{
+                  width: COVER_W,
+                  height: book.height,
+                  backgroundColor: book.coverColor,
+                  backgroundImage: book.coverImage
+                    ? `url('${book.coverImage}')`
+                    : "none",
+                  backgroundSize: "100% 100%",
+                  backgroundPosition: "top center",
+                  color: book.coverTextColor,
+                }}
+              >
+                {!book.coverImage && (
+                  <>
+                    <span className={styles.coverTitle}>{book.title}</span>
+                    <span className={styles.coverAuthor}>{book.author}</span>
+                  </>
+                )}
+              </div>
+              </div>
             </div>
           ))}
         </div>
+
+        <div ref={shelfLineRef} className={styles.shelfLine} />
 
         <div
           ref={detailRef}

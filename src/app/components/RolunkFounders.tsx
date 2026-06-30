@@ -46,23 +46,23 @@ export default function RolunkFounders() {
           scrollTrigger: {
             trigger: block,
             start: "top 80%",
-            end: "center 45%",
+            end: "center 50%",
             scrub: 0.6,
           },
         });
 
-        // 1) a fotó beúszik és kitisztul
+        // 1) a fotó beúszik és kitisztul — a görgetés első ~60%-a
         tl.fromTo(
           photo,
           { yPercent: 14, scale: 0.9, autoAlpha: 0 },
-          { yPercent: 0, scale: 1, autoAlpha: 1, ease: "none" }
+          { yPercent: 0, scale: 1, autoAlpha: 1, ease: "none", duration: 0.6 }
         );
-        // 2) utána a név emelkedik a helyére
+        // 2) a kép teljes landolása UTÁN emelkedik a név a helyére
         tl.fromTo(
           name,
           { yPercent: 70, autoAlpha: 0 },
-          { yPercent: 0, autoAlpha: 1, ease: "none" },
-          ">-0.1"
+          { yPercent: 0, autoAlpha: 1, ease: "none", duration: 0.4 },
+          ">"
         );
       });
     }, root);
@@ -71,11 +71,11 @@ export default function RolunkFounders() {
   }, []);
 
   return (
-    <section ref={rootRef} className={styles.founders} id="alapitok">
+    <section ref={rootRef} className={styles.founders} id="founders">
       <div className="container">
         <header className={styles.head}>
           <h2 className={`text-section ${styles.title}`} data-reveal>
-            Két alapító, egy hang.
+            Two founders, one voice.
           </h2>
         </header>
       </div>

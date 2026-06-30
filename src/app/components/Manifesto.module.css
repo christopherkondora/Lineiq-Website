@@ -77,10 +77,12 @@
   display: block;
 }
 
-/* Lines 2 and 3 must stay on a single line (incl. "ízlés"); line 4 holds only
-   "szakértelemmel". On mid widths they fall back to wrapping (below). */
+/* Lines 2–4 must each stay on a single line — line 4 carries the whole
+   "with technical and theoretical expertise." run, so no break before the
+   serif keyword. On phones (≤900px) they fall back to wrapping (below). */
 .line2,
-.line3 {
+.line3,
+.line4 {
   white-space: nowrap;
 }
 
@@ -148,12 +150,6 @@
   z-index: 2;
 }
 
-.caption {
-  display: flex;
-  justify-content: space-between;
-  color: rgba(255, 255, 255, 0.6);
-}
-
 /* Below this the copy column is too narrow to hold the single lines, so let
    them wrap rather than overflow. */
 @media (max-width: 1100px) {
@@ -170,5 +166,9 @@
   .grid {
     grid-template-columns: 1fr;
     gap: var(--space-xl);
+  }
+  /* Full-width copy on phones: let the long run wrap rather than overflow. */
+  .line4 {
+    white-space: normal;
   }
 }

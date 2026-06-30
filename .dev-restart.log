@@ -1,0 +1,28 @@
+
+> web@0.1.0 dev
+> next dev --webpack
+
+▲ Next.js 16.2.6 (webpack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.253:3000
+✓ Ready in 294ms
+
+ GET / 200 in 1020ms (next.js: 878ms, application-code: 143ms)
+ GET / 200 in 32ms (next.js: 4ms, application-code: 28ms)
+ GET / 200 in 28ms (next.js: 1928µs, application-code: 26ms)
+ GET / 200 in 33ms (next.js: 2ms, application-code: 30ms)
+ GET / 200 in 32ms (next.js: 2ms, application-code: 30ms)
+ GET / 200 in 31ms (next.js: 2ms, application-code: 29ms)
+⚠ Blocked cross-origin request to Next.js dev resource /_next/webpack-hmr from "unconsumed-kelli-irritatedly.ngrok-free.dev".
+Cross-origin access to Next.js dev resources is blocked by default for safety.
+
+To allow this host in development, add it to "allowedDevOrigins" in next.config.js and restart the dev server:
+
+// next.config.js
+module.exports = {
+  allowedDevOrigins: ['unconsumed-kelli-irritatedly.ngrok-free.dev'],
+}
+
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+ OPTIONS /tabs 404 in 704ms (next.js: 578ms, application-code: 126ms)
+ OPTIONS /tabs 404 in 134ms (next.js: 8ms, application-code: 126ms)

@@ -29,6 +29,42 @@ export default function Intro() {
           scrollTrigger: { trigger: root, start: "top 70%" },
         }
       );
+
+      // Scroll-synced redaction-swap a "Agency" szón, a CtaSwap gomb receptjével:
+      // ELŐBB a piros highlight söpör végig balról jobbra (1. fázis, clip-path
+      // 100%→0), AZTÁN — kissé késleltetve, a sweep után — a fehér "Studio" úszik
+      // fel betűnként a piroson (2. fázis, betű-staggerelt opacity). A két fázist
+      // egyetlen scrubbolt timeline pacingeli a görgetéssel. CSS base + a
+      // reduced-motion media query a feltárt végállapotot tartja JS nélkül is.
+      const redaction = root.querySelector<HTMLElement>("[data-redaction]");
+      if (redaction) {
+        const letters = redaction.querySelectorAll<HTMLElement>(
+          "[data-studio-letter]"
+        );
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: redaction,
+            start: "top 55%",
+            end: "top 20%",
+            scrub: true,
+          },
+        });
+        // 1. fázis — piros highlight wipe (a gomb .box scaleX-ének megfelelője)
+        tl.fromTo(
+          redaction,
+          { clipPath: "inset(0% 100% 0% 0%)" },
+          { clipPath: "inset(0% 0% 0% 0%)", ease: "power3.inOut", duration: 1 },
+          0
+        );
+        // 2. fázis — a "Studio" betűnként, a sweep BEFEJEZÉSE után indul (pos 1.0,
+        // a box wipe vége), hogy tisztán "előbb highlight, aztán szöveg" legyen.
+        tl.fromTo(
+          letters,
+          { opacity: 0 },
+          { opacity: 1, ease: "power3.inOut", stagger: 0.16, duration: 0.6 },
+          1.0
+        );
+      }
     }, root);
 
     return () => ctx.revert();
@@ -40,31 +76,54 @@ export default function Intro() {
         <div className={styles.composition}>
           <p className={styles.lead} data-reveal>
             <span className={styles.firstLine}>
-              Egy brandépítő stúdió{" "}
-              <span className={`${styles.highlight} ${styles.strike}`}>
-                Ügynökség
+              A brand-building{" "}
+              <span className={styles.swap}>
+                <span
+                  className={`${styles.swapWord} ${styles.agency}`}
+                  aria-hidden="true"
+                >
+                  Agency
+                </span>
+                <span className={styles.redaction} data-redaction>
+                  <span className={`${styles.swapWord} ${styles.studio}`}>
+                    {"Studio".split("").map((ch, i) => (
+                      <span key={i} className={styles.studioLetter} data-studio-letter>
+                        {ch}
+                      </span>
+                    ))}
+                  </span>
+                </span>
               </span>{" "}
-              és szoftverház.
+              and software house.
             </span>
             <span className={styles.secondLine}>
-              <span className={styles.highlight}>Nem csak</span> kivitelezünk, nem
-              különálló szolgáltatásokat nyújtunk.
+              <span className={styles.highlight}>We don&apos;t just</span> execute,
+              and we don&apos;t deliver standalone services.
             </span>
             <span className={styles.thirdLine}>
-              Nevet építünk, amit egyedi szoftveres megoldásokkal és marketing
-              rendszerrel
+              We build a name, backed by custom software and a marketing
+              {/* Desktopon a "system." a 4. sorban ül (lent); mobilon viszont a
+                  3. mondat végéhez tartozik, ezért ott külön megjelenítjük. */}
+              <span className={styles.systemMobile}>{" "}system.</span>
             </span>
             <span className={styles.fourthLine}>
-              <span className={styles.support}>támogatunk meg.</span>{" "}
+              <span className={styles.support}>system.</span>{" "}
               <span className={styles.ecosystem}>
-                Egy <span className={styles.highlight}>ökoszisztéma,</span>{" "}
-                aminek egyetlen célja van:
+                An <span className={styles.highlight}>ecosystem</span>{" "}
+                with a single purpose:
               </span>
             </span>
           </p>
 
+          {/* Mobil-only: az ecosystem mondat balra rendezve, a záró nagybetűs
+              sorral közös bal éllel. Desktopon rejtve (ott a .lead-ben él). */}
+          <p className={styles.kicker} data-reveal>
+            An <span className={styles.highlight}>ecosystem</span> with a single
+            purpose:
+          </p>
+
           <p className={styles.closing} data-reveal>
-            Hogy bemutatkozhass a világnak.
+            To introduce you to the world.
           </p>
         </div>
       </div>

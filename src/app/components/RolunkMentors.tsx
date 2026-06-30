@@ -12,17 +12,17 @@ const MENTORS = [
   {
     initials: "RD",
     name: "Ray Dalio",
-    line: "A vállalkozás rendszerében és kultúrájában él tovább — az elveket le kell írni és következetesen alkalmazni.",
+    line: "He lives on in the company's systems and culture — principles must be written down and applied consistently.",
   },
   {
     initials: "SS",
     name: "Sabri Suby",
-    line: "A marketingszemléletünk gerince — a figyelem megérdemlése, nem a megvásárlása.",
+    line: "The backbone of our marketing mindset — earning attention, not buying it.",
   },
   {
     initials: "—",
-    name: "Hamarosan",
-    line: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. A lista bővül, a végleges névsor készül.",
+    name: "Soon",
+    line: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. The list is growing, the final roster is in the works.",
     placeholder: true,
   },
 ];
@@ -58,15 +58,15 @@ export default function RolunkMentors() {
   }, []);
 
   return (
-    <section ref={rootRef} className={`section ${styles.mentors}`} id="akikre-felnezunk">
+    <section ref={rootRef} className={`section ${styles.mentors}`} id="mentors">
       <div className="container">
         <header className={styles.head}>
           <h2 className={`text-section ${styles.title}`} data-reveal>
-            Akik megelőztek minket.
+            Those who came before us.
           </h2>
           <p className={styles.lead} data-reveal>
-            Nem életrajz és nem idézetfal. Egy mondat arról, mit jelent az adott
-            gondolkodó a LineiQ munkájában.
+            Not a biography and not a wall of quotes. One sentence on what each
+            thinker means to LineiQ&apos;s work.
           </p>
         </header>
 

@@ -71,18 +71,18 @@ export default function Process() {
   }, []);
 
   return (
-    <section ref={rootRef} className={`section ${styles.process}`} id="szolgaltatasok">
+    <section ref={rootRef} className={`section ${styles.process}`} id="services">
       <div className="container">
         <header className={styles.head}>
           <h2 className={`text-section ${styles.title}`} data-reveal>
-            Stratégiától a kódig.
+            From strategy to code.
           </h2>
         </header>
 
         <ul className={styles.list} data-list>
           {services.map((s, i) => (
             <li key={s.slug} className={styles.rowItem} data-row>
-              <Link href={`/mit-nyujtunk/${s.slug}`} className={styles.row}>
+              <Link href={`/services/${s.slug}`} className={styles.row}>
                 <span className={styles.num}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -91,7 +91,7 @@ export default function Process() {
                   <div className={styles.bodyWrap}>
                     <p className={styles.teaser}>
                       {s.teaser.join(" · ")}
-                      <span className={styles.etc}> · stb.</span>
+                      <span className={styles.etc}> · etc.</span>
                     </p>
                   </div>
                 </div>

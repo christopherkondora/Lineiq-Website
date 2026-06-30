@@ -20,18 +20,20 @@ export default function Manifesto() {
       // kódig") is sticky, so it parks at the top of the viewport while this
       // opaque panel scrolls up over it (see page.tsx + .manifesto z-index).
       // Here we animate the Manifesto's content — headline, copy, narrative
-      // line and the red wipe — all scrubbed to scroll. The range must extend
-      // PAST the full cover ("top top"): the content is centred in the 110vh
-      // panel, so during the approach it sits below the fold — a range ending
-      // at the cover would play everything off-screen. From top 60% to top
-      // -20% the composition rides on screen the whole way, and scrub: 1
-      // smooths fast flicks into a soft catch-up instead of a snap.
+      // line and the red wipe — all scrubbed to scroll. The content is centred
+      // in the 110vh panel, so during the approach it sits below the fold; the
+      // range therefore starts late (top 60%) and ends as the composition
+      // settles into the viewport (top 10% ≈ content centred). Earlier the end
+      // sat at "top -20%", which parked ~20vh of extra scroll behind the final
+      // frame and made the whole sequence — the red wipe especially — finish
+      // long after the section was already in view. scrub: 1 smooths fast
+      // flicks into a soft catch-up instead of a snap.
       // Durations below are relative weights of that range (total ≈ 2).
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root,
           start: "top 60%",
-          end: "top -20%",
+          end: "top 10%",
           scrub: 1,
         },
       });
@@ -63,23 +65,27 @@ export default function Manifesto() {
 
       // 4) Red bar sweeps across the photo and back — the closing accent,
       //    placed in the second half so it plays after the panel has arrived.
+      //    Lengthened durations spread the sweep over more scroll (slower), and
+      //    sine.inOut gives a gentler in/out than power2 (smoother). The reveal
+      //    starts earlier to win the extra room; the return still lands on the
+      //    timeline end (~2.0) so the rest of the section is untouched.
       const block = root.querySelector("[data-red-block]");
       if (block) {
         tl.fromTo(
           block,
           { scaleX: 0, transformOrigin: "left center" },
-          { scaleX: 1, duration: 0.5, ease: "power2.inOut" },
-          0.9
+          { scaleX: 1, duration: 0.8, ease: "sine.inOut" },
+          0.6
         );
         tl.to(
           block,
           {
             scaleX: 0,
             transformOrigin: "right center",
-            duration: 0.6,
-            ease: "power2.inOut",
+            duration: 0.7,
+            ease: "sine.inOut",
           },
-          1.4
+          1.3
         );
       }
     }, root);
@@ -122,20 +128,21 @@ export default function Manifesto() {
 
             <p className={styles.lead}>
               <span className={styles.line1} data-lead-line>
-                Magyar stúdió,{" "}
-                <span className={styles.highlight}>nyugat-európai mércével.</span>
+                A Hungarian studio,{" "}
+                <span className={styles.highlight}>by Western-European standards.</span>
               </span>
               <span className={styles.line2} data-lead-line>
-                Az AI-t mindenki használja. A különbség az{" "}
-                <span className={styles.highlight}>elme</span> és az{" "}
-                <span className={styles.highlight}>ízlés.</span>
+                Everyone uses AI. The difference is the{" "}
+                <span className={styles.highlight}>mind</span> and the{" "}
+                <span className={styles.highlight}>taste.</span>
               </span>
               <span className={styles.lastBlock}>
                 <span className={styles.line3} data-lead-line>
-                  Brand, tartalom és kód kreatív elméktől, technikai és elméleti
+                  Brand, content and code from creative minds,
                 </span>
                 <span className={styles.line4} data-lead-line>
-                  <span className={styles.highlight}>szakértelemmel.</span>
+                  with technical and theoretical{" "}
+                  <span className={styles.highlight}>expertise.</span>
                 </span>
               </span>
             </p>
@@ -146,15 +153,12 @@ export default function Manifesto() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/work/studio.jpg"
-                alt="LineiQ stúdió"
+                alt="LineiQ studio"
                 className={styles.image}
                 data-reveal-image
               />
               <span className={styles.redBlock} data-red-block />
             </div>
-            <p className={styles.caption}>
-              <span className="text-label">Stúdió · BP</span>
-            </p>
           </div>
         </div>
       </div>

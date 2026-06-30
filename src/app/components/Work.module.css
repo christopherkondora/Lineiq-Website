@@ -65,9 +65,48 @@
   background: #f0f0f0;
 }
 
+/* ─── Stacked caption (static / mobile / reduced-motion) ── */
+/* A diagonális mód a swap-elő .brand/.copy elemekkel viszi a szöveget; itt a
+   statikus nézethez minden kártya saját, látható feliratot kap. */
+.caption {
+  padding-top: var(--space-md);
+}
+
+.captionBrand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.75rem, 7vw, 2.75rem);
+  line-height: 1;
+  letter-spacing: var(--tracking-tight);
+  font-variation-settings: "opsz" 90;
+  color: var(--color-black);
+}
+
+.captionDesc {
+  margin-top: var(--space-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: rgba(0, 0, 0, 0.72);
+  max-width: 52ch;
+}
+
+.stackedCta {
+  display: flex;
+  padding: var(--space-md) var(--container-pad) var(--space-3xl);
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
 /* ============================================================
    Diagonal mode (JS active)
    ============================================================ */
+/* A diagonális pin a sarkokba pinelt elemekkel dolgozik, így a statikus
+   feliratok és a stacked CTA itt elrejtve. */
+.isDiagonal .caption,
+.isDiagonal .stackedCta {
+  display: none;
+}
 .isDiagonal {
   /* step per page — keep in sync with STEP_X / STEP_Y in Work.tsx */
   --stepx: 27vw;
@@ -185,8 +224,29 @@
   }
 }
 
-@media (max-width: 600px) {
-  .page {
-    grid-template-columns: 1fr;
+/* Statikus, egymás-alá-rakott nézet (≤768px): a diagonális mód itt ki van
+   kapcsolva (lásd Work.tsx), a kártyák tömör függőleges listát alkotnak. */
+@media (max-width: 768px) {
+  .track {
+    padding: var(--space-xl) var(--container-pad-mobile);
+    gap: var(--space-2xl);
+  }
+  .stackedCta {
+    padding: 0 var(--container-pad-mobile) var(--space-2xl);
+  }
+  /* A cím jelentősen nagyobb, és kb. a fele (vertikálisan) ráúszik a fotó
+     aljára. A mix-blend-mode: difference adja az inverz színt: a sötét fotón
+     fehéresen, a fehér háttéren feketén jelenik meg — így a fél-fél átfedés is
+     mindig kontrasztos marad. */
+  .caption {
+    padding-top: 0;
+  }
+  .captionBrand {
+    position: relative;
+    z-index: 1;
+    margin-top: -0.67em;
+    font-size: clamp(4.29rem, 19.8vw, 7.26rem);
+    mix-blend-mode: difference;
+    color: var(--color-white);
   }
 }

@@ -29,7 +29,7 @@ const kranky = Kranky({
 export const metadata: Metadata = {
   title: "LineiQ — Brand. Code. Signal.",
   description:
-    "Prémium brandépítő ügynökség és szoftverház. Nyugat-európai minőség, magyar piaci tudás.",
+    "Premium brand-building agency and software house. Western-European quality, Hungarian market knowledge.",
 };
 
 export default function RootLayout({
@@ -38,7 +38,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="hu" className={`${fraunces.variable} ${wix.variable} ${kranky.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${wix.variable} ${kranky.variable}`}>
       <body>
         <SmoothScroll />
         <Cursor />

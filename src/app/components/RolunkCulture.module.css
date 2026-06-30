@@ -1,90 +1,61 @@
 .culture {
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.head {
-  position: relative;
-  max-width: 820px;
-  margin-bottom: var(--space-3xl);
-}
-
-/* A piros vonal a szöveg mögött fut — a header magasságában, z-index 0-n,
-   míg a szöveg z-index 1-en ül felette. */
-.narrativeLine {
+/* A piros narratív vonal vízszintesen söpör végig a szekción, függőlegesen
+   középre zárva, fix magasságban — így finom, lapos hullám marad a szöveg
+   mögött (z-index 0), nem nő óriás ívvé. */
+.line {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: -5%;
   width: 110%;
-  height: 100%;
+  height: 240px;
+  transform: translateY(-50%);
   pointer-events: none;
-  opacity: 0.85;
   z-index: 0;
+  opacity: 1;
 }
 
-.heading {
+.copy {
   position: relative;
   z-index: 1;
-  margin-top: var(--space-md);
-  color: var(--color-white);
 }
 
-.lead {
-  position: relative;
-  z-index: 1;
-  margin-top: var(--space-lg);
-  font-family: var(--font-body);
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  color: rgba(255, 255, 255, 0.78);
-  max-width: 56ch;
-}
-
-.principles {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-xl);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  padding-top: var(--space-xl);
-}
-
-.principle {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
-}
-
-.num {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: var(--tracking-widest);
-  color: var(--color-red);
-}
-
-.principleTitle {
+.para {
+  margin: 0;
+  max-width: 30ch;
   font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  font-weight: 500;
+  font-size: clamp(1.75rem, 3.4vw, 3.1rem);
   line-height: var(--leading-snug);
-  font-variation-settings: "opsz" 75;
+  letter-spacing: var(--tracking-tight);
+  font-weight: 500;
+  font-variation-settings: "opsz" 90;
   color: var(--color-white);
 }
 
-.principleBody {
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: rgba(255, 255, 255, 0.62);
+.para + .para {
+  margin-top: 1.3em;
 }
 
-@media (max-width: 900px) {
-  .principles {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
+/* Alapból láthatók (no-JS / reduced-motion biztonság). A wave a görgetésnél
+   állítja vissza sötétre, majd világosítja ki. */
+.word {
+  opacity: 1;
+  will-change: opacity;
+}
+
+@media (max-width: 768px) {
+  .culture {
+    min-height: auto;
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-3xl);
   }
-  .head {
-    margin-bottom: var(--space-2xl);
+  .para {
+    max-width: 100%;
   }
 }

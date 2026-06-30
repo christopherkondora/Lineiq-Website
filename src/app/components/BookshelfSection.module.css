@@ -26,6 +26,12 @@
   padding: 0 5%;
 }
 
+/* Külön réteg a scroll-belépőnek: a kinyitott könyv fade-je (.bgTitle)
+   és a scrub-olt belépő (.bgTitleInner) nem ütközhet egymással. */
+.bgTitleInner {
+  display: inline-block;
+}
+
 /* ── Stage ──────────────────────────────────────────── */
 
 .stage {
@@ -35,7 +41,20 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding-bottom: 0;
+  padding-bottom: 48px;
+}
+
+/* ── Shelf line ─────────────────────────────────────── */
+
+.shelfLine {
+  position: absolute;
+  bottom: 46px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(880px, 92vw);
+  height: 2px;
+  background: #1a1a1a;
+  pointer-events: none;
 }
 
 /* ── Shelf ──────────────────────────────────────────── */
@@ -50,13 +69,45 @@
 
 /* ── Book Wrapper ───────────────────────────────────── */
 
+/* Nincs will-change: a permanens GPU-réteg "beragadt tile" artifaktokat
+   (szellem-téglalapok, vastagabbnak renderelt gerincek) okozott — animáció
+   alatt a GSAP enélkül is réteget promótál. */
 .bookWrapper {
   flex-shrink: 0;
   cursor: pointer;
   perspective: 1400px;
   perspective-origin: center bottom;
   position: relative;
-  will-change: transform, opacity;
+}
+
+/* Belépő réteg: a scroll-scrub ezt mozgatja, így nem ütközik a wrapper-en
+   futó kinyitó/becsukó tween-ekkel. Nincs will-change — a preserve-3d
+   láncon belüli extra kompozit réteg GPU-repedéseket okoz. */
+.entrance {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+/* ── Contact shadow ─────────────────────────────────── */
+
+.contactShadow {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150%;
+  height: 16px;
+  background: radial-gradient(
+    ellipse 50% 50% at center,
+    rgba(25, 18, 8, 0.45),
+    rgba(25, 18, 8, 0.18) 55%,
+    transparent 75%
+  );
+  filter: blur(4px);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* ── Book 3D container ──────────────────────────────── */
@@ -66,7 +117,6 @@
   bottom: 0;
   left: 50%;
   transform-style: preserve-3d;
-  will-change: transform;
 }
 
 /* ── Faces ──────────────────────────────────────────── */
@@ -86,17 +136,60 @@
   justify-content: flex-end;
   padding: 32px;
   gap: 10px;
-  border-radius: 0 3px 3px 0;
+  border-radius: 0 4px 4px 0;
+  /* a tábla élén megcsillanó fény + alsó él kontaktárnyéka */
+  box-shadow:
+    inset -1px 0 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 }
 
+/* Gerinc-csukló: sötét él a kötésnél, keskeny fénycsík, majd a klasszikus
+   préselt horony ~17px-re — a keményborítós tábla anatómiája.
+   Nincs z-index: a 3D-transzformált face-en belüli kényszerített réteg
+   átlátszó GPU tile-repedéseket okozott. */
 .coverFace::before {
   content: "";
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
-  width: 40px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.2), transparent);
+  width: 36px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.35) 0px,
+    rgba(0, 0, 0, 0.12) 4px,
+    rgba(255, 255, 255, 0.12) 7px,
+    rgba(0, 0, 0, 0.05) 10px,
+    transparent 14px,
+    rgba(0, 0, 0, 0.16) 17px,
+    rgba(0, 0, 0, 0.05) 22px,
+    transparent 36px
+  );
+  pointer-events: none;
+}
+
+/* 2D borító-réteg: a kinyitott, lebegő könyv ezt mutatja a 3D doboz helyett.
+   Alapból rejtett; a left/transform a book3d-vel azonos pozícióba központosítja. */
+.flatCover {
+  display: none;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Finom irányított fény a táblán — enyhe sheen balról-fentről. */
+.coverFace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.05) 18%,
+    transparent 40%,
+    rgba(0, 0, 0, 0.08) 100%
+  );
+  border-radius: inherit;
   pointer-events: none;
 }
 
@@ -128,16 +221,22 @@
   padding: 20px 0;
 }
 
+/* Domború gerinc-illúzió: finom élsötétítés, középen lapos fény.
+   Visszafogott, mert a gerinc-fotók már hordozzák a saját árnyékolásukat —
+   az erős sáv mesterséges "oldalárnyéknak" hatott. */
 .spineFace::after {
   content: "";
   position: absolute;
   inset: 0;
   background-image: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.07) 35%,
-    rgba(255, 255, 255, 0.07) 65%,
-    rgba(255, 255, 255, 0) 100%
+    rgba(0, 0, 0, 0.16) 0%,
+    rgba(0, 0, 0, 0.04) 8%,
+    rgba(255, 255, 255, 0.07) 24%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.07) 76%,
+    rgba(0, 0, 0, 0.04) 92%,
+    rgba(0, 0, 0, 0.16) 100%
   );
   pointer-events: none;
 }
@@ -161,24 +260,93 @@
 
 /* ── Pages edges ────────────────────────────────────── */
 
+/* Lapozat: finom 1px-es csíkozás szimulálja az egyes lapokat,
+   az élek felé besötétedő tónussal. */
 .pagesEdge {
-  background: linear-gradient(
-    90deg,
-    #e8e3d6 0%,
-    #f5f0e6 20%,
-    #f5f0e6 80%,
-    #e8e3d6 100%
-  );
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(120, 105, 80, 0.14) 0 1px,
+      transparent 1px 3px
+    ),
+    linear-gradient(
+      90deg,
+      #d8d1c0 0%,
+      #f6f1e5 15%,
+      #efe9da 50%,
+      #f6f1e5 85%,
+      #d8d1c0 100%
+    );
+  /* a táblák "túlnyúlását" inset árnyék imitálja a valódi 3D-s
+     beljebbtolás helyett (BSP-repedések elkerülése) */
+  box-shadow:
+    inset 0 8px 10px -8px rgba(0, 0, 0, 0.35),
+    inset 0 -8px 10px -8px rgba(0, 0, 0, 0.35),
+    inset 6px 0 8px -6px rgba(0, 0, 0, 0.3),
+    inset -6px 0 8px -6px rgba(0, 0, 0, 0.3);
 }
 
-.pagesTop {
+.pagesTop,
+.pagesBottom {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(120, 105, 80, 0.14) 0 1px,
+      transparent 1px 3px
+    ),
+    linear-gradient(
+      180deg,
+      #d8d1c0 0%,
+      #f6f1e5 30%,
+      #f6f1e5 70%,
+      #d8d1c0 100%
+    );
+  box-shadow:
+    inset 6px 0 8px -6px rgba(0, 0, 0, 0.3),
+    inset -6px 0 8px -6px rgba(0, 0, 0, 0.3);
+}
+
+/* Az alsó lapél sötétebb tónusa gradiens-csere, nem filter — a filter
+   kompozit réteget kényszerít a 3D láncban. */
+.pagesBottom {
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(120, 105, 80, 0.14) 0 1px,
+      transparent 1px 3px
+    ),
+    linear-gradient(180deg, #c7c0ae 0%, #e6e0d2 30%, #e6e0d2 70%, #c7c0ae 100%);
+}
+
+/* ── Back cover ─────────────────────────────────────── */
+
+.backFace {
+  border-radius: 4px 0 0 4px;
+}
+
+.backFace::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 36px;
   background: linear-gradient(
-    180deg,
-    #e8e3d6 0%,
-    #f5f0e6 30%,
-    #f5f0e6 70%,
-    #e8e3d6 100%
+    -90deg,
+    rgba(0, 0, 0, 0.35) 0px,
+    rgba(0, 0, 0, 0.1) 5px,
+    transparent 14px
   );
+  pointer-events: none;
+}
+
+.backFace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(245deg, transparent 60%, rgba(0, 0, 0, 0.12) 100%);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 /* ── Detail Panel ───────────────────────────────────── */
@@ -324,7 +492,12 @@
   }
 
   .stage {
-    padding-bottom: 0;
+    padding-bottom: 32px;
+  }
+
+  .shelfLine {
+    bottom: 30px;
+    width: 94vw;
   }
 
   .shelf {

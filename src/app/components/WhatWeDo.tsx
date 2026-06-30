@@ -17,21 +17,6 @@ import { services } from "../data/services";
 export default function WhatWeDo() {
   const rootRef = useRef<HTMLElement>(null);
 
-  // A home page a .stackSticky wrapperben parkoltatja ezt a szekciót, miközben
-  // a Manifesto fölé csúszik (page.module.css). A sticky wrappernek a saját
-  // rendert magassága kell --stack-sticky-h-ként, hogy alulra igazítva tudjon
-  // parkolni; CSS önmagában nem tud egy elem saját magasságára hivatkozni.
-  // Reduced motion mellett is fut — ez pozicionálás, nem animáció.
-  useEffect(() => {
-    const sticky = rootRef.current?.parentElement;
-    if (!sticky) return;
-    const ro = new ResizeObserver(() => {
-      sticky.style.setProperty("--stack-sticky-h", `${sticky.offsetHeight}px`);
-    });
-    ro.observe(sticky);
-    return () => ro.disconnect();
-  }, []);
-
   // A fotó az aktív névhez úszik. A ripelt bundle ut() függvényének portja:
   // a kártya translateY-ját az aktív sor függőleges középpontjához tweeneljük.
   useEffect(() => {
@@ -49,26 +34,8 @@ export default function WhatWeDo() {
       CustomEase.create("ease-fade", "0.76, 0, 0.24, 1");
       const SLOW = 1.075;
 
-      const content = root.querySelector<HTMLElement>(`.${styles.content}`);
-      const card = root.querySelector<HTMLElement>(`.${styles.card}`);
-      const inner = root.querySelector<HTMLElement>(`.${styles.cardInner}`);
-      if (!content || !card || !inner) return;
-
-      const triggers = gsap.utils.toArray<HTMLElement>("[data-trigger]", root);
-      const images = gsap.utils.toArray<HTMLElement>("[data-img]", root);
-      let first = true;
-      let currentIdx = 0;
-
-      // a kártya belép: elmosódásból, enyhén alulról, amikor a szekció a nézetbe ér
+      // Belépő reveal — minden méreten fut (Hybrid: a reveal-ek maradnak).
       if (!reduce) {
-        gsap.from(inner, {
-          opacity: 0,
-          yPercent: 8,
-          filter: "blur(6px)",
-          duration: SLOW,
-          ease: "ease-transition",
-          scrollTrigger: { trigger: root, start: "top 75%" },
-        });
         gsap.from(root.querySelectorAll("[data-reveal]"), {
           y: 40,
           opacity: 0,
@@ -79,49 +46,80 @@ export default function WhatWeDo() {
         });
       }
 
-      // egy sor függőleges középpontja a content dobozhoz mérve
-      const centerY = (el: HTMLElement) => {
-        const r = content.getBoundingClientRect();
-        const c = el.getBoundingClientRect();
-        return c.top - r.top + c.height / 2;
-      };
-      const moveTo = (el: HTMLElement) => {
-        const y = centerY(el);
-        if (first || reduce) {
-          first = false;
-          gsap.set(card, { y });
-        } else {
-          gsap.to(card, { y, duration: SLOW, ease: "ease-transition" });
+      // Az úszó fotó + az aktív-név kiemelés (a többi 0.3-ra halványul) CSAK
+      // asztali nézetben (≥901px): mobilon nincs hover, a fotó rejtett (CSS), és
+      // minden szolgáltatás-név teljes erősséggel látszik.
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 901px)", () => {
+        const content = root.querySelector<HTMLElement>(`.${styles.content}`);
+        const card = root.querySelector<HTMLElement>(`.${styles.card}`);
+        const inner = root.querySelector<HTMLElement>(`.${styles.cardInner}`);
+        if (!content || !card || !inner) return;
+
+        const triggers = gsap.utils.toArray<HTMLElement>("[data-trigger]", root);
+        const images = gsap.utils.toArray<HTMLElement>("[data-img]", root);
+        let first = true;
+        let currentIdx = 0;
+
+        // a kártya belép: elmosódásból, enyhén alulról, amikor a szekció a nézetbe ér
+        if (!reduce) {
+          gsap.from(inner, {
+            opacity: 0,
+            yPercent: 8,
+            filter: "blur(6px)",
+            duration: SLOW,
+            ease: "ease-transition",
+            scrollTrigger: { trigger: root, start: "top 75%" },
+          });
         }
-      };
-      const setActive = (i: number) => {
-        currentIdx = i;
-        images.forEach((img, c) => {
-          gsap.to(img, { opacity: c === i ? 1 : 0, duration: 0.2, ease: "ease-fade" });
+
+        // egy sor függőleges középpontja a content dobozhoz mérve
+        const centerY = (el: HTMLElement) => {
+          const r = content.getBoundingClientRect();
+          const c = el.getBoundingClientRect();
+          return c.top - r.top + c.height / 2;
+        };
+        const moveTo = (el: HTMLElement) => {
+          const y = centerY(el);
+          if (first || reduce) {
+            first = false;
+            gsap.set(card, { y });
+          } else {
+            gsap.to(card, { y, duration: SLOW, ease: "ease-transition" });
+          }
+        };
+        const setActive = (i: number) => {
+          currentIdx = i;
+          images.forEach((img, c) => {
+            gsap.to(img, { opacity: c === i ? 1 : 0, duration: 0.2, ease: "ease-fade" });
+          });
+          triggers.forEach((t, c) => {
+            gsap.to(t, { opacity: c === i ? 1 : 0.3, duration: 0.2, ease: "ease-fade" });
+          });
+        };
+
+        setActive(0);
+        moveTo(triggers[0]);
+        const handlers = triggers.map((t, i) => {
+          const fn = () => {
+            setActive(i);
+            moveTo(t);
+          };
+          t.addEventListener("pointerenter", fn);
+          return fn;
         });
-        triggers.forEach((t, c) => {
-          gsap.to(t, { opacity: c === i ? 1 : 0.3, duration: 0.2, ease: "ease-fade" });
-        });
-      };
 
-      setActive(0);
-      moveTo(triggers[0]);
-      triggers.forEach((t, i) =>
-        t.addEventListener("pointerenter", () => {
-          setActive(i);
-          moveTo(t);
-        })
-      );
+        // ha a layout újrarendeződik, igazítsuk a kártyát az aktív sorhoz
+        const onResize = () => gsap.set(card, { y: centerY(triggers[currentIdx]) });
+        window.addEventListener("resize", onResize);
+        ScrollTrigger.addEventListener("refresh", onResize);
 
-      // ha a layout újrarendeződik, igazítsuk a kártyát az aktív sorhoz
-      const onResize = () => gsap.set(card, { y: centerY(triggers[currentIdx]) });
-      window.addEventListener("resize", onResize);
-      ScrollTrigger.addEventListener("refresh", onResize);
-
-      return () => {
-        window.removeEventListener("resize", onResize);
-        ScrollTrigger.removeEventListener("refresh", onResize);
-      };
+        return () => {
+          window.removeEventListener("resize", onResize);
+          ScrollTrigger.removeEventListener("refresh", onResize);
+          triggers.forEach((t, i) => t.removeEventListener("pointerenter", handlers[i]));
+        };
+      });
     }, root);
 
     // a sorpozíciók a Fraunces betöltése után pontosak; mérés utána
@@ -133,29 +131,17 @@ export default function WhatWeDo() {
   }, []);
 
   return (
-    <section ref={rootRef} className={styles.whatwedo} id="szolgaltatasok">
+    <section ref={rootRef} className={styles.whatwedo} id="services">
       <div className={`container ${styles.inner}`}>
         <div className={styles.layout}>
-          {/* Bal: egy beszédes mondat + egyszerű vonal-animáció */}
-          <aside className={styles.rail}>
-            <div className={styles.statement} data-reveal>
-              <div className={styles.line} aria-hidden="true">
-                <span />
-              </div>
-              <p className={styles.statementText}>
-                Olyat építünk, ami helyetted is dolgozik.
-              </p>
-            </div>
-          </aside>
-
-          {/* Jobb: óriás szolgáltatás-lista + úszó fotó */}
+          {/* Óriás szolgáltatás-lista + úszó fotó */}
           <div className={styles.main}>
             <div className={styles.content}>
               <ul className={styles.list}>
                 {services.map((s) => (
                   <li key={s.slug} className={styles.rowItem} data-reveal>
                     <Link
-                      href={`/mit-nyujtunk/${s.slug}`}
+                      href={`/services/${s.slug}`}
                       className={styles.row}
                       data-trigger
                     >

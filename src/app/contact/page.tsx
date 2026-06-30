@@ -3,9 +3,9 @@ import Footer from "../components/Footer";
 import IntakeFlow from "./IntakeFlow";
 
 export const metadata: Metadata = {
-  title: "Kapcsolat — LineiQ",
+  title: "Contact — LineiQ",
   description:
-    "Kurált intake folyamat: öt rövid kérdés, és úgy érkezünk az első hívásra, hogy már ismerjük a cégedet.",
+    "A curated intake flow: four short questions, and we arrive at the first call already knowing your company.",
 };
 
 export default function KapcsolatPage() {

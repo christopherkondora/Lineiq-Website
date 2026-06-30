@@ -41,13 +41,13 @@ export default function RolunkClose() {
     <section ref={rootRef} className={`section section--dark ${styles.close}`}>
       <div className={`container ${styles.inner}`}>
         <h2 className={`text-statement ${styles.heading}`} data-reveal>
-          Ha ez rezonál,
+          If this resonates,
           <br />
-          beszéljünk.
+          let&apos;s talk.
         </h2>
         <div className={styles.actions} data-reveal>
-          <SplashLink href="/kapcsolat" className={styles.ctaLink}>
-            <CtaSwap defaultLabel="Kezdjük el." hoverLabel="Vágjunk bele!" />
+          <SplashLink href="/contact" className={styles.ctaLink}>
+            <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's go!" />
           </SplashLink>
         </div>
       </div>

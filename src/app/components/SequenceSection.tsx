@@ -20,6 +20,11 @@ export default function SequenceSection() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    // Mobilon a szekció teljesen ki van kapcsolva (a .wrapper CSS-ben
+    // display:none ≤900px). Itt is kilépünk, hogy a 40 frame (~3.6 MB) be se
+    // töltődjön és a scroll-listener se fusson feleslegesen.
+    if (window.matchMedia("(max-width: 900px)").matches) return;
+
     const wrapper = wrapperRef.current;
     const canvas = canvasRef.current;
     if (!wrapper || !canvas) return;
@@ -45,11 +50,23 @@ export default function SequenceSection() {
       drawFrame(currentFrame.current);
     };
 
-    frames.current = Array.from({ length: FRAME_COUNT }, (_, i) => {
-      const img = new Image();
+    // Frame 0 loads immediately so the canvas has something to paint; the
+    // remaining 39 frames (~3.6 MB) are deferred to browser idle time so they
+    // don't compete with above-the-fold assets on initial load. The section
+    // sits 350vh down, so idle loading finishes long before the user scrolls
+    // here; drawFrame already skips any frame that isn't loaded yet.
+    frames.current = Array.from({ length: FRAME_COUNT }, () => new Image());
+    const loadFrame = (i: number) => {
+      const img = frames.current[i];
+      if (img.src) return;
+      if (i === 0) img.onload = () => drawFrame(0);
       img.src = frameSrc(i);
-      img.onload = () => { if (i === 0) drawFrame(0); };
-      return img;
+    };
+    loadFrame(0);
+    const idle =
+      window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200));
+    const idleId = idle(() => {
+      for (let i = 1; i < FRAME_COUNT; i++) loadFrame(i);
     });
 
     resize();
@@ -78,6 +95,8 @@ export default function SequenceSection() {
     return () => {
       window.removeEventListener("resize", resize);
       window.removeEventListener("scroll", onScroll);
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idleId as number);
+      else window.clearTimeout(idleId as number);
     };
   }, []);
 
@@ -87,45 +106,45 @@ export default function SequenceSection() {
         <canvas ref={canvasRef} className={styles.canvas} />
 
         <div ref={endTextRef} className={styles.endText}>
-          <p className={styles.endHeadline}>Készen állsz?</p>
-          <SplashLink href="/kapcsolat" className={styles.endCta}>
-            <CtaSwap defaultLabel="Kezdjük el." hoverLabel="Vágjunk bele!" />
+          <p className={styles.endHeadline}>Ready?</p>
+          <SplashLink href="/contact" className={styles.endCta}>
+            <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's go!" />
           </SplashLink>
         </div>
 
         <div className={styles.footerOverlay}>
           <div className={styles.footerGrid}>
             <div>
-              <p className={styles.footerLabel}>Stúdió</p>
+              <p className={styles.footerLabel}>Studio</p>
               <p className={styles.footerText}>LineiQ Kft.<br />Budapest, HU</p>
             </div>
             <div>
-              <p className={styles.footerLabel}>Oldaltérkép</p>
+              <p className={styles.footerLabel}>Sitemap</p>
               <ul className={styles.footerList}>
-                <li><Link href="/munkaink">Munkáink</Link></li>
-                <li><Link href="/#szolgaltatasok">Mit nyújtunk?</Link></li>
-                <li><Link href="/rolunk">Rólunk</Link></li>
-                <li><Link href="/kapcsolat">Kapcsolat</Link></li>
+                <li><Link href="/">Home</Link></li>
+                <li><Link href="/#services">Services</Link></li>
+                <li><Link href="/about">About</Link></li>
+                <li><Link href="/contact">Contact</Link></li>
               </ul>
             </div>
             <div>
-              <p className={styles.footerLabel}>Közösség</p>
+              <p className={styles.footerLabel}>Connect</p>
+              {/* Channels without a live URL render as plain text — no dead links. */}
               <ul className={styles.footerList}>
-                <li><a href="#">Instagram</a></li>
-                <li><a href="#">LinkedIn</a></li>
-                <li><a href="#">Are.na</a></li>
+                <li><span className={styles.footerSoon}>Instagram</span></li>
+                <li><span className={styles.footerSoon}>LinkedIn</span></li>
+                <li><span className={styles.footerSoon}>Are.na</span></li>
               </ul>
             </div>
             <div>
-              <p className={styles.footerLabel}>Ökoszisztéma</p>
+              <p className={styles.footerLabel}>Legal</p>
               <ul className={styles.footerList}>
-                <li><a href="#">Klient</a></li>
-                <li><a href="#">Miért? — Podcast</a></li>
-                <li><a href="#">Kova — Tanfolyam</a></li>
+                <li><Link href="/aszf">ÁSZF</Link></li>
+                <li><Link href="/adatkezelesi-tajekoztato">Adatkezelési tájékoztató</Link></li>
               </ul>
             </div>
           </div>
-          <p className={styles.footerLegal}>© 2026 LineiQ. Minden jog fenntartva.</p>
+          <p className={styles.footerLegal}>© 2026 LineiQ. All rights reserved.</p>
         </div>
       </div>
     </div>

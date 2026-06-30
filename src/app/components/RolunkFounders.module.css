@@ -1,6 +1,6 @@
 .founders {
   background: var(--color-surface);
-  padding: var(--space-3xl) 0 0;
+  padding: var(--space-3xl) 0;
 }
 
 .head {
@@ -12,17 +12,15 @@
   margin: 0;
 }
 
-/* Minden alapító egy saját, közel teljes magasságú blokk — ezeken görgetve
-   játszódik le a kép → név beanimálás. */
+/* Két alapító: bal-, illetve jobb-oldalt, egymáshoz közel — a jobb fotó
+   feljebb húzva, hogy a kettő szoros, eltolt párt alkosson (nem 100vh). */
 .founder {
-  min-height: 100vh;
   display: flex;
-  align-items: center;
 }
 
 .inner {
   position: relative;
-  width: min(460px, 78vw);
+  width: min(340px, 58vw);
 }
 
 .left .inner {
@@ -32,13 +30,14 @@
 .right .inner {
   margin-left: auto;
   margin-right: 8vw;
+  margin-top: -8vh;
 }
 
 .photo {
   position: relative;
   z-index: 1;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   background: linear-gradient(150deg, #e6e6e6, #d2d2d2);
   display: flex;
   align-items: center;
@@ -49,7 +48,7 @@
 
 .initials {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 500;
   font-variation-settings: "opsz" 144;
   color: rgba(0, 0, 0, 0.12);
@@ -79,7 +78,7 @@
 .name {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2.25rem, 5.5vw, 4rem);
+  font-size: clamp(1.85rem, 4.5vw, 3.25rem);
   font-weight: 500;
   font-variation-settings: "opsz" 90;
   line-height: 1.05;
@@ -90,15 +89,19 @@
 }
 
 @media (max-width: 768px) {
-  .founder {
-    min-height: 90vh;
-  }
   .left .inner,
   .right .inner {
     margin-left: auto;
     margin-right: auto;
+    margin-top: 0;
+  }
+  .right .inner {
+    margin-top: var(--space-2xl);
+  }
+  .inner {
+    width: min(300px, 72vw);
   }
   .name {
-    font-size: clamp(1.85rem, 9vw, 2.75rem);
+    font-size: clamp(1.6rem, 8vw, 2.5rem);
   }
 }

@@ -4,22 +4,22 @@ import CtaSwap from "../components/CtaSwap";
 
 export const metadata: Metadata = {
   title: "Styleguide — LineiQ",
-  description: "Élő vizuális referencia a LineiQ design rendszerhez.",
+  description: "Living visual reference for the LineiQ design system.",
   robots: { index: false, follow: false },
 };
 
 type Color = { token: string; hex: string; name: string; note?: string };
 
 const baseColors: Color[] = [
-  { token: "--color-white", hex: "#FFFFFF", name: "Fehér", note: "Alap háttér" },
-  { token: "--color-black", hex: "#000000", name: "Fekete", note: "Szöveg, dark szekciók" },
-  { token: "--color-red", hex: "#DA0303", name: "Piros", note: "Brand hang, vonalak, reveal" },
+  { token: "--color-white", hex: "#FFFFFF", name: "White", note: "Base background" },
+  { token: "--color-black", hex: "#000000", name: "Black", note: "Text, dark sections" },
+  { token: "--color-red", hex: "#DA0303", name: "Red", note: "Brand voice, lines, reveal" },
 ];
 
 const grayColors: Color[] = [
-  { token: "--color-surface", hex: "#F4F4F4", name: "Felület", note: "Kártya háttér" },
-  { token: "--color-border", hex: "#E0E0E0", name: "Keret", note: "Elválasztó vonalak" },
-  { token: "--color-muted", hex: "#A0A0A0", name: "Tompa szöveg", note: "Másodlagos szöveg" },
+  { token: "--color-surface", hex: "#F4F4F4", name: "Surface", note: "Card background" },
+  { token: "--color-border", hex: "#E0E0E0", name: "Border", note: "Divider lines" },
+  { token: "--color-muted", hex: "#A0A0A0", name: "Muted text", note: "Secondary text" },
 ];
 
 const sizes = [
@@ -79,9 +79,9 @@ export default function StyleguidePage() {
       <div className="container">
         <header className={styles.header}>
           <p className={`text-label ${styles.eyebrow}`}>Styleguide · v1.0</p>
-          <h1 className={styles.title}>Vizuális rendszer</h1>
+          <h1 className={styles.title}>Visual system</h1>
           <p className={styles.lead}>
-            Élő referencia a LineiQ weboldal design tokenjeihez, komponenseihez és mozgásrendszeréhez. Minden szín, méret és animáció a tényleges CSS változókat olvassa, így ez az oldal mindig az aktuális állapotot mutatja, nem egy másolatot.
+            Living reference for the LineiQ website&apos;s design tokens, components and motion system. Every color, size and animation reads the actual CSS variables, so this page always shows the current state, not a copy.
           </p>
         </header>
 
@@ -90,9 +90,9 @@ export default function StyleguidePage() {
           <div className={styles.sectionHead}>
             <span className={styles.sectionNumber}>01</span>
             <div>
-              <h2 className={styles.sectionTitle}>Színrendszer</h2>
+              <h2 className={styles.sectionTitle}>Color system</h2>
               <p className={styles.sectionNote}>
-                A piros a brand hangja és az egyetlen szín a fekete-fehér alap mellett. A szürkék funkcionálisak, nem dekoratívak.
+                Red is the brand&apos;s voice and the only color alongside the black-and-white base. The grays are functional, not decorative.
               </p>
             </div>
           </div>
@@ -117,9 +117,9 @@ export default function StyleguidePage() {
           <div className={styles.sectionHead}>
             <span className={styles.sectionNumber}>02</span>
             <div>
-              <h2 className={styles.sectionTitle}>Tipográfiai szerepek</h2>
+              <h2 className={styles.sectionTitle}>Typographic roles</h2>
               <p className={styles.sectionNote}>
-                Három font, három feladat. Fraunces a display, Wix Madefor a funkció, Kranky a szignatúra. A Kranky kizárólag angol szóra, soha bekezdésre.
+                Three fonts, three jobs. Fraunces for display, Wix Madefor for function, Kranky for the signature. Kranky for English words only, never for paragraphs.
               </p>
             </div>
           </div>
@@ -148,7 +148,7 @@ export default function StyleguidePage() {
               <span className={styles.typeToken}>.text-section · Fraunces</span>
             </div>
             <div className={`${styles.typeSample} text-section`}>
-              Egyetlen csomag, nem à la carte
+              One package, not à la carte
             </div>
           </div>
 
@@ -166,7 +166,7 @@ export default function StyleguidePage() {
               <span className={styles.typeToken}>.text-body · Wix Madefor</span>
             </div>
             <p className={styles.typeSample} style={{ maxWidth: "62ch" }}>
-              A LineiQ vizuális rendszere két erő egyensúlyán alapul, precizitás és személyiség. Az architektúra geometrikus és kontrollált, a brand aláírása viszont emberkéz nyomát viseli.
+              The LineiQ visual system rests on a balance of two forces, precision and personality. The architecture is geometric and controlled, while the brand&apos;s signature carries the mark of a human hand.
             </p>
           </div>
 
@@ -175,7 +175,7 @@ export default function StyleguidePage() {
               <span className={styles.typeLabel}>Nav</span>
               <span className={styles.typeToken}>.text-nav · Wix Madefor</span>
             </div>
-            <div className={`${styles.typeSample} text-nav`}>Munkáink · Mit nyújtunk · Rólunk</div>
+            <div className={`${styles.typeSample} text-nav`}>Work · Services · About</div>
           </div>
 
           <div className={styles.typeRow}>
@@ -192,9 +192,9 @@ export default function StyleguidePage() {
           <div className={styles.sectionHead}>
             <span className={styles.sectionNumber}>03</span>
             <div>
-              <h2 className={styles.sectionTitle}>Méretskála</h2>
+              <h2 className={styles.sectionTitle}>Size scale</h2>
               <p className={styles.sectionNote}>
-                A teljes type scale Fraunces-ben szedve, hogy a karakter egyben látható legyen. A Fraunces optikai tengelye (opsz) a mérettel együtt nő, a nagy display méret kapja a vékony, magas kontrasztú vonalakat, a kicsi marad testes és olvasható. Body szövegnél Wix Madefort használj, ugyanezzel a méretskálával.
+                The full type scale set in Fraunces, so the character is visible at a glance. Fraunces&apos;s optical axis (opsz) grows with size: the large display size gets thin, high-contrast strokes, the small one stays sturdy and legible. For body text use Wix Madefor, with the same size scale.
               </p>
             </div>
           </div>
@@ -225,7 +225,7 @@ export default function StyleguidePage() {
             <div>
               <h2 className={styles.sectionTitle}>Spacing</h2>
               <p className={styles.sectionNote}>
-                Hét lépéses skála négy pixeltől 128 pixelig. A szekciók között <code>--space-xl</code> és <code>--space-2xl</code> dominál, a zsúfoltság elkerülése tudatos.
+                A seven-step scale from four pixels to 128 pixels. Between sections <code>--space-xl</code> and <code>--space-2xl</code> dominate; avoiding clutter is deliberate.
               </p>
             </div>
           </div>
@@ -244,9 +244,9 @@ export default function StyleguidePage() {
           <div className={styles.sectionHead}>
             <span className={styles.sectionNumber}>05</span>
             <div>
-              <h2 className={styles.sectionTitle}>Sarokrendszer</h2>
+              <h2 className={styles.sectionTitle}>Corner system</h2>
               <p className={styles.sectionNote}>
-                A komponensek geometrikusak és élesek, az ívet a Fraunces és a Kranky viseli. A pill kizárólag gombokon és kis kontraszt elemeken jelenik meg.
+                The components are geometric and sharp; the curve is carried by Fraunces and Kranky. The pill appears only on buttons and small low-contrast elements.
               </p>
             </div>
           </div>
@@ -269,9 +269,9 @@ export default function StyleguidePage() {
           <div className={styles.sectionHead}>
             <span className={styles.sectionNumber}>06</span>
             <div>
-              <h2 className={styles.sectionTitle}>Gombok</h2>
+              <h2 className={styles.sectionTitle}>Buttons</h2>
               <p className={styles.sectionNote}>
-                Egy gomb van: a highlight-swap. Egy fekete kihúzás takarja a szót, majd betűről betűre felhozza a másodlagos címkét, sötét háttéren a kihúzás fehér és a hover szöveg fekete. Vidd fölé a kurzort, hogy lásd a mozgást.
+                There is one button: the highlight-swap. A black strike covers the word, then brings up the secondary label letter by letter; on a dark background the strike is white and the hover text is black. Hover over it to see the motion.
               </p>
             </div>
           </div>
@@ -279,13 +279,13 @@ export default function StyleguidePage() {
           <div className={styles.buttonStage}>
             <div className={styles.buttonRow}>
               <a href="#" className={styles.swapButton}>
-                <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
+                <CtaSwap defaultLabel="Let's talk?" hoverLabel="Let's go!" />
               </a>
             </div>
 
             <div className={`${styles.buttonRow} ${styles.buttonRowDark} section--dark`}>
               <a href="#" className={styles.swapButton}>
-                <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
+                <CtaSwap defaultLabel="Let's talk?" hoverLabel="Let's go!" />
               </a>
             </div>
           </div>
@@ -296,9 +296,9 @@ export default function StyleguidePage() {
           <div className={styles.sectionHead}>
             <span className={styles.sectionNumber}>07</span>
             <div>
-              <h2 className={styles.sectionTitle}>Mozgás</h2>
+              <h2 className={styles.sectionTitle}>Motion</h2>
               <p className={styles.sectionNote}>
-                Súly és nyugalom, nem sebesség. A leglassabb in-out a brand belégzése, az expo a markánsabb belépő. Gyors mozdulatot itt nem használunk, a tempó maga a kultúra. Vidd fölé a csempét, hogy lásd a görbét.
+                Weight and calm, not speed. The slowest in-out is the brand&apos;s inhale, expo is the more pronounced entrance. We don&apos;t use fast movement here; the pace is the culture itself. Hover over a tile to see the curve.
               </p>
             </div>
           </div>
@@ -329,9 +329,9 @@ export default function StyleguidePage() {
           <div className={styles.sectionHead}>
             <span className={styles.sectionNumber}>08</span>
             <div>
-              <h2 className={styles.sectionTitle}>Vonalrendszer</h2>
+              <h2 className={styles.sectionTitle}>Line system</h2>
               <p className={styles.sectionNote}>
-                A vonal a brand alapeleme, de ritkán szól. Egy szekcióban csak egy típus él, és az is csak ott, ahol a kompozíció elbírja. A piros az egyetlen szín, a sűrűség pedig mindig alacsony.
+                The line is a core brand element, but it rarely speaks. Only one type lives in a section, and only where the composition can bear it. Red is the only color, and the density is always low.
               </p>
             </div>
           </div>
@@ -342,14 +342,14 @@ export default function StyleguidePage() {
                 <path d="M0 70 Q 100 30, 200 70 T 400 70" />
                 <path d="M0 110 Q 100 70, 200 110 T 400 110" />
               </svg>
-              <span className={styles.lineCaption}>Ambient — két hullám fáziseltolódással</span>
+              <span className={styles.lineCaption}>Ambient — two waves out of phase</span>
             </div>
 
             <div className={styles.lineSample}>
               <div className={styles.narrativeLine}>
                 <span />
               </div>
-              <span className={styles.lineCaption}>Narrative — scroll-triggered, egyirányú</span>
+              <span className={styles.lineCaption}>Narrative — scroll-triggered, one-directional</span>
             </div>
 
             <div className={styles.lineSample}>
@@ -362,14 +362,14 @@ export default function StyleguidePage() {
                   return <line key={i} x1={x} y1={y1} x2={x} y2={y2} style={{ animationDelay: `${i * 90}ms` }} />;
                 })}
               </svg>
-              <span className={styles.lineCaption}>Radial — sugárzó csoport, sarokba</span>
+              <span className={styles.lineCaption}>Radial — radiating cluster, into the corner</span>
             </div>
 
             <div className={styles.lineSample}>
               <div className={styles.cascadeLines} aria-hidden="true">
                 <span /><span /><span /><span /><span /><span /><span />
               </div>
-              <span className={styles.lineCaption}>Cascade — lépcsős vonalak, hullámzva</span>
+              <span className={styles.lineCaption}>Cascade — stepped lines, undulating</span>
             </div>
           </div>
         </section>
@@ -379,21 +379,21 @@ export default function StyleguidePage() {
           <div className={styles.sectionHead}>
             <span className={styles.sectionNumber}>09</span>
             <div>
-              <h2 className={styles.sectionTitle}>Dark szekció</h2>
+              <h2 className={styles.sectionTitle}>Dark section</h2>
               <p className={styles.sectionNote}>
-                Nincs dark mode kapcsoló. Az oldal egyes szekciói feketék, ezek dramaturgiai eszközök. A brand színek változatlanul működnek bennük.
+                There is no dark mode toggle. Some sections of the site are black; these are dramaturgical devices. The brand colors work unchanged within them.
               </p>
             </div>
           </div>
 
           <div className={`${styles.darkSample} section--dark`}>
-            <p className="text-label" style={{ marginBottom: "var(--space-md)" }}>Példa</p>
+            <p className="text-label" style={{ marginBottom: "var(--space-md)" }}>Example</p>
             <p className="text-statement" style={{ marginBottom: "var(--space-lg)" }}>
-              Felejtsd el az átlagost.
+              Forget being ordinary.
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--space-md)" }}>
               <a href="#" className={`${styles.swapButton} ${styles.swapButtonDark}`}>
-                <CtaSwap defaultLabel="Kezdjük el." hoverLabel="Beszéljünk!" />
+                <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's talk!" />
               </a>
             </div>
           </div>

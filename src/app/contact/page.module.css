@@ -400,6 +400,18 @@
     font-size: 11px;
   }
 
+  /* Nagyobb fogható terület a (láthatatlan) natív thumb-on, hogy ujjal is
+     könnyen húzható legyen — a látható 16px-es kör változatlan marad. */
+  .slider::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+    margin-top: -13px;
+  }
+  .slider::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+
   .doneGrid {
     grid-template-columns: 1fr;
     gap: var(--space-lg);

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import RolunkIntro from "../components/RolunkIntro";
 import RolunkCulture from "../components/RolunkCulture";
 import RolunkFounders from "../components/RolunkFounders";
 import RolunkMentors from "../components/RolunkMentors";
@@ -8,15 +7,14 @@ import RolunkClose from "../components/RolunkClose";
 import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
-  title: "Rólunk — LineiQ",
+  title: "About — LineiQ",
   description:
-    "Kondora Kristóf és Sütő Áron társalapítók. A LineiQ kultúrája, elvei és az emberek, akikre felnézünk.",
+    "Co-founders Kondora Kristóf and Sütő Áron. LineiQ's culture, principles, and the people we look up to.",
 };
 
 export default function RolunkPage() {
   return (
     <main>
-      <RolunkIntro />
       <RolunkCulture />
       <RolunkFounders />
       <RolunkMentors />

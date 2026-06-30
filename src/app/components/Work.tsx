@@ -31,23 +31,23 @@ const projects = [
   {
     client: "Klient",
     image: "/work/klient.jpg",
-    href: "/munkaink",
+    href: "/work",
     desc:
-      "Projektek, számlázás és ügyfélkommunikáció egyetlen felületen. A szoftver, amit előbb építettünk magunknak, mint hogy eladtuk volna bárkinek.",
+      "Projects, invoicing and client communication on a single surface. The software we built for ourselves before we ever sold it to anyone.",
   },
   {
-    client: "Helios Clinic",
+    client: "North",
     image: "/work/helios.jpg",
-    href: "/munkaink",
+    href: "/work",
     desc:
-      "Magánklinika, ami nem úgy néz ki, mint a többi. Új identitás, új hang, és egy foglalórendszer, ami az első kattintástól a visszahívásig vezet.",
+      "A budgeting app for iOS that makes money feel calm. A clear visual system, fluid native interactions, and a flow that turns everyday spending into a habit people actually keep.",
   },
   {
     client: "Miért?",
     image: "/work/miert.jpg",
-    href: "/munkaink",
+    href: "/work",
     desc:
-      "Podcast, aminek a kérdés a márkája. Editorial rendszer, mozgókép-nyelv és egy vizuális hang, ami minden epizódban ugyanúgy, felismerhetően szól.",
+      "A podcast whose brand is the question. An editorial system, a motion language and a visual voice that sounds the same, recognizably, in every episode.",
   },
 ];
 
@@ -57,11 +57,23 @@ export default function Work() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [enabled, setEnabled] = useState(false);
 
-  // Decide whether to run the diagonal build (client + motion allowed).
+  // Decide whether to run the diagonal build: client, motion allowed, AND a
+  // wide-enough viewport. Mobilon (≤768px) a pinelt diagonális koreográfia
+  // összepréselődik a magas-keskeny viewportben, ezért kikapcsoljuk és a
+  // statikus, egymás-alá-rakott fallback layout (kép + név + leírás) jelenik
+  // meg. A breakpoint átlépésére (resize/forgatás) újraértékeljük.
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    setEnabled(true);
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const wide = window.matchMedia("(min-width: 768px)");
+    const update = () => setEnabled(!reduce.matches && wide.matches);
+    update();
+    wide.addEventListener("change", update);
+    reduce.addEventListener("change", update);
+    return () => {
+      wide.removeEventListener("change", update);
+      reduce.removeEventListener("change", update);
+    };
   }, []);
 
   // Build the pin only AFTER the .isDiagonal class is committed to the DOM,
@@ -87,6 +99,7 @@ export default function Work() {
       let lastActive = 0; // text already shows project 0 — don't swap on load
       let swapTl: gsap.core.Timeline | null = null;
       let brandReveal: gsap.core.Tween | null = null;
+      let brandExit: gsap.core.Tween | null = null;
 
       // Write the name back one letter at a time: split the new text into chars
       // and stagger them up into place. The previous split is reverted first so
@@ -94,6 +107,7 @@ export default function Work() {
       const revealBrand = (text: string) => {
         if (!brandEl) return;
         brandReveal?.kill();
+        brandExit?.kill();
         brandSplit?.revert();
         brandEl.textContent = text;
         gsap.set(brandEl, { autoAlpha: 1 });
@@ -108,17 +122,42 @@ export default function Work() {
         });
       };
 
+      // The exact time-reverse of revealBrand: instead of fading the name out as
+      // one block, the current letters drop back down and out one by one — last
+      // letter first — so the name "un-writes" itself the way it was written. The
+      // current split is reused (it holds the on-screen chars); if there isn't one
+      // yet (very first swap shows the JSX text node) we split it on the fly.
+      // Returns the exit's total time so the caller can start the new name after.
+      const exitBrand = (): number => {
+        if (!brandEl) return 0;
+        brandReveal?.kill();
+        brandExit?.kill();
+        if (!brandSplit) {
+          brandSplit = new SplitText(brandEl, { type: "chars" });
+          gsap.set(brandSplit.chars, { display: "inline-block" });
+        }
+        brandExit = gsap.to(brandSplit.chars, {
+          autoAlpha: 0,
+          yPercent: 25,
+          duration: 0.5,
+          ease: "power3.in",
+          stagger: { each: 0.045, from: "end" },
+        });
+        return brandExit.totalDuration();
+      };
+
       // Calm, staggered change — the two labels never move in unison. The name
-      // leads: it fades out, then writes itself back letter by letter. The
-      // description follows a beat later with a soft crossfade. Absolute
-      // timeline positions keep the offset independent of scroll speed.
+      // leads: it un-writes itself letter by letter (reversed entrance), then the
+      // next name writes itself back in. The description follows a beat later with
+      // a soft crossfade. Absolute timeline positions keep the offset independent
+      // of scroll speed.
       const swapText = (active: number) => {
         const p = projects[active];
         swapTl?.kill(); // a fast scroll past two works can't stack swaps
         const tl = gsap.timeline();
         if (brandEl) {
-          tl.to(brandEl, { autoAlpha: 0, duration: 0.22, ease: "power2.in" }, 0)
-            .add(() => revealBrand(p.client), 0.22);
+          const exitDur = exitBrand();
+          tl.add(() => revealBrand(p.client), exitDur);
         }
         if (copyEl) {
           tl.to(copyEl, { autoAlpha: 0, duration: 0.3, ease: "power2.in" }, 0.18)
@@ -296,7 +335,7 @@ export default function Work() {
     <section
       ref={rootRef}
       className={`${styles.work} ${enabled ? styles.isDiagonal : ""}`}
-      id="munkak"
+      id="work"
     >
       <div ref={stageRef} className={styles.stage}>
         <div ref={trackRef} className={styles.track}>
@@ -306,7 +345,7 @@ export default function Work() {
               href={p.href}
               className={styles.page}
               data-page
-              data-cursor-text="Case megnézése"
+              data-cursor-text="View case"
               style={{ "--i": i } as CSSProperties}
             >
               <div className={styles.inner} data-inner>
@@ -315,8 +354,22 @@ export default function Work() {
                   <img src={p.image} alt={p.client} className={styles.featureImg} />
                 </div>
               </div>
+              {/* Statikus (mobil / reduced-motion) nézet felirata — diagonális
+                  módban elrejtve, ott a swap-elő .brand/.copy viszi a szöveget. */}
+              <div className={styles.caption}>
+                <h3 className={styles.captionBrand}>{p.client}</h3>
+                <p className={styles.captionDesc}>{p.desc}</p>
+              </div>
             </Link>
           ))}
+        </div>
+
+        {/* Csak a statikus (stacked) nézetben: a diagonális mód a cornerCta-t
+            használja a saját pinelt sarkában. */}
+        <div className={styles.stackedCta}>
+          <SplashLink href="/work" className={styles.cornerCtaLink}>
+            <CtaSwap defaultLabel="All our work ↗" hoverLabel="Let's see ↗" />
+          </SplashLink>
         </div>
 
         <p className={styles.copy} data-copy>
@@ -328,8 +381,8 @@ export default function Work() {
         </h3>
 
         <div className={styles.cornerCta} data-corner-cta>
-          <SplashLink href="/munkaink" className={styles.cornerCtaLink}>
-            <CtaSwap defaultLabel="Összes munkánk ↗" hoverLabel="Nézzük meg! ↗" />
+          <SplashLink href="/work" className={styles.cornerCtaLink}>
+            <CtaSwap defaultLabel="All our work ↗" hoverLabel="Let's see ↗" />
           </SplashLink>
         </div>
       </div>

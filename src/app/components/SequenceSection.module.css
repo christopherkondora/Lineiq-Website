@@ -113,6 +113,14 @@
   color: var(--color-white);
 }
 
+/* Channels awaiting a live URL: present but visibly inactive. */
+.footerSoon {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.4);
+  cursor: default;
+}
+
 .footerLegal {
   font-family: var(--font-body);
   font-size: var(--text-xs);
@@ -122,16 +130,12 @@
   padding: var(--space-sm) var(--container-pad) var(--space-lg);
 }
 
+/* Mobilon a teljes frame-synced szekvenció ki van kapcsolva: a .wrapper
+   elrejtése megszünteti a 350vh-t és a sticky canvas-jelenetet (CTA + overlay
+   footer együtt), a JS pedig be sem tölti a 40 frame-et (lásd SequenceSection.tsx
+   matchMedia guard). Az oldalt mobilon a page.tsx statikus footere zárja. */
 @media (max-width: 900px) {
-  .footerGrid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-lg);
-    padding: var(--space-md) var(--container-pad-mobile) var(--space-sm);
-  }
-}
-
-@media (max-width: 500px) {
-  .footerGrid {
-    grid-template-columns: 1fr;
+  .wrapper {
+    display: none;
   }
 }

@@ -14,10 +14,10 @@ type MenuItem = {
 };
 
 const menuItems: MenuItem[] = [
-  { label: "Munkáink", href: "/munkaink" },
-  { label: "Mit nyújtunk?", href: "/#szolgaltatasok" },
-  { label: "Rólunk", href: "/rolunk" },
-  { label: "Kapcsolat", href: "/kapcsolat" },
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/#services" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -115,42 +115,29 @@ export default function Navbar() {
           onDark || open ? styles.onDark : ""
         }`}
       >
-        <Link href="/" className={styles.logo} aria-label="LineiQ főoldal">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={onDark || open ? "/logo-white.svg" : "/logo-black.svg"}
-            alt="LineiQ"
-            className={styles.logoImg}
-          />
-        </Link>
+        {/* Bal: hamburger menü (a menü nyitó/záró gombja). */}
+        <button
+          className={styles.toggle}
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-label={open ? "Close menu" : "Open menu"}
+        >
+          <span className={`${styles.bar} ${open ? styles.barOpenA : ""}`} />
+          <span className={`${styles.bar} ${open ? styles.barOpenB : ""}`} />
+        </button>
 
-        <div className={styles.right}>
-          {/* A kapcsolat oldalon a CTA önmagára mutatna — ott nem jelenik meg. */}
-          {!hideCta && pathname !== "/kapcsolat" && (
-            <SplashLink
-              href="/kapcsolat"
-              className={styles.cta}
-              onClick={closeMenu}
-            >
-              <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
-            </SplashLink>
-          )}
-
-          <button
-            className={styles.toggle}
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-label={open ? "Menü bezárása" : "Menü megnyitása"}
-          >
-            <span className={`${styles.bar} ${open ? styles.barOpenA : ""}`} />
-            <span className={`${styles.bar} ${open ? styles.barOpenB : ""}`} />
-          </button>
-        </div>
+        {/* Jobb: kapcsolatfelvétel gomb. A kapcsolat oldalon a CTA önmagára
+            mutatna — ott nem jelenik meg. */}
+        {!hideCta && pathname !== "/contact" && (
+          <SplashLink href="/contact" className={styles.cta} onClick={closeMenu}>
+            <CtaSwap defaultLabel="Let's talk?" hoverLabel="Let's go!" />
+          </SplashLink>
+        )}
       </header>
 
       <div
         ref={overlayRef}
-        className={styles.overlay}
+        className={`${styles.overlay} ${open ? styles.overlayOpen : ""}`}
         aria-hidden={!open}
         role="dialog"
       >

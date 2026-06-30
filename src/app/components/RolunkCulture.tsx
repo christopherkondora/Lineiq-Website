@@ -5,25 +5,11 @@ import styles from "./RolunkCulture.module.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// A kultúra szekció a Rólunk oldal magja — itt a hangsúly a LineiQ
-// gondolkodásmódján, nem az alapítók életrajzán. A body szövegek egyelőre
-// lorem ipsum helykitöltők, a végleges hangot Kristóf és Áron adja meg.
-const PRINCIPLES = [
-  {
-    num: "01",
-    title: "Mélymunka, nem zaj",
-    body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua nostrud.",
-  },
-  {
-    num: "02",
-    title: "Rendszer, nem kampány",
-    body: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure.",
-  },
-  {
-    num: "03",
-    title: "Ízlés, nem sablon",
-    body: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum sed perspiciatis.",
-  },
+// A Rólunk második szekciója: tisztán szöveg, a piros narratív vonal a
+// háttérben. A bekezdések szavanként világosodnak ki, a fény átlósan söpör
+// végig a szövegen (bal-felülről jobb-alulra), a görgetéshez kötve.
+const PARAGRAPHS = [
+  "Founders shaping the world deserve a presence as strong as what they build. Most founders we work with create something significant, but their presence doesn't show it yet.",
 ];
 
 export default function RolunkCulture() {
@@ -35,33 +21,70 @@ export default function RolunkCulture() {
     const root = rootRef.current;
     if (!root) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const words = gsap.utils.toArray<HTMLElement>("[data-word]", root);
+    const line = root.querySelector<SVGPathElement>("[data-line]");
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // Reduced motion: a teljes szöveg azonnal világos, a vonal kirajzolva.
+      gsap.set(words, { opacity: 1 });
+      return;
+    }
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        root.querySelectorAll("[data-reveal]"),
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.9,
-          stagger: 0.12,
-          ease: "power3.out",
-          clearProps: "opacity,transform",
-          scrollTrigger: { trigger: root, start: "top 70%" },
-        }
-      );
+      // Minden szó átlós pozíciója (bal + felső táv a szekció sarkától)
+      // adja a wave sorrendjét — ez söpör végig a görgetés alatt.
+      const rootRect = root.getBoundingClientRect();
+      const metrics = words.map((w) => {
+        const r = w.getBoundingClientRect();
+        return {
+          w,
+          diag: r.left - rootRect.left + (r.top - rootRect.top),
+        };
+      });
+      const diags = metrics.map((m) => m.diag);
+      const min = Math.min(...diags);
+      const span = Math.max(...diags) - min || 1;
 
-      const line = root.querySelector<SVGPathElement>("[data-narrative-line]");
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: root,
+          // A wave akkor fejeződjön be, amikor a szöveg középre ér (még jól
+          // látható), ne csak a szekció kigörgetésekor — ezért gyorsabb ablak.
+          start: "top 82%",
+          end: "center 35%",
+          scrub: 0.6,
+        },
+      });
+
+      // BAND: a görgetés mekkora hányadán át vált egy szó sötétből világosba.
+      // A szavak az átlós pozíciójuk arányában lépnek be, így átlós sávban
+      // söpör végig a fény.
+      const BAND = 0.22;
+      metrics.forEach(({ w, diag }) => {
+        const t = (diag - min) / span;
+        tl.fromTo(
+          w,
+          { opacity: 0.16 },
+          { opacity: 1, ease: "none", duration: BAND },
+          t * (1 - BAND)
+        );
+      });
+
+      // Háttér piros vonal: a szekció belépésekor gyorsan, balról jobbra
+      // rajzolódik át teljesen — rövid ablak, hogy olvasáskor már mindig teljes
+      // szélességű legyen (a vonal mindkét szélen túlfut a viewporton).
       if (line) {
-        const length = line.getTotalLength();
-        line.style.strokeDasharray = `${length}`;
-        line.style.strokeDashoffset = `${length}`;
+        const len = line.getTotalLength();
+        gsap.set(line, { strokeDasharray: len, strokeDashoffset: len });
         gsap.to(line, {
           strokeDashoffset: 0,
-          duration: 2,
-          ease: "power3.out",
-          scrollTrigger: { trigger: root, start: "top 65%" },
+          ease: "none",
+          scrollTrigger: {
+            trigger: root,
+            start: "top 92%",
+            end: "top 58%",
+            scrub: 0.4,
+          },
         });
       }
     }, root);
@@ -73,46 +96,37 @@ export default function RolunkCulture() {
     <section
       ref={rootRef}
       className={`section section--dark ${styles.culture}`}
-      id="kultura"
+      id="culture"
     >
-      <div className="container">
-        <header className={styles.head}>
-          <svg
-            className={styles.narrativeLine}
-            viewBox="0 0 1440 200"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M 0 100 Q 360 20, 720 100 T 1440 100"
-              stroke="var(--color-red)"
-              strokeWidth="1.2"
-              fill="none"
-              data-narrative-line
-            />
-          </svg>
-          <h2 className={`text-statement ${styles.heading}`} data-reveal>
-            A kultúra nem dísz.
-            <br />
-            Az a termék.
-          </h2>
-          <p className={styles.lead} data-reveal>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </p>
-        </header>
+      <svg
+        className={styles.line}
+        viewBox="0 0 1440 200"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M 0 100 Q 360 60, 720 100 T 1440 100"
+          stroke="var(--color-red)"
+          strokeWidth="1.2"
+          fill="none"
+          data-line
+        />
+      </svg>
 
-        <ul className={styles.principles}>
-          {PRINCIPLES.map((p) => (
-            <li key={p.num} className={styles.principle} data-reveal>
-              <span className={styles.num}>{p.num}</span>
-              <h3 className={styles.principleTitle}>{p.title}</h3>
-              <p className={styles.principleBody}>{p.body}</p>
-            </li>
+      <div className="container">
+        <div className={styles.copy}>
+          {PARAGRAPHS.map((para, pi) => (
+            <p key={pi} className={styles.para}>
+              {para.split(" ").map((word, wi) => (
+                <span key={wi}>
+                  <span className={styles.word} data-word>
+                    {word}
+                  </span>{" "}
+                </span>
+              ))}
+            </p>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

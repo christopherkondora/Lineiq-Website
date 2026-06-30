@@ -96,12 +96,97 @@ body {
   overflow-x: clip;
 }
 
+/* ─── Text selection ───────────────────────────────────── */
+::selection {
+  background: var(--color-red);
+  color: var(--color-white);
+}
+::-moz-selection {
+  background: var(--color-red);
+  color: var(--color-white);
+}
+
 @media (pointer: fine) {
   html,
-  body,
-  a,
-  button {
+  html * {
     cursor: none;
+  }
+}
+
+/* LineiQ saját kurzor (kézzel rajzolt ecsetvonás). A wrapper követi az egeret
+   (JS translate), a középre igazított mark a kurzor-pont. A függőleges line
+   mindig látszik; a plus overlay ugyanarra a középre ül, és clip-path-szal a
+   középvonalból kifelé "behúzza" a vízszintes szárat kattintható felület fölött.
+   A váltás tisztán CSS :has(). Az SVG-k tiszta fehérek: brightness(0) feketére
+   festi őket a domináns világos hero fölött, köré fehér haló kerül, hogy sötét
+   szekción is kirajzolódjanak. */
+:root {
+  --cursor-h: 30px; /* a mark magassága; a line ennek ~1/6.5-e széles */
+  --cursor-w: 38px; /* a doboz szélessége: >= a plus szélessége + haló */
+}
+
+/* A .cursor valós méretű doboz, és JS-ben a kurzor-pontra van középre tolva
+   (translate(-50%,-50%)). A mark tiszta fehér; mix-blend-mode: difference
+   invertálja a háttérhez: világos felületen feketének, sötéten fehérnek
+   látszik — haló nélkül. (A cursor a <body> közvetlen gyereke, a Lenis nem
+   transzformált wrappert használ, így a difference a teljes oldal háttere
+   ellen blendel.) */
+.cursor {
+  position: fixed;
+  inset: 0 auto auto 0;
+  width: var(--cursor-w);
+  height: var(--cursor-h);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: transform;
+  mix-blend-mode: difference;
+}
+
+.cursor.is-visible {
+  opacity: 1;
+}
+
+/* A line és a plus is a dobozon belül, középre igazítva. */
+.cursor-mark {
+  position: absolute;
+  inset: 0;
+}
+
+.cursor-mark img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: var(--cursor-h);
+  width: auto;
+  display: block;
+}
+
+/* A plus a középvonalra zárva (0 széles) rejtett; hover-re kinyílik → a
+   vízszintes szár a középből kifelé rajzolódik be. A függőleges szára pont
+   a line fölé esik, így nincs ugrás. */
+.cursor-plus {
+  clip-path: inset(0 50% 0 50%);
+  transition: clip-path 0.15s ease;
+}
+
+body:has(a:hover) .cursor-plus,
+body:has(button:hover) .cursor-plus,
+body:has([data-cursor]:hover) .cursor-plus {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-plus {
+    transition: none;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .cursor {
+    display: none;
   }
 }
 

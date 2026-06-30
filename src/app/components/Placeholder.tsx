@@ -36,23 +36,23 @@ export default function Placeholder({
         <p className={styles.lede}>{lede}</p>
 
         <div className={styles.actions}>
-          <SplashLink href="/kapcsolat" className={styles.ctaLink}>
-            <CtaSwap defaultLabel="Beszéljünk?" hoverLabel="Vágjunk bele!" />
+          <SplashLink href="/contact" className={styles.ctaLink}>
+            <CtaSwap defaultLabel="Let's talk?" hoverLabel="Let's go!" />
           </SplashLink>
           <SplashLink href="/" className={styles.backLink}>
-            Vissza a főoldalra
+            Back to home
           </SplashLink>
         </div>
 
         <div className={styles.meta}>
           <div>
-            <span className="text-label">Státusz</span>
+            <span className="text-label">Status</span>
             <p className={styles.metaText}>
-              {nextStep ?? "Az oldal aktív fejlesztés alatt."}
+              {nextStep ?? "The page is under active development."}
             </p>
           </div>
           <div>
-            <span className="text-label">Élesítés</span>
+            <span className="text-label">Launch</span>
             <p className={styles.metaText}>{eta}</p>
           </div>
         </div>
