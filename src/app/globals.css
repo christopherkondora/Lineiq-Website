@@ -97,6 +97,29 @@ body {
   overflow-x: clip;
 }
 
+/* Betöltési intro alatt nincs scroll. Az attribútum értéke a variáns
+   ("type" vagy "wave"); a Hero veszi le, amikor az intro lefutott. */
+html[data-preloader] {
+  overflow: hidden;
+}
+
+/* Mindkét variánsban rejtve várnak: a hero vonalai, a pont és az aláírás. */
+html[data-preloader] [data-gate-hide] {
+  visibility: hidden;
+}
+
+/* Zaj-variáns: a cím is rejtve vár, mert ott a vonalak viszik a gesztust. */
+html[data-preloader="wave"] [data-gate-hide-wave] {
+  visibility: hidden;
+}
+
+/* Tipográfiai variáns: a cím az első festéstől látszik, csak hibásan szedve.
+   Ez az --intro-p 0 értéke; a Hero tweeneli 1-re. Így nincs üres fehér
+   képernyő a hidratálásig — a betöltés maga a szedés helyreállása. */
+html[data-preloader="type"] {
+  --intro-p: 0;
+}
+
 /* ─── Text selection ───────────────────────────────────── */
 ::selection {
   background: var(--color-red);

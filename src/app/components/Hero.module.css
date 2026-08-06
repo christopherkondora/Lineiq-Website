@@ -25,14 +25,39 @@
   font-weight: 600;
   letter-spacing: var(--tracking-tight);
   /* opsz-t fixen pinneljük, nem bízzuk az auto optical sizingra: a cím nagy, így
-     a vékony, magas-kontrasztú display karaktert akarjuk (mint a többi fejléc). */
-  font-variation-settings: "opsz" 144;
+     a vékony, magas-kontrasztú display karaktert akarjuk (mint a többi fejléc).
+     Az --intro-p a tipográfiai intro keverője: 1 = kész (opsz 144), 0 = a
+     betöltés hibás szedése (opsz 9, azaz kisbetűs optikai vágás display
+     fokozatban). Intro nélkül a fallback 1, tehát ez a sor változatlanul
+     144-et jelent. */
+  font-variation-settings: "opsz" calc(9 + 135 * var(--intro-p, 1));
   font-size: clamp(2.75rem, 10vw, 9.2rem);
   line-height: 0.98;
 }
 
 .word {
   display: inline-block; /* so the per-word entrance transform applies */
+}
+
+/* Karakterenkénti szedési hibák a tipográfiai intróhoz. Csak az intro
+   idejére léteznek (typeIntro.ts bontja szét és állítja vissza a szöveget),
+   mert az inline-block spanek elrontanák az alávágást a kész címben.
+   Minden hiba az --intro-p-vel csillapodik nullára, tehát a végállapot
+   pontosan az, ami intro nélkül lenne. */
+.char {
+  display: inline-block;
+  white-space: pre; /* a szóközök is karakterek maradjanak */
+  /* Karakterenként saját opsz, hogy a helyreállás staggerelhető legyen: a
+     sor balról jobbra "ül le" a helyes optikai vágásba. */
+  font-variation-settings: "opsz" calc(9 + 135 * var(--intro-p, 1));
+  transform: translateY(calc(var(--r, 0) * (1 - var(--intro-p, 1)) * 0.13em))
+    scaleX(calc(1 + var(--r2, 0) * (1 - var(--intro-p, 1)) * 0.12));
+  /* Az alávágás-veszteséget nem itt egyenlítjük ki, hanem karakterenkénti
+     jobb margóval (typeIntro.ts) — egy átlagolt letter-spacing korrekció
+     ugyanis nem párfüggő, és a glifák külön-külön elugranának a szöveg
+     visszaállításakor. Itt csak a szándékos, hibás karaktertáv van. */
+  letter-spacing: calc(var(--r3, 0) * (1 - var(--intro-p, 1)) * 0.08em);
+  font-weight: calc(600 + var(--r2, 0) * (1 - var(--intro-p, 1)) * 250);
 }
 
 .ordinaryWrap {

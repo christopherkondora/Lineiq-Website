@@ -22,7 +22,7 @@ const MENTORS = [
   {
     initials: "—",
     name: "Soon",
-    line: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. The list is growing, the final roster is in the works.",
+    line: "The roster is still forming. A name earns its place here only after the thinking behind it has changed how we actually work.",
     placeholder: true,
   },
 ];

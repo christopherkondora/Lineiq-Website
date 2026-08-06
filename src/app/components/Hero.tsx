@@ -4,88 +4,47 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Hero.module.css";
+import { splitWords } from "./typeIntro";
+import {
+  HERO_LINE_A,
+  HERO_LINE_B,
+  HERO_LINE_A_MOBILE,
+  HERO_LINE_B_MOBILE,
+  initPhases,
+  stepWavePath,
+  staticWavePath,
+} from "./waveEngine";
 
-type WaveComponent = { amp: number; k: number; speed: number; phase: number };
-type WaveLine = { baseline: number; comps: WaveComponent[] };
+// A hero egyben a betöltési élmény is. Két intro-variáns létezik, a layout
+// gate-scriptje írja ki a html[data-preloader] attribútum értékébe:
+//
+// "type" (élesben ez fut) — a cím az első festéstől látszik, csak hibásan
+//   szedve: opsz 9 display fokozatban, ingadozó vastagsággal, elcsúszott
+//   sorvonallal és hibás karaktertávval. A betöltés végére helyreáll. A
+//   gesztus a stúdió saját mércéjéről szól, és nincs üres fehér képernyő:
+//   a tartalom végig ott van, csak rosszul.
+//
+// "wave" — a korábbi zaj→nyugalom hullám: a két ambient vonal volatilisen
+//   vibrál, majd lecsillapodik a hero lélegzésébe, és csak utána jön a
+//   szöveg. Megtartva összehasonlításra, a /preloader oldalon váltható.
+//
+// Ismételt látogatáskor (nincs attribútum) mindkét esetben a megszokott
+// belépő fut: szavak, pont, szignó, majd a vonalak elúszása.
 
-const TAU = Math.PI * 2;
-const WAVE_X0 = -60;
-const WAVE_X1 = 1500;
-const WAVE_STEP = 60;
+export type IntroVariant = "type" | "wave";
 
-// Each line is a sum of long, gentle sines with its own phases and speeds, so
-// the crests drift slowly and the two lines fall out of phase with each other.
-const LINE_A: WaveLine = {
-  baseline: 340,
-  comps: [
-    { amp: 30, k: TAU / 980, speed: 0.32, phase: 0 },
-    { amp: 9, k: TAU / 560, speed: -0.5, phase: 1.1 },
-  ],
-};
+const SESSION_KEY = "lineiq-preloaded";
+const MIN_NOISE = 1.1; // wave: ennyit legalább zajong, hogy olvasható legyen
+const MAX_NOISE = 2.6; // wave: ennél tovább akkor sem várunk
+const MAX_FONT_WAIT = 2.0; // type: a betűre várunk, de nem a végtelenségig
 
-const LINE_B: WaveLine = {
-  baseline: 366,
-  comps: [
-    { amp: 27, k: TAU / 1080, speed: 0.26, phase: 1.8 },
-    { amp: 8, k: TAU / 600, speed: 0.44, phase: 0.4 },
-  ],
-};
-
-// The SVG stretches a 1440-wide viewBox across a ~390px phone (preserveAspectRatio
-// "none"), which squeezes the desktop wavelengths into many crests and reads as
-// busy. On mobile we stretch the wavelengths ~3x and soften the amplitude and
-// drift so only a gentle curve or two crosses the screen — the same calm the
-// desktop has.
-const LINE_A_MOBILE: WaveLine = {
-  baseline: 340,
-  comps: [
-    { amp: 20, k: TAU / 2900, speed: 0.18, phase: 0 },
-    { amp: 6, k: TAU / 1680, speed: -0.28, phase: 1.1 },
-  ],
-};
-
-const LINE_B_MOBILE: WaveLine = {
-  baseline: 366,
-  comps: [
-    { amp: 18, k: TAU / 3200, speed: 0.15, phase: 1.8 },
-    { amp: 5, k: TAU / 1800, speed: 0.25, phase: 0.4 },
-  ],
-};
-
-// Smooth Catmull-Rom spline through the sampled points (rendered as cubic
-// beziers) so the line flows without visible breaking points.
-function buildWavePath(line: WaveLine, t: number): string {
-  const pts: number[] = [];
-  for (let x = WAVE_X0; x <= WAVE_X1; x += WAVE_STEP) {
-    let y = line.baseline;
-    for (const c of line.comps) {
-      y += c.amp * Math.sin(x * c.k + t * c.speed + c.phase);
-    }
-    pts.push(x, y);
-  }
-
-  const n = pts.length / 2;
-  const px = (i: number) => pts[Math.max(0, Math.min(n - 1, i)) * 2];
-  const py = (i: number) => pts[Math.max(0, Math.min(n - 1, i)) * 2 + 1];
-
-  let d = `M${px(0).toFixed(1)} ${py(0).toFixed(2)}`;
-  for (let i = 0; i < n - 1; i++) {
-    const c1x = px(i) + (px(i + 1) - px(i - 1)) / 6;
-    const c1y = py(i) + (py(i + 1) - py(i - 1)) / 6;
-    const c2x = px(i + 1) - (px(i + 2) - px(i)) / 6;
-    const c2y = py(i + 1) - (py(i + 2) - py(i)) / 6;
-    d += ` C${c1x.toFixed(1)} ${c1y.toFixed(2)} ${c2x.toFixed(1)} ${c2y.toFixed(2)} ${px(
-      i + 1
-    ).toFixed(1)} ${py(i + 1).toFixed(2)}`;
-  }
-  return d;
-}
-
-// Static frame used for SSR / first paint / reduced-motion.
-const STATIC_A = buildWavePath(LINE_A, 0);
-const STATIC_B = buildWavePath(LINE_B, 0);
-
-export default function Hero() {
+export default function Hero({
+  forceIntro = false,
+  introVariant,
+}: {
+  forceIntro?: boolean;
+  introVariant?: IntroVariant;
+}) {
   const rootRef = useRef<HTMLElement>(null);
   const lineARef = useRef<SVGPathElement>(null);
   const lineBRef = useRef<SVGPathElement>(null);
@@ -98,58 +57,211 @@ export default function Hero() {
     if (!root) return;
 
     const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    const lineA = isMobile ? LINE_A_MOBILE : LINE_A;
-    const lineB = isMobile ? LINE_B_MOBILE : LINE_B;
+    const lineA = isMobile ? HERO_LINE_A_MOBILE : HERO_LINE_A;
+    const lineB = isMobile ? HERO_LINE_B_MOBILE : HERO_LINE_B;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      // Still pick the right (calmer) frame for mobile when motion is off.
-      lineARef.current?.setAttribute("d", buildWavePath(lineA, 0));
-      lineBRef.current?.setAttribute("d", buildWavePath(lineB, 0));
+      // Statikus calm frame — mobilon is a szelídebb paraméterekkel.
+      lineARef.current?.setAttribute("d", staticWavePath(lineA));
+      lineBRef.current?.setAttribute("d", staticWavePath(lineB));
       return;
     }
 
+    const gateAttr = document.documentElement.getAttribute("data-preloader");
+    const intro = forceIntro || gateAttr !== null;
+    const variant: IntroVariant =
+      introVariant ?? (gateAttr === "wave" ? "wave" : "type");
+    const waveIntro = intro && variant === "wave";
+    const typeIntro = intro && variant === "type";
+
+    // A hullám-driver: a calm.pA/pB (0 = zaj, 1 = nyugalom) a két vonal
+    // megnyugvási állapota. Csak a wave-variáns indul zajból; a tipográfiai
+    // intro alatt a vonalak eleve nyugodtak, csak később úsznak be.
+    const calm = { pA: waveIntro ? 0 : 1, pB: waveIntro ? 0 : 1 };
+    const phasesA = initPhases(lineA);
+    const phasesB = initPhases(lineB);
+
+    let raf = 0;
+    let last = performance.now();
+    const tick = (now: number) => {
+      // tab-váltás után ne ugorjon nagyot a fázis
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+      lineARef.current?.setAttribute("d", stepWavePath(lineA, phasesA, dt, calm.pA));
+      lineBRef.current?.setAttribute("d", stepWavePath(lineB, phasesB, dt, calm.pB));
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
+    const delayedCalls: gsap.core.Tween[] = [];
+    let restoreText: (() => void) | null = null;
+
     const ctx = gsap.context(() => {
-      const words = root.querySelectorAll("[data-hero-word]");
+      const words = root.querySelectorAll<HTMLElement>("[data-hero-word]");
       const dot = root.querySelector("[data-hero-dot]");
       const sig = root.querySelector("[data-hero-sig]");
       const lineSvg = root.querySelector("[data-hero-line]");
+      const titleEl = root.querySelector<HTMLElement>("h1");
 
-      // lines start hidden — they only breathe in once the type has landed
-      if (lineSvg) gsap.set(lineSvg, { autoAlpha: 0 });
-
-      const tl = gsap.timeline({ delay: 0.2 });
-
-      // 1) "Forget being ordinary" rises in word by word
-      tl.from(words, {
-        yPercent: 100,
-        autoAlpha: 0,
-        duration: 0.9,
-        ease: "power4.out",
-        stagger: 0.14,
-      });
-
-      // 2) the dot gets its own playful entrance — it drops in and bounces,
-      //    fading in quickly so the opacity doesn't inherit the bounce
-      if (dot) {
-        tl.from(dot, { autoAlpha: 0, duration: 0.3, ease: "power1.out" }, "-=0.35")
-          .from(dot, { y: -90, duration: 0.9, ease: "bounce.out" }, "<");
+      if (intro) {
+        // a dev hangolóoldalon (forceIntro) nem nyúlunk a scrollhoz
+        if (!forceIntro) window.scrollTo(0, 0);
       }
 
-      // 3) "noise off." writes itself in — a clip-path wipe left→right reveals
-      //    the cursive along its slant, like a pen signing it
-      if (sig) {
-        tl.fromTo(
-          sig,
-          { clipPath: "inset(0 100% 0 0)" },
-          { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power1.inOut" },
-          "-=0.3"
+      if (waveIntro) {
+        // A gate-CSS a vonalakat is rejti (ne a nyugodt SSR-frame villanjon be
+        // a zaj előtt) — az inline visibility itt írja felül, már zaj-módban.
+        if (lineSvg) gsap.set(lineSvg, { autoAlpha: 1 });
+      } else if (lineSvg) {
+        // Tipográfiai intro és ismételt látogatás: a vonalak a szöveg után
+        // lélegeznek be.
+        gsap.set(lineSvg, { autoAlpha: 0 });
+      }
+
+      const tl = gsap.timeline({
+        delay: intro ? 0 : 0.2,
+        paused: intro,
+        onComplete: () => {
+          if (!intro) return;
+          try {
+            sessionStorage.setItem(SESSION_KEY, "true");
+          } catch {
+            // privát mód — legfeljebb újra lejátszik
+          }
+        },
+      });
+
+      if (waveIntro) {
+        // 1) Megnyugvás: a zaj-paraméterek átúsznak a hero ambient értékeibe.
+        //    A B vonal kicsit lemaradva követ — előbb az egyik csendesedik el,
+        //    aztán a másik, ez adja az organikus "elülés" érzetet.
+        tl.to(calm, { pA: 1, duration: 1.8, ease: "power2.out" }, 0).to(
+          calm,
+          { pB: 1, duration: 1.8, ease: "power2.out" },
+          0.22
+        );
+        // 2) A szöveg már a lecsengés farkán indul; ugyanitt kerül le a
+        //    data-preloader attribútum — a navbar CSS-ből úszik be, és a
+        //    scroll-zár is ekkor enged fel.
+        tl.call(
+          () => document.documentElement.removeAttribute("data-preloader"),
+          [],
+          1.0
         );
       }
 
-      // 4) only now do the ambient lines fade in
-      if (lineSvg) {
-        tl.to(lineSvg, { autoAlpha: 1, duration: 2.4, ease: "power2.out" }, ">-0.15");
+      if (typeIntro) {
+        // A cím már látszik (hibásan szedve). Karakterekre bontjuk, hogy a
+        // helyreállás balról jobbra fusson végig a soron, mint egy szedés,
+        // ami leül a helyére. A pont és az aláírás inline rejtve várnak,
+        // hogy a gate levétele ne villantsa be őket idő előtt.
+        if (dot) gsap.set(dot, { autoAlpha: 0 });
+        if (sig) gsap.set(sig, { autoAlpha: 0 });
 
+        // A bontás a KÉSZ állapotban mér (alávágott előtolások, dobozméretek),
+        // ezért az intro keverőjét a hívás idejére 1-re állítjuk.
+        titleEl?.style.setProperty("--intro-p", "1");
+        restoreText = splitWords(Array.from(words), styles.char);
+        titleEl?.style.removeProperty("--intro-p");
+
+        const chars = root.querySelectorAll<HTMLElement>(`.${styles.char}`);
+
+        tl.fromTo(
+          chars,
+          { "--intro-p": 0 },
+          {
+            "--intro-p": 1,
+            // Tempó: a teljes helyreállás = duration + stagger * (karakterek-1),
+            // itt ~2.4s. Az 1.65s kapkodásnak hatott, a 3.2s vontatottnak.
+            // Az expo.out szándékosan nincs: szinte az egész mozgást az első
+            // pillanatba sűríti, amitől a szedés "beugrik" ahelyett, hogy
+            // leérkezne — a power2.out egyenletesebben oszlik el.
+            duration: 1.6,
+            ease: "power2.out",
+            stagger: { each: 0.045, from: "start" },
+          },
+          0
+        );
+
+        // A helyreállás vége — a pont ehhez igazodik, nem a scroll-zár
+        // feloldásához (a ">" különben a legutóbb hozzáadott elemre nézne).
+        tl.addLabel("typeResolved");
+
+        // A scroll-zár és a navbar korán felenged: a cím ekkor már olvasható,
+        // csak még rendezkedik. A karakterek saját --intro-p-je felülírja a
+        // gyökérét, tehát az attribútum levétele nem szakítja meg a mozgást.
+        tl.call(
+          () => document.documentElement.removeAttribute("data-preloader"),
+          [],
+          0.5
+        );
+      }
+
+      // A szavak beemelése: a wave-intróban és ismételt látogatáskor. A
+      // tipográfiai variánsban nincs rá szükség, ott a szöveg végig látszik.
+      if (!typeIntro) {
+        const textAt = waveIntro ? 1.0 : 0;
+
+        // "Forget being ordinary" szavanként emelkedik be
+        tl.from(
+          words,
+          {
+            yPercent: 100,
+            autoAlpha: 0,
+            duration: 0.9,
+            ease: "power4.out",
+            stagger: 0.14,
+          },
+          textAt
+        );
+      }
+
+      // a pont saját, játékos érkezése — leesik és pattan, az opacity gyorsan
+      // jön, hogy ne örökölje a bounce-ot
+      if (dot) {
+        const dotAt = typeIntro ? "typeResolved-=0.15" : "-=0.35";
+        tl.to(dot, { autoAlpha: 1, duration: 0.3, ease: "power1.out" }, dotAt).from(
+          dot,
+          { y: -90, duration: 0.9, ease: "bounce.out" },
+          "<"
+        );
+      }
+
+      // "noise off." beírja magát — clip-path wipe balról jobbra, mint egy
+      // tollvonás; az intro után ez már összegzés, nem állítás
+      if (sig) {
+        tl.to(sig, { autoAlpha: 1, duration: 0.01 }, "-=0.3").fromTo(
+          sig,
+          { clipPath: "inset(0 100% 0 0)" },
+          { clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power1.inOut" },
+          "<"
+        );
+      }
+
+      // A vonalak a szöveg után úsznak be — kivéve a wave-intrót, ahol
+      // végig ők vitték a gesztust.
+      if (!waveIntro && lineSvg) {
+        tl.to(lineSvg, { autoAlpha: 1, duration: 2.4, ease: "power2.out" }, ">-0.15");
+      }
+
+      // A szedés visszaállítása: a karakter-spanek megszüntetik az alávágást,
+      // ezért a kész cím megint egyetlen szövegcsomópont legyen.
+      if (typeIntro) {
+        // Pontosan a helyreállás pillanatában, nem a timeline végén: ekkor
+        // minden karakter p=1-en áll, tehát a pozíciók egyeznek a kész
+        // szedéssel, és így a lehető legrövidebb ideig van alávágás nélküli
+        // szöveg a képernyőn.
+        tl.call(
+          () => {
+            restoreText?.();
+            restoreText = null;
+          },
+          [],
+          "typeResolved"
+        );
+      }
+
+      if (lineSvg) {
         gsap.to(lineSvg, {
           yPercent: -25,
           ease: "none",
@@ -161,38 +273,74 @@ export default function Hero() {
           },
         });
       }
-    }, root);
 
-    // Drive the ambient lines: recompute each path from layered sines so the
-    // waves ripple and the two lines drift out of phase with each other.
-    let raf = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = (now - start) / 1000;
-      lineARef.current?.setAttribute("d", buildWavePath(lineA, t));
-      lineBRef.current?.setAttribute("d", buildWavePath(lineB, t));
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
+      if (waveIntro) {
+        // A zaj tartása: legalább MIN_NOISE, a fontok beérkezéséig, de
+        // legfeljebb MAX_NOISE — a lecsengés így a valós betöltést követi.
+        let minElapsed = false;
+        let fontsDone = false;
+        let started = false;
+        const begin = () => {
+          if (started) return;
+          started = true;
+          tl.play();
+        };
+        delayedCalls.push(
+          gsap.delayedCall(MIN_NOISE, () => {
+            minElapsed = true;
+            if (fontsDone) begin();
+          }),
+          gsap.delayedCall(MAX_NOISE, begin)
+        );
+        if (document.fonts?.ready) {
+          document.fonts.ready.then(() => {
+            fontsDone = true;
+            if (minElapsed) begin();
+          });
+        } else {
+          fontsDone = true;
+        }
+      } else if (typeIntro) {
+        // Nincs mesterséges várakozás: a gesztus tipográfiai, tehát pontosan
+        // akkor indul, amikor a betű megérkezett. A cap csak biztosíték.
+        let started = false;
+        const begin = () => {
+          if (started) return;
+          started = true;
+          tl.play();
+        };
+        if (document.fonts?.ready) {
+          document.fonts.ready.then(begin);
+          delayedCalls.push(gsap.delayedCall(MAX_FONT_WAIT, begin));
+        } else {
+          begin();
+        }
+      }
+    }, root);
 
     return () => {
       cancelAnimationFrame(raf);
+      delayedCalls.forEach((d) => d.kill());
       ctx.revert();
+      // ha a komponens az intro közben tűnik el, a szöveg akkor is épen marad
+      restoreText?.();
+      document.documentElement.removeAttribute("data-preloader");
     };
-  }, []);
+  }, [forceIntro, introVariant]);
 
   return (
     <section ref={rootRef} className={styles.hero} id="top">
       <svg
         className={styles.ambientLine}
         data-hero-line
+        data-gate-hide
         viewBox="0 0 1440 800"
         preserveAspectRatio="none"
         aria-hidden="true"
       >
         <path
           ref={lineARef}
-          d={STATIC_A}
+          d={staticWavePath(HERO_LINE_A)}
           stroke="var(--color-red)"
           strokeWidth="1.2"
           fill="none"
@@ -200,7 +348,7 @@ export default function Hero() {
         />
         <path
           ref={lineBRef}
-          d={STATIC_B}
+          d={staticWavePath(HERO_LINE_B)}
           stroke="var(--color-red)"
           strokeWidth="0.8"
           fill="none"
@@ -209,7 +357,10 @@ export default function Hero() {
         />
       </svg>
 
-      <div className={`container ${styles.inner}`}>
+      {/* A cím a tipográfiai variánsban az első festéstől látszik, ezért csak
+          a wave-intro rejti (data-gate-hide-wave). A pont és az aláírás
+          mindkettőben vár. */}
+      <div className={`container ${styles.inner}`} data-gate-hide-wave>
         <h1 className={styles.title}>
           <span className={styles.word} data-hero-word>
             Forget
@@ -223,13 +374,13 @@ export default function Hero() {
             <span className={styles.word} data-hero-word>
               ordinary
             </span>
-            <span className={styles.dot} data-hero-dot>
+            <span className={styles.dot} data-hero-dot data-gate-hide>
               .
             </span>
           </span>
         </h1>
 
-        <p className={styles.signature} data-hero-sig>
+        <p className={styles.signature} data-hero-sig data-gate-hide>
           <span className="text-signature">noise off.</span>
         </p>
       </div>

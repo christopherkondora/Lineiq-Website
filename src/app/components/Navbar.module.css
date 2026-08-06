@@ -11,7 +11,15 @@
   color: var(--color-black);
   transform: translateY(0);
   transition: transform var(--duration-base) var(--ease-out-expo),
-    color var(--duration-fast) var(--ease-out-expo);
+    color var(--duration-fast) var(--ease-out-expo),
+    opacity var(--duration-slow) var(--ease-out-expo);
+}
+
+/* A betöltési intro alatt a navbar rejtve; amikor a Hero leveszi az
+   attribútumot, az opacity úszik be a szöveggel együtt. */
+:global(html[data-preloader]) .navbar {
+  opacity: 0;
+  visibility: hidden;
 }
 
 .hidden {

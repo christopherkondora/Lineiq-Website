@@ -17,9 +17,7 @@ export default function MunkainkPage() {
           <>
             The work we
             <br />
-            <em style={{ fontStyle: "italic", fontWeight: 400 }}>
-              put our name on.
-            </em>
+            put our name on.
           </>
         }
         signature="proof."
