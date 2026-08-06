@@ -1,161 +1,328 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Hero, { type IntroVariant } from "../components/Hero";
-import {
-  HERO_LINE_A,
-  HERO_LINE_B,
-  initPhases,
-  stepWavePath,
-} from "../components/waveEngine";
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import type { gsap } from "gsap";
+import Preloader, {
+  DEFAULT_TIMING,
+  type ExitStyle,
+  type PreloaderTiming,
+  type RevealMode,
+} from "../components/Preloader";
 import styles from "./preloader.module.css";
 
-// Fejlesztői aloldal a zaj→nyugalom hero-intro hangolásához. Két felület:
-// 1) Scrub — csúszkával kézzel vezérelhető a p (megnyugvás), a közös
-//    hullámmotoron; itt lőhető be a volatile paraméterkészlet karaktere.
-// 2) Teljes intro — maga az éles Hero komponens forceIntro módban, replay
-//    gombbal újraindítva; nincs külön másolat, ami szétcsúszhatna az élestől.
+// Hangolóoldal a betöltési gesztushoz. Nem másolat: az ÉLES Preloader komponens
+// fut benne, embedded módban — így nem tud szétcsúszni attól, ami kimegy.
 // Nem kerül a publikus navigációba.
+//
+// Amit tud, és miért:
+// - scrub: lejátszásból csak annyi derül ki, hogy "valami nem stimmel"; a
+//   képkockánkénti végignézésből az, hogy pontosan mi.
+// - élő számok: fájlszerkesztés + HMR körökben az ember a harmadik legjobb
+//   értéknél megáll.
+// - hamis késleltetés: localhoston a fontok azonnal megjönnek, tehát a (C) séma
+//   LASSÚ ága — ahol a sáv tényleg vár — sosem futna le. Ezt csak így lehet látni.
 
-function NoiseScrub() {
-  const [p, setP] = useState(0);
-  const pRef = useRef(0);
-  const lineARef = useRef<SVGPathElement>(null);
-  const lineBRef = useRef<SVGPathElement>(null);
+type LatencyKey = "fonts" | "0" | "800" | "3000" | "never" | "none";
 
-  // A rAF-hurok a ref-en át olvassa a csúszka értékét, hogy ne kelljen
-  // minden lépésnél újraindulnia; a szinkronizálás effektben történik, nem renderben.
-  useEffect(() => {
-    pRef.current = p;
-  }, [p]);
+const LATENCY: Record<
+  LatencyKey,
+  { label: string; gate: "real" | "none"; value?: number | null }
+> = {
+  fonts: { label: "valós (document.fonts)", gate: "real" },
+  "0": { label: "0 ms", gate: "real", value: 0 },
+  "800": { label: "800 ms", gate: "real", value: 800 },
+  "3000": { label: "3 s", gate: "real", value: 3000 },
+  never: { label: "soha (csak a cap old fel)", gate: "real", value: null },
+  none: { label: "nincs kapu — tiszta koreográfia", gate: "none" },
+};
 
-  useEffect(() => {
-    const phasesA = initPhases(HERO_LINE_A);
-    const phasesB = initPhases(HERO_LINE_B);
-    let raf = 0;
-    let last = performance.now();
-    const tick = (now: number) => {
-      const dt = Math.min((now - last) / 1000, 0.05);
-      last = now;
-      lineARef.current?.setAttribute(
-        "d",
-        stepWavePath(HERO_LINE_A, phasesA, dt, pRef.current)
-      );
-      lineBRef.current?.setAttribute(
-        "d",
-        stepWavePath(HERO_LINE_B, phasesB, dt, pRef.current)
-      );
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
+type Knob = { key: keyof PreloaderTiming; label: string; min: number; max: number };
 
+const KNOBS: Knob[] = [
+  { key: "minFill", label: "töltés (min)", min: 0.4, max: 4 },
+  { key: "wipe", label: "kitörlés", min: 0.2, max: 2 },
+  { key: "rise", label: "betű emelkedés", min: 0.15, max: 1.5 },
+  { key: "stagger", label: "stagger (csak sequential)", min: 0, max: 0.4 },
+  { key: "hold", label: "megállás", min: 0, max: 1.5 },
+  { key: "exit", label: "távozás", min: 0.1, max: 1.5 },
+  { key: "gateCap", label: "cap (max várakozás)", min: 1, max: 8 },
+  { key: "closeFill", label: "utolsó 10%", min: 0.05, max: 1 },
+];
+
+export default function PreloaderHarnessPage() {
+  // A useSearchParams Suspense-határt kíván; a fallback szándékosan üres, a
+  // query csak azonnal rendelkezésre álló kezdőértékeket ad.
   return (
-    <div className={styles.scrub}>
-      <div className={styles.scrubStage}>
-        <svg viewBox="0 0 1440 800" preserveAspectRatio="none" aria-hidden="true">
-          <path ref={lineARef} stroke="var(--color-red)" strokeWidth="1.2" fill="none" />
-          <path
-            ref={lineBRef}
-            stroke="var(--color-red)"
-            strokeWidth="0.8"
-            fill="none"
-            opacity="0.5"
-          />
-        </svg>
-      </div>
-      <label className={styles.scrubControl}>
-        <span className="text-label">
-          megnyugvás (p) — {p.toFixed(2)} {p === 0 ? "· tiszta zaj" : p === 1 ? "· hero ambient" : ""}
-        </span>
-        <input
-          type="range"
-          min={0}
-          max={1}
-          step={0.01}
-          value={p}
-          onChange={(e) => setP(Number(e.target.value))}
-        />
-      </label>
-    </div>
+    <Suspense fallback={null}>
+      <PreloaderHarness />
+    </Suspense>
   );
 }
 
-// A tipográfiai intro a vonalak beúszásával együtt ~6s; ennyi szünettel
-// indul újra, hogy a végállapot megálljon egy pillanatra.
-const LOOP_MS = 8000;
+function PreloaderHarness() {
+  // A query renderben olvasva, nem effektben: nincs setState-kaszkád, és az
+  // első képkocka már a helyes állapottal születik.
+  //   ?p=0.42  — determinisztikus, mélylinkelhető képkocka
+  //   ?bare=1  — vezérlők nélkül, teljes nézetben
+  //   ?mode=sequential, ?exit=curtain — a változatok is linkelhetők
+  const sp = useSearchParams();
+  const pParam = sp.get("p");
+  const frozen = pParam === null ? null : Number(pParam);
+  const bare = sp.get("bare") !== null;
 
-export default function PreloaderPage() {
   const [run, setRun] = useState(0);
   const [loop, setLoop] = useState(false);
-  const [variant, setVariant] = useState<IntroVariant>("type");
+  const [mode, setMode] = useState<RevealMode>(() =>
+    sp.get("mode") === "sequential" ? "sequential" : "synced"
+  );
+  const [exitStyle, setExitStyle] = useState<ExitStyle>(() =>
+    sp.get("exit") === "curtain" ? "curtain" : "dissolve"
+  );
+  const [latency, setLatency] = useState<LatencyKey>("fonts");
+  const [t, setT] = useState<PreloaderTiming>(DEFAULT_TIMING);
+  const [duration, setDuration] = useState(0);
+  const [build, setBuild] = useState(0);
+  const [scrub, setScrub] = useState<number | null>(frozen);
+
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
+
+  // Stabil identitás: a Preloader effektjének függőségei közt szerepelnek, és
+  // ha minden renderben újak lennének, a timeline körbe-körbe épülne újra.
+  // A build számláló azt jelzi, hogy ÚJ timeline készült — a scrub-pozíciót
+  // erre kell visszaállítani, és a hossz önmagában nem árulja el (két hangolás
+  // adhat azonos hosszt).
+  const handleTimeline = useCallback((tl: gsap.core.Timeline) => {
+    tlRef.current = tl;
+    setDuration(tl.duration());
+    setBuild((b) => b + 1);
+  }, []);
+  const handleDone = useCallback(() => {}, []);
+
+  const timing = useMemo(() => t, [t]);
+  const lat = LATENCY[latency];
+
+  // A scrub-pozíció alkalmazása effektben, nem a callbackben: így nem kell
+  // olyan refet írni, amit egy effekt olvas — és minden újraépítés után
+  // ugyanoda áll vissza a képkocka.
+  useEffect(() => {
+    const tl = tlRef.current;
+    if (!tl || scrub === null) return;
+    tl.pause();
+    tl.progress(scrub);
+  }, [scrub, build]);
+
+  const replay = useCallback(() => {
+    setScrub(null);
+    setRun((n) => n + 1);
+  }, []);
 
   useEffect(() => {
-    if (!loop) return;
-    const id = setInterval(() => setRun((n) => n + 1), LOOP_MS);
+    if (!loop || !duration) return;
+    const id = setInterval(replay, (duration + 1.2) * 1000);
     return () => clearInterval(id);
-  }, [loop]);
+  }, [loop, duration, replay]);
+
+  const onScrub = (v: number) => setScrub(v);
+  const clearScrub = () => setScrub(null);
+
+  const setKnob = (key: keyof PreloaderTiming, value: number) => {
+    setT((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // A kapu lejátszás-fogalom: megállítja a timeline-t, amíg a valós jel meg nem
+  // érkezik. Scrub és mélylinkelt képkocka közben ennek nincs értelme — ott
+  // tiszta koreográfiát nézünk, különben a megérkező jel visszarántja
+  // lejátszásba azt, amit épp vizsgálunk.
+  const inspecting = frozen !== null || scrub !== null;
+  const gate = inspecting ? "none" : lat.gate;
+  const autoPlay = !inspecting;
+
+  if (bare) {
+    return (
+      <main className={styles.bare}>
+        <Preloader
+          key={`${run}-${mode}-${exitStyle}-${latency}`}
+          embedded
+          force
+          mode={mode}
+          exitStyle={exitStyle}
+          timing={timing}
+          gate={gate}
+          simulatedLatency={lat.value}
+          autoPlay={autoPlay}
+          onTimeline={handleTimeline}
+          onDone={handleDone}
+        />
+      </main>
+    );
+  }
 
   return (
     <main className={styles.page}>
       <div className="container">
-        <h1 className={`text-section ${styles.title}`}>
-          Hero-intro — variánsok
-        </h1>
-
+        <h1 className={`text-section ${styles.title}`}>Preloader — hangolás</h1>
         <p className={styles.lead}>
-          Két betöltési gesztus, ugyanazzal az éles Hero komponenssel.{" "}
-          <strong>Type</strong>: a cím hibásan szedve indul (opsz 9 display
-          fokozatban) és a helyes szedésbe áll össze. <strong>Wave</strong>: a
-          korábbi zaj→nyugalom hullám. Alul a scrub a hullámmotort hangolja.
+          A sáv balról jobbra töltődik (folyamatjelző), majd kitörlődik — és a
+          nyomában emelkedik ki a <strong>Line</strong> a kézzel rajzolt piros{" "}
+          <strong>iQ</strong> mellé. A sáv a szó alapvonala. A végállapot van
+          középre igazítva: minden korábbi képkocka ennek részhalmaza, semmi nem
+          mozdul vízszintesen.
         </p>
-
-        <div className={styles.variantRow}>
-          {(["type", "wave"] as const).map((v) => (
-            <label key={v} className={styles.loopToggle}>
-              <input
-                type="radio"
-                name="variant"
-                checked={variant === v}
-                onChange={() => {
-                  setVariant(v);
-                  setRun((n) => n + 1);
-                }}
-              />
-              <span className="text-label">{v}</span>
-            </label>
-          ))}
-        </div>
-
-        <div className={styles.replayRow}>
-          <button
-            type="button"
-            className={styles.replayBtn}
-            onClick={() => setRun((n) => n + 1)}
-          >
-            Intro újraindítása ↻
-          </button>
-
-          <label className={styles.loopToggle}>
-            <input
-              type="checkbox"
-              checked={loop}
-              onChange={(e) => setLoop(e.target.checked)}
-            />
-            <span className="text-label">
-              Auto-ismétlés ({LOOP_MS / 1000}s)
-            </span>
-          </label>
-        </div>
       </div>
 
-      <div className={styles.heroFrame}>
-        <Hero key={run} forceIntro introVariant={variant} />
+      <div className={styles.stage}>
+        <Preloader
+          key={`${run}-${mode}-${exitStyle}-${latency}`}
+          embedded
+          force
+          mode={mode}
+          exitStyle={exitStyle}
+          timing={timing}
+          gate={gate}
+          simulatedLatency={lat.value}
+          autoPlay={autoPlay}
+          onTimeline={handleTimeline}
+          onDone={handleDone}
+        />
       </div>
 
       <div className="container">
-        <NoiseScrub />
+        <div className={styles.controls}>
+          <div className={styles.row}>
+            <button type="button" className={styles.btn} onClick={replay}>
+              Újraindítás ↻
+            </button>
+            <button
+              type="button"
+              className={styles.btn}
+              onClick={() => tlRef.current?.play()}
+            >
+              Play ▶
+            </button>
+            <button
+              type="button"
+              className={styles.btn}
+              onClick={() => tlRef.current?.pause()}
+            >
+              Pause ⏸
+            </button>
+            <label className={styles.toggle}>
+              <input
+                type="checkbox"
+                checked={loop}
+                onChange={(e) => setLoop(e.target.checked)}
+              />
+              <span className="text-label">Auto-ismétlés</span>
+            </label>
+          </div>
+
+          <label className={styles.scrubRow}>
+            <span className="text-label">
+              scrub — {(scrub ?? 0).toFixed(3)} · {duration.toFixed(2)}s teljes
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.001}
+              value={scrub ?? 0}
+              onChange={(e) => onScrub(Number(e.target.value))}
+            />
+          </label>
+
+          <div className={styles.segments}>
+            <fieldset className={styles.seg}>
+              <legend className="text-label">felfedés</legend>
+              {(["synced", "sequential"] as const).map((m) => (
+                <label key={m} className={styles.toggle}>
+                  <input
+                    type="radio"
+                    name="mode"
+                    checked={mode === m}
+                    onChange={() => {
+                      setMode(m);
+                      clearScrub();
+                    }}
+                  />
+                  <span className="text-label">
+                    {m === "synced"
+                      ? "synced — a betűk a törlőél nyomában"
+                      : "sequential — előbb eltűnik, aztán jönnek"}
+                  </span>
+                </label>
+              ))}
+            </fieldset>
+
+            <fieldset className={styles.seg}>
+              <legend className="text-label">távozás</legend>
+              {(["dissolve", "curtain"] as const).map((x) => (
+                <label key={x} className={styles.toggle}>
+                  <input
+                    type="radio"
+                    name="exit"
+                    checked={exitStyle === x}
+                    onChange={() => {
+                      setExitStyle(x);
+                      clearScrub();
+                    }}
+                  />
+                  <span className="text-label">{x}</span>
+                </label>
+              ))}
+            </fieldset>
+
+            <fieldset className={styles.seg}>
+              <legend className="text-label">valós jel késleltetése</legend>
+              {(Object.keys(LATENCY) as LatencyKey[]).map((k) => (
+                <label key={k} className={styles.toggle}>
+                  <input
+                    type="radio"
+                    name="latency"
+                    checked={latency === k}
+                    onChange={() => {
+                      setLatency(k);
+                      clearScrub();
+                    }}
+                  />
+                  <span className="text-label">{LATENCY[k].label}</span>
+                </label>
+              ))}
+            </fieldset>
+          </div>
+
+          <div className={styles.knobs}>
+            {KNOBS.map((k) => (
+              <label key={k.key} className={styles.knob}>
+                <span className="text-label">
+                  {k.label} — {t[k.key].toFixed(2)}s
+                </span>
+                <input
+                  type="range"
+                  min={k.min}
+                  max={k.max}
+                  step={0.01}
+                  value={t[k.key]}
+                  onChange={(e) => setKnob(k.key, Number(e.target.value))}
+                />
+              </label>
+            ))}
+            <button
+              type="button"
+              className={styles.btn}
+              onClick={() => {
+                setT(DEFAULT_TIMING);
+                clearScrub();
+              }}
+            >
+              Alapértékek
+            </button>
+          </div>
+
+          <pre className={styles.dump}>
+            {JSON.stringify(t, null, 2)}
+          </pre>
+        </div>
       </div>
     </main>
   );

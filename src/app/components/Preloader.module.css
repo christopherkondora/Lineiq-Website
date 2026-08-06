@@ -1,0 +1,36 @@
+/* A preloader teljes képernyős, ÁTLÁTSZATLAN fehér felület. Pont ezért nincs
+   szükség a régi data-gate-hide rendszerre: nem elemenként rejtjük az oldalt,
+   hanem letakarjuk. */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--color-white);
+  display: grid;
+  place-items: center;
+  /* elnyeli a kattintást: a betöltés alatt az alatta lévő oldal nem kattintható */
+  pointer-events: auto;
+}
+
+/* A harness-ben nem fixed, hanem a színpad dobozába ül. */
+.embedded {
+  position: absolute;
+}
+
+/* A jel szándékosan kicsi: nem kitölti a képernyőt, hanem ül a közepén.
+   A sáv így rövid, a töltés gyorsan olvasható végig — a gesztus intim, nem
+   monumentális. (Korábban 54vw / 82vw volt, harmadára véve.) */
+.mark {
+  width: 18vw;
+  max-width: 300px;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+@media (max-width: 768px) {
+  .mark {
+    width: 28vw;
+    max-width: none;
+  }
+}
