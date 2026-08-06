@@ -2,7 +2,6 @@
    szükség a régi data-gate-hide rendszerre: nem elemenként rejtjük az oldalt,
    hanem letakarjuk. */
 .root {
-  position: fixed;
   inset: 0;
   z-index: 9999;
   background: var(--color-white);
@@ -12,25 +11,49 @@
   pointer-events: auto;
 }
 
-/* A harness-ben nem fixed, hanem a színpad dobozába ül. */
+/* Élesben: alapból REJTVE, és az inline script mutatja meg, sosem fordítva.
+   Ha a fedő alapból látszana és a script rejtené el a visszatérő látogatónak,
+   akkor egy elszálló script átlátszatlan lepedőt hagyna az egész oldalon. Így
+   viszont a script hibája legfeljebb az animációba kerül, nem az oldalba. */
+.live {
+  position: fixed;
+  display: none;
+}
+
+:global(html[data-intro]) .live {
+  display: grid;
+}
+
+/* A harness-ben nem fixed, hanem a színpad dobozába ül — és ott mindig látszik,
+   a data-intro attribútumtól függetlenül. */
 .embedded {
   position: absolute;
 }
 
 /* A jel szándékosan kicsi: nem kitölti a képernyőt, hanem ül a közepén.
    A sáv így rövid, a töltés gyorsan olvasható végig — a gesztus intim, nem
-   monumentális. (Korábban 54vw / 82vw volt, harmadára véve.) */
+   monumentális. (Korábban 54vw / 82vw volt, harmadára véve.)
+
+   A min-width nem esztétikai, hanem olvashatósági korlát. A sáv vastagsága a
+   jel szélességéhez kötött (BAR_H 7.5 az 1365 egységes viewBoxban), tehát
+   190px alatt a sáv 1 CSS pixelnél vékonyabb — és ott már nem feketén
+   rajzolódik ki, hanem szürkére simul. A folyamatjelző pont azt veszítené el,
+   amitől sáv. 190px az a szélesség, ahol a sáv még kitesz egy egész pixelt. */
 .mark {
   width: 18vw;
+  min-width: 190px;
   max-width: 300px;
   height: auto;
   display: block;
   overflow: visible;
 }
 
+/* Telefonon arányosan nagyobb: 28vw mellett a jel a 390-es kijelzőn 109px volt,
+   a sáv 0.6px — a gesztus lényege veszett el a legszűkebb helyen, pedig épp ott
+   tart tényleg a betöltés. */
 @media (max-width: 768px) {
   .mark {
-    width: 28vw;
+    width: 52vw;
     max-width: none;
   }
 }

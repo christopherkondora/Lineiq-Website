@@ -8,9 +8,9 @@ import {
   BAR_H,
   CLIP_Y,
   IQ_D,
+  type Letter,
   LETTERS,
   LINE_X0,
-  LINE_X1,
   VIEWBOX,
 } from "./lineiqWordmark";
 
@@ -42,22 +42,55 @@ export type PreloaderTiming = {
 };
 
 export const DEFAULT_TIMING: PreloaderTiming = {
-  minFill: 1.6,
+  minFill: 1.15,
   gateCap: 4,
   closeFill: 0.3,
-  wipe: 0.75,
-  rise: 0.55,
+  wipe: 1.0,
+  rise: 0.28,
   stagger: 0.09,
-  hold: 0.45,
-  exit: 0.5,
+  hold: 0.32,
+  exit: 0.45,
 };
 
 // A kitörlés ease-e. A "synced" mód ebből számolja vissza, hogy a törlőél mikor
-// ér egy adott betű bal széléhez — ezért kell néven ismernünk, nem elég inline.
-const WIPE_EASE = "power1.inOut";
+// ér egy adott betűhöz — ezért kell néven ismernünk, nem elég inline.
+//
+// Szándékosan LINEÁRIS. Egy inOut ease a pálya közepén a leggyorsabb, épp ott,
+// ahol az "i" és az "n" áll: a törlőél a wipe 8, illetve 14 százaléka alatt
+// söpört át rajtuk, tehát a ritmus az ease-ből jött, nem a betűközökből, és a
+// két középső betű egyszerre villant fel. Egyenletes élsebességgel a felfedés
+// üteme tényleg a szó tördeléséből adódik — ezt akarja a gesztus.
+const WIPE_EASE = "none";
+
+/** A sáv jobb vége. NEM a "Line" jobb széle (850.2), hanem valamivel előtte.
+ *
+ *  A szó 850.2-ig ér, a piros iQ 868.3-nál kezdődik — a sáv teli állapotban 18
+ *  egységre, kb. 3 képpontra közelítette meg az iQ-t. A betűnél ez nem tűnne
+ *  fel, mert az "e" jobb szélső pontja egy vékony, felkunkorodó terminál; a sáv
+ *  viszont tömör, függőleges éllel zárul, ráadásul a töltés alatt a betűk még
+ *  nincsenek ott. Így a sáv vége nekiment az iQ-nak.
+ *
+ *  Innen nézve a szóköz, nem a szó szélessége a mérvadó: a sáv ott álljon meg,
+ *  ahol még marad rendes optikai hézag a jel másik feléig. */
+const TRACK_X1 = 765;
+
+/** Hol tart a törlőél a betűn belül, amikor az emelkedni kezd (0 = bal szél).
+ *  A betű a sáv NYOMÁBAN áll fel, nem vele egyszerre: mire elindul, az él már
+ *  áthaladt a fele fölött. Bal szélre kötve az "L" a nulladik képkockán, még
+ *  teljes hosszú sáv mellett indult — fekete tömbként pattant be. */
+const WAKE = 0.5;
 
 /** Mennyivel lóg a parkoló betű a klip éle ALÁ (viewBox-egység). */
 const PARK_OVERSHOOT = 4;
+
+/** A betű kiinduló helye: a klip alá tolva, tehát nem látszik.
+ *
+ *  Ez a MARKUPBA is beleíródik, nem csak az effektben áll be. Ha csak a
+ *  gsap.set állítaná, a kiszolgált HTML a betűket nyugalmi helyzetben
+ *  tartalmazná — vagyis az első képkockán ott áll a teljes fekete "Line", és
+ *  csak a hidratálás után ugrik a helyére. Pont ez volt a preloader elején
+ *  villanó szó. A kezdőállapot a markupba való, nem egy effektbe. */
+const parkY = (letter: Letter) => CLIP_Y - letter.top + PARK_OVERSHOOT;
 
 /** Az ease invertálása: milyen t-nél veszi fel az ease a megadott értéket. */
 function timeAtProgress(easeName: string, target: number): number {
@@ -84,10 +117,19 @@ export type PreloaderProps = {
   simulatedLatency?: number | null;
   /** a hangolóoldal színpadába ágyazva: nem fixed és nem zárja a scrollt */
   embedded?: boolean;
+  /** az éles, teljes képernyős fedő (nem a harness színpada) */
+  live?: boolean;
+  /** amíg false, a komponens NEM nyúl semmihez: se timeline, se scroll-zár.
+   *  A markup ettől még kiszolgálódik, hogy az első festés már helyes legyen —
+   *  a hívó egy effektben dönti el, hogy egyáltalán fut-e a gesztus. */
+  enabled?: boolean;
   /** reduced-motion kihagyása (csak a hangolóoldalon) */
   force?: boolean;
   autoPlay?: boolean;
   onTimeline?: (tl: gsap.core.Timeline) => void;
+  /** a fedő távozni KEZD — innen indulhat a mögötte lévő oldal belépője, hogy
+   *  ne legyen üres képkocka a kettő között */
+  onExitStart?: () => void;
   onDone?: () => void;
 };
 
@@ -98,9 +140,12 @@ export default function Preloader({
   gate = "real",
   simulatedLatency,
   embedded = false,
+  live = false,
+  enabled = true,
   force = false,
   autoPlay = true,
   onTimeline,
+  onExitStart,
   onDone,
 }: PreloaderProps) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -109,6 +154,9 @@ export default function Preloader({
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    // A hívó még nem döntött (vagy eldöntötte, hogy nincs gesztus): a komponens
+    // ilyenkor néma — nem zárja a scrollt és nem épít timeline-t.
+    if (!enabled) return;
 
     const root = rootRef.current;
     const bar = barRef.current;
@@ -121,7 +169,7 @@ export default function Preloader({
       return;
     }
 
-    const span = LINE_X1 - LINE_X0;
+    const span = TRACK_X1 - LINE_X0;
     const fill = { p: 0 };
     const wipe = { p: 0 };
 
@@ -160,9 +208,13 @@ export default function Preloader({
       // A ráadás azért kell, mert pontosan a klip élére állítva a betűtetők
       // élsimítása halvány hajszálvonalat rajzol oda, ahol majd a sáv lesz —
       // egy kísértet-sáv a nulladik képkockán.
+      //
+      // Ugyanaz az érték, ami a markupban is ott van: a gsap.set nem beállítja
+      // a kezdőállapotot, hanem átveszi a prezentációs attribútumtól, hogy a
+      // tween origója egyértelmű legyen. Ezért nincs ugrás a hidratálásnál.
       LETTERS.forEach((l, i) => {
         const el = letterEls[i];
-        if (el) gsap.set(el, { y: CLIP_Y - l.top + PARK_OVERSHOOT });
+        if (el) gsap.set(el, { y: parkY(l) });
       });
 
       const tl = gsap.timeline({
@@ -210,17 +262,28 @@ export default function Preloader({
       LETTERS.forEach((l, i) => {
         const el = letterEls[i];
         if (!el) return;
-        // synced: a betű akkor indul, amikor a törlőél a bal széléhez ér — a
-        // ritmus így a betűközökből jön, nem egy fix számból.
+        // synced: a betű akkor indul, amikor a törlőél már a WAKE-ig áthaladt
+        // fölötte — a ritmus így a betűközökből jön, nem egy fix számból.
         // sequential: a sáv előbb teljesen eltűnik, utána jönnek a betűk.
+        const trigger = l.x0 + (l.x1 - l.x0) * WAKE;
+        // A sáv rövidebb, mint a szó, tehát egy betű indítópontja elvben a
+        // pálya végén túlra eshet; ott a törlőél érkezése a wipe vége.
+        const atTrack = Math.min(1, (trigger - LINE_X0) / span);
         const at =
           mode === "synced"
-            ? timeAtProgress(WIPE_EASE, (l.x0 - LINE_X0) / span) * timing.wipe
+            ? timeAtProgress(WIPE_EASE, atTrack) * timing.wipe
             : timing.wipe + i * timing.stagger;
-        tl.to(el, { y: 0, duration: timing.rise, ease: "power3.out" }, `reveal+=${at}`);
+        // power2.out, nem power3.out: a köbös változat a saját idejének első
+        // nyolc százaléka alatt teszi meg az út negyedét, tehát a betű nem
+        // emelkedik, hanem bepattan — pont az ellenkezője a kívánt mozdulatnak.
+        tl.to(el, { y: 0, duration: timing.rise, ease: "power2.out" }, `reveal+=${at}`);
       });
 
       tl.addLabel("landed");
+
+      // A mögöttes oldal belépője innen indulhat, a távozás alatt — így a
+      // fedő eltűnése és a hero érkezése átfedi egymást, nem követi.
+      tl.call(() => onExitStart?.(), [], `landed+=${timing.hold}`);
 
       if (exitStyle === "curtain") {
         tl.to(
@@ -275,16 +338,20 @@ export default function Preloader({
     gate,
     simulatedLatency,
     embedded,
+    enabled,
     force,
     autoPlay,
     onTimeline,
+    onExitStart,
     onDone,
   ]);
 
   return (
     <div
       ref={rootRef}
-      className={`${styles.root} ${embedded ? styles.embedded : ""}`}
+      className={`${styles.root} ${embedded ? styles.embedded : ""} ${
+        live ? styles.live : ""
+      }`}
       aria-hidden="true"
     >
       <svg
@@ -305,7 +372,11 @@ export default function Preloader({
 
         <g clipPath={`url(#${clipId})`}>
           {LETTERS.map((letter) => (
-            <g key={letter.id} data-letter={letter.id}>
+            <g
+              key={letter.id}
+              data-letter={letter.id}
+              transform={`translate(0 ${parkY(letter)})`}
+            >
               {letter.d.map((d, i) => (
                 <path key={i} d={d} fill="var(--color-black)" />
               ))}

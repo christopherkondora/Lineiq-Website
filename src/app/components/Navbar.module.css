@@ -15,12 +15,8 @@
     opacity var(--duration-slow) var(--ease-out-expo);
 }
 
-/* A betöltési intro alatt a navbar rejtve; amikor a Hero leveszi az
-   attribútumot, az opacity úszik be a szöveggel együtt. */
-:global(html[data-preloader]) .navbar {
-  opacity: 0;
-  visibility: hidden;
-}
+/* A navbart nem kell külön rejteni a betöltés alatt: az átlátszatlan fedő
+   amúgy is takarja, és a távozásával egyszerre kerül elő az egész oldal. */
 
 .hidden {
   transform: translateY(-110%);

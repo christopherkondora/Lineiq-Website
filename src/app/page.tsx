@@ -1,3 +1,4 @@
+import HomeIntro, { introGateScript } from "./components/HomeIntro";
 import Hero from "./components/Hero";
 import Intro from "./components/Intro";
 import Work from "./components/Work";
@@ -11,6 +12,15 @@ import styles from "./page.module.css";
 export default function Home() {
   return (
     <main>
+      {/* Még az első festés előtt fut, és csak ezen az útvonalon: eldönti,
+          kell-e a betöltési gesztus (első session-látogatás, nem reduced-
+          motion). A fedő markupja alatta van, tehát mire a böngésző odaér,
+          a döntés már megszületett. */}
+      <script
+        id="lineiq-intro-gate"
+        dangerouslySetInnerHTML={{ __html: introGateScript }}
+      />
+      <HomeIntro />
       <Hero />
       <Intro />
       <Work />
