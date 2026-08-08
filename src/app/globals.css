@@ -112,6 +112,17 @@ html[data-intro] {
   overflow: hidden;
 }
 
+/* A görgetősáv helye MINDIG le van foglalva, akkor is, amikor nincs sáv. A zár
+   overflow: hidden-t tesz a html-re, ami eltünteti a sávot: a fedő távozásának
+   pillanatában a viewport ~15 képponttal szélesebb volt, a zár feloldásakor
+   pedig visszaugrott. A középre igazított hero tehát pont a megjelenése
+   képkockáján csúszott oldalra egyet — a "durva érkezés" fele ez volt, nem az
+   animáció. A gutter fenntartásával a szélesség a gesztus alatt és után
+   ugyanaz. (Overlay-sávos rendszereken, pl. macOS, eleve nincs mit lefoglalni.) */
+html {
+  scrollbar-gutter: stable;
+}
+
 /* ─── Text selection ───────────────────────────────────── */
 ::selection {
   background: var(--color-red);

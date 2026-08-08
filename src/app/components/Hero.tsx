@@ -84,23 +84,35 @@ export default function Hero() {
         paused: waitsForIntro,
       });
 
-      // "Forget being ordinary" szavanként emelkedik be
+      // "Forget being ordinary" szavanként emelkedik be. A mozgás és a
+      // fedettség KÜLÖN tween: közös power4.out mellett a szó a saját idejének
+      // első tizede alatt megtette az út harmadát, és ugyanennyi idő alatt vette
+      // fel a fedettség harmadát is — vagyis nem beúszott, hanem bevillant.
+      // Külön véve a szó lassabban válik láthatóvá, mint amilyen gyorsan
+      // elindul: a fedő elvékonyodó fehérjén már a mozdulat ELEJE is átlátszik,
+      // nem egy félig kész címsor bukkan fel a végén.
       tl.from(
         words,
-        {
-          yPercent: 100,
-          autoAlpha: 0,
-          duration: 0.9,
-          ease: "power4.out",
-          stagger: 0.14,
-        },
+        { yPercent: 100, duration: 1.1, ease: "power3.out", stagger: 0.12 },
+        0
+      );
+      tl.from(
+        words,
+        { autoAlpha: 0, duration: 0.8, ease: "power1.out", stagger: 0.12 },
         0
       );
 
-      // a pont saját, játékos érkezése — leesik és pattan, az opacity gyorsan
-      // jön, hogy ne örökölje a bounce-ot
+      // a pont saját, játékos érkezése — leesik és pattan, a fedettség gyorsan
+      // jön, hogy ne örökölje a bounce-ot.
+      //
+      // FROM, nem to: a kiinduló rejtettség így a tweené, tehát már a timeline
+      // FELÉPÍTÉSEKOR érvényes. A `to` változat semmit nem rejtett el — a pont
+      // a CSS-ből örökölt teljes fedettséggel, a végleges helye fölött 90
+      // pixellel állt a hidratálástól a saját belépőjéig. A fedő
+      // elvékonyodásakor tehát egy magában lebegő piros pont fogadta a
+      // látogatót, egy másodperccel a hozzá tartozó szó előtt.
       if (dot) {
-        tl.to(dot, { autoAlpha: 1, duration: 0.3, ease: "power1.out" }, "-=0.35").from(
+        tl.from(dot, { autoAlpha: 0, duration: 0.3, ease: "power1.out" }, "-=0.35").from(
           dot,
           { y: -90, duration: 0.9, ease: "bounce.out" },
           "<"

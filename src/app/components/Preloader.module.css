@@ -2,13 +2,22 @@
    szükség a régi data-gate-hide rendszerre: nem elemenként rejtjük az oldalt,
    hanem letakarjuk. */
 .root {
+  position: relative;
   inset: 0;
   z-index: 9999;
-  background: var(--color-white);
   display: grid;
   place-items: center;
   /* elnyeli a kattintást: a betöltés alatt az alatta lévő oldal nem kattintható */
   pointer-events: auto;
+}
+
+/* A takarás saját rétege. A háttér korábban a gyökéren ült, így távozáskor a
+   lepel és a jel egyetlen tweenben, azonos ütemben ment el; külön rétegen a
+   fehér lassulva vékonyodik, a jel közben felfelé gyorsulva kilép. */
+.veil {
+  position: absolute;
+  inset: 0;
+  background: var(--color-white);
 }
 
 /* Élesben: alapból REJTVE, és az inline script mutatja meg, sosem fordítva.
@@ -35,11 +44,16 @@
    monumentális. (Korábban 54vw / 82vw volt, harmadára véve.)
 
    A min-width nem esztétikai, hanem olvashatósági korlát. A sáv vastagsága a
-   jel szélességéhez kötött (BAR_H 7.5 az 1365 egységes viewBoxban), tehát
-   190px alatt a sáv 1 CSS pixelnél vékonyabb — és ott már nem feketén
-   rajzolódik ki, hanem szürkére simul. A folyamatjelző pont azt veszítené el,
-   amitől sáv. 190px az a szélesség, ahol a sáv még kitesz egy egész pixelt. */
+   jel szélességéhez kötött, tehát a keskeny jel vékony sávot jelent — és egy
+   CSS pixel alatt a sáv már nem feketén rajzolódik ki, hanem szürkére simul: a
+   folyamatjelző pont azt veszítené el, amitől sáv. A 190px még a 7.5 egységes
+   hajszálvonalhoz volt méretezve (ott ez volt az egy egész pixel határa); a
+   mostani BAR_THICK 16 mellett a határ jóval lejjebb van, a 190px innentől
+   tartalék, nem küszöb. */
 .mark {
+  /* a lepel abszolút, tehát festési sorrendben a statikus svg fölé kerülne */
+  position: relative;
+  z-index: 1;
   width: 18vw;
   min-width: 190px;
   max-width: 300px;

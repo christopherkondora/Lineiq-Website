@@ -157,13 +157,17 @@
     margin-top: 0;
   }
 
-  /* A script a "We take on" alá, középre, kissé ráúszva. */
+  /* A script a "We take on" alá úszik, és bele is lóg. A vízszintes eltolás a
+     BETŰMÉRETHEZ kötött (em), nem a szó szélességéhez: a "partners" saját
+     szélessége a scripttípustól függ, a viszonyítás viszont a fejléc-sorhoz
+     szól. A -50% a geometriai közép; a kézzel írt szó optikai súlypontja
+     jobbra esik (a záró "s" hosszú kifutása), ezért balra kell korrigálni. */
   .script {
     position: absolute;
     left: 50%;
     top: 100%;
     margin-top: 0;
-    transform: translate(-50%, -42%);
+    transform: translate(calc(-50% - 0.15em), -60%);
     font-size: clamp(3rem, 8vw, 8.5rem);
   }
 

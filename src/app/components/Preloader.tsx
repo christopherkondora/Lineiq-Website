@@ -5,8 +5,6 @@ import { gsap } from "gsap";
 import styles from "./Preloader.module.css";
 import {
   BASELINE,
-  BAR_H,
-  CLIP_Y,
   IQ_D,
   type Letter,
   LETTERS,
@@ -44,12 +42,15 @@ export type PreloaderTiming = {
 export const DEFAULT_TIMING: PreloaderTiming = {
   minFill: 1.15,
   gateCap: 4,
-  closeFill: 0.3,
+  closeFill: 0.13,
   wipe: 1.0,
   rise: 0.28,
-  stagger: 0.09,
+  stagger: 0.13,
   hold: 0.32,
-  exit: 0.45,
+  // A lepel teljes elvékonyodása. Hosszabb, mint a jel távozása: a hero
+  // belépője ~1.1 másodperc, egy fél másodperces fade alatt annak alig a
+  // harmada fér el. 0.7 mellett a két mozdulat érdemben átfedi egymást.
+  exit: 0.7,
 };
 
 // A kitörlés ease-e. A "synced" mód ebből számolja vissza, hogy a törlőél mikor
@@ -83,6 +84,20 @@ const WAKE = 0.5;
 /** Mennyivel lóg a parkoló betű a klip éle ALÁ (viewBox-egység). */
 const PARK_OVERSHOOT = 4;
 
+/** A sáv vastagsága. NEM a generált fájl BAR_H-ja (7.5): az a MÉRT érték, ami
+ *  épp csak befogadja az L talpát (376.9) és az e túllövését (375.1). Mérni
+ *  kellett, de a folyamatjelző vastagsága ettől még döntés — ugyanaz a viszony,
+ *  mint a TRACK_X1 és a mért LINE_X1 között, ezért itt lakik, nem ott.
+ *
+ *  7.5 egység a 300 pixeles jelnél 1.6 képpont: tipográfiai hajszálvonal, nem
+ *  folyamatjelző. A vastagabb sáv a mért túllövéseket továbbra is elfedi (csak
+ *  bővebben), a felfedés logikája pedig változatlan. */
+const BAR_THICK = 16;
+
+/** A klip alja = a SÁV alja, nem az alapvonal: az L talpa és az e túllövése a
+ *  sáv vastagságába lóg bele, azt a sáv takarja. Együtt mozog a vastagsággal. */
+const CLIP_BOTTOM = BASELINE + BAR_THICK;
+
 /** A betű kiinduló helye: a klip alá tolva, tehát nem látszik.
  *
  *  Ez a MARKUPBA is beleíródik, nem csak az effektben áll be. Ha csak a
@@ -90,7 +105,7 @@ const PARK_OVERSHOOT = 4;
  *  tartalmazná — vagyis az első képkockán ott áll a teljes fekete "Line", és
  *  csak a hidratálás után ugrik a helyére. Pont ez volt a preloader elején
  *  villanó szó. A kezdőállapot a markupba való, nem egy effektbe. */
-const parkY = (letter: Letter) => CLIP_Y - letter.top + PARK_OVERSHOOT;
+const parkY = (letter: Letter) => CLIP_BOTTOM - letter.top + PARK_OVERSHOOT;
 
 /** Az ease invertálása: milyen t-nél veszi fel az ease a megadott értéket. */
 function timeAtProgress(easeName: string, target: number): number {
@@ -149,6 +164,8 @@ export default function Preloader({
   onDone,
 }: PreloaderProps) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const veilRef = useRef<HTMLDivElement>(null);
+  const markRef = useRef<SVGSVGElement>(null);
   const barRef = useRef<SVGRectElement>(null);
   const clipId = `lineiq-baseline-${useId().replace(/:/g, "")}`;
 
@@ -159,8 +176,10 @@ export default function Preloader({
     if (!enabled) return;
 
     const root = rootRef.current;
+    const veil = veilRef.current;
+    const mark = markRef.current;
     const bar = barRef.current;
-    if (!root || !bar) return;
+    if (!root || !veil || !mark || !bar) return;
 
     // A gesztus tiszta mozgás: motion-free változata csak egy késleltetés lenne
     // a tartalom előtt, ezért reduced-motion mellett kimarad.
@@ -285,18 +304,30 @@ export default function Preloader({
       // fedő eltűnése és a hero érkezése átfedi egymást, nem követi.
       tl.call(() => onExitStart?.(), [], `landed+=${timing.hold}`);
 
+      const exitAt = `landed+=${timing.hold}`;
+
       if (exitStyle === "curtain") {
-        tl.to(
-          root,
-          { yPercent: -100, duration: timing.exit, ease: "power3.inOut" },
-          `landed+=${timing.hold}`
-        );
+        tl.to(root, { yPercent: -100, duration: timing.exit, ease: "power3.inOut" }, exitAt);
       } else {
+        // A távozás két külön mozdulat, nem egy. Korábban a gyökér ment el
+        // egyben (autoAlpha + y, power2.in): a befelé gyorsuló fade a saját
+        // idejének feléig gyakorlatilag átlátszatlan maradt, tehát a mögötte
+        // futó hero-belépő első fele nem látszott — a címsor a semmiből, félig
+        // kész állapotban csapódott be. A "beérkezik" helyett "felbukkan".
+        //
+        // A jel felfelé gyorsulva hagyja el a képet — ez az ő mozdulata, és a
+        // vége előtt lezárul, hogy ne kísértsen a felálló címsor fölött.
         tl.to(
-          root,
-          { autoAlpha: 0, y: "-2.5vh", duration: timing.exit, ease: "power2.in" },
-          `landed+=${timing.hold}`
+          mark,
+          { autoAlpha: 0, y: "-2.5vh", duration: timing.exit * 0.6, ease: "power2.in" },
+          exitAt
         );
+        // A lepel viszont kifelé LASSULVA vékonyodik: az első pillanattól
+        // átereszt, tehát a hero mozdulatának az eleje is olvasható rajta. A
+        // két gesztus így átfedi egymást, ahogy az onExitStart szándéka is volt.
+        tl.to(veil, { autoAlpha: 0, duration: timing.exit, ease: "power1.out" }, exitAt);
+        // A fedő ekkor már nem takar, de még elnyelné a kattintást.
+        tl.set(root, { pointerEvents: "none" }, exitAt);
       }
 
       // A lejátszás indul először, és csak utána kapja meg a hívó a timeline-t:
@@ -354,7 +385,13 @@ export default function Preloader({
       }`}
       aria-hidden="true"
     >
+      {/* A fehér felület külön réteg, nem a gyökér háttere: a távozáskor a jel
+          és a lepel külön ütemben megy el. Egyetlen elemen a kettő
+          elkerülhetetlenül ugyanazt az ease-t kapná. */}
+      <div ref={veilRef} className={styles.veil} />
+
       <svg
+        ref={markRef}
         className={styles.mark}
         viewBox={`0 0 ${VIEWBOX.w} ${VIEWBOX.h}`}
         aria-hidden="true"
@@ -363,7 +400,7 @@ export default function Preloader({
           {/* A klip alja a sáv alja, nem az alapvonal: az L talpa és az e
               túllövése a sáv vastagságába lóg bele, azt a sáv takarja. */}
           <clipPath id={clipId}>
-            <rect x={-100} y={-200} width={VIEWBOX.w + 200} height={CLIP_Y + 200} />
+            <rect x={-100} y={-200} width={VIEWBOX.w + 200} height={CLIP_BOTTOM + 200} />
           </clipPath>
         </defs>
 
@@ -389,7 +426,7 @@ export default function Preloader({
           x={LINE_X0}
           y={BASELINE}
           width={0}
-          height={BAR_H}
+          height={BAR_THICK}
           fill="var(--color-black)"
         />
       </svg>

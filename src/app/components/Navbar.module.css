@@ -15,8 +15,16 @@
     opacity var(--duration-slow) var(--ease-out-expo);
 }
 
-/* A navbart nem kell külön rejteni a betöltés alatt: az átlátszatlan fedő
-   amúgy is takarja, és a távozásával egyszerre kerül elő az egész oldal. */
+/* A betöltési gesztus alatt a fejléc nincs ott. Korábban nem volt külön rejtve
+   ("a fedő amúgy is takarja"), de épp ez volt a baj: a lepel elvékonyodásakor
+   egy kész, teljes fedettségű sáv állt már a helyén, mozdulat nélkül, miközben
+   a hero még csak érkezett. A data-intro levételekor a fenti opacity-átmenet
+   (--duration-slow) úsztatja be, tehát a hero belépőjével EGYÜTT jön elő.
+   Kizárólag a főoldali gesztus alatt él: aloldalon az attribútum sosem kerül fel,
+   és négy egymástól független dolog veszi le, a React indulásának hiányában is. */
+:global(html[data-intro]) .navbar {
+  opacity: 0;
+}
 
 .hidden {
   transform: translateY(-110%);
