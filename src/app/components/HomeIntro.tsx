@@ -22,7 +22,21 @@ export const INTRO_SESSION_KEY = "lineiq-intro";
  *  a leghosszabb lehetséges gesztus (kapu-cap + timeline) fölött van. */
 const FAILSAFE_MS = 8000;
 
-export const introGateScript = `try{if(!sessionStorage.getItem("${INTRO_SESSION_KEY}")&&!matchMedia("(prefers-reduced-motion: reduce)").matches){var d=document.documentElement;d.setAttribute("data-intro","");setTimeout(function(){d.removeAttribute("data-intro")},${FAILSAFE_MS})}}catch(e){}`;
+// Két, EGYMÁSTÓL FÜGGETLEN döntés, mindkettő még az első festés előtt:
+//
+//   data-enter — engedélyezett-e a mozgás. Ha igen, a hero belépőjének
+//     kiinduló állapotát a CSS adja, MÁR AZ ELSŐ FESTÉSTŐL. Enélkül a rejtést
+//     csak a GSAP tette fel a timeline felépítésekor, ami hidratálás után fut:
+//     mobilon ~1.3 másodpercig a hero a VÉGÁLLAPOTÁBAN állt, majd visszaugrott
+//     és elindult a belépő. A betöltési gesztus ezt eltakarta — de az csak a
+//     session ELSŐ oldalbetöltésén fut, minden továbbin látszott a villanás.
+//
+//   data-intro — kell-e a betöltési gesztus (session első látogatása).
+//
+// A kettő szétválasztása a lényeg: a belépő minden betöltéskor fut, a gesztus
+// csak egyszer. Mindkettőnek saját biztosítéka van arra az esetre, ha a React
+// el sem indulna.
+export const introGateScript = `try{var d=document.documentElement;if(!matchMedia("(prefers-reduced-motion: reduce)").matches){d.setAttribute("data-enter","");setTimeout(function(){d.removeAttribute("data-enter")},${FAILSAFE_MS});if(!sessionStorage.getItem("${INTRO_SESSION_KEY}")){d.setAttribute("data-intro","");setTimeout(function(){d.removeAttribute("data-intro")},${FAILSAFE_MS})}}}catch(e){}`;
 
 export default function HomeIntro() {
   // Egyszeri leolvasás renderben, nem effektben: az attribútum már a hidratálás

@@ -1,6 +1,23 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Csak a dev szerverre vonatkozik. A Next 16 alapból BLOKKOLJA a /_next/*
+  // dev-erőforrásokat, ha a kérés nem localhostról érkezik — telefonos teszthez
+  // (LAN-IP vagy ngrok-tunnel) viszont pont nem localhost a host. A JS chunkok
+  // ilyenkor 200-zal le is jönnek, de a HMR websocket 403-at kap, a React nem
+  // hidratál, és az egész animációs réteg (GSAP, ScrollTrigger, Lenis, preloader)
+  // néma marad: az oldal statikus lapnak látszik. Ezek a minták engedik át a
+  // telefonos teszt-originokat. Produkcióban nincs hatása.
+  allowedDevOrigins: [
+    "10.68.*.*",
+    "192.168.*.*",
+    "172.16.*.*",
+    "*.ngrok-free.app",
+    "*.ngrok-free.dev",
+    "*.ngrok.app",
+    "*.ngrok.io",
+    "*.trycloudflare.com",
+  ],
   images: {
     formats: ["image/avif", "image/webp"],
   },

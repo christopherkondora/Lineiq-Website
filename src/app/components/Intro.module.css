@@ -71,6 +71,12 @@
   position: relative;
   display: inline-block;
   vertical-align: baseline;
+  /* A .redaction kilóg a .swap dobozából (left: -0.12em, min-width: 100% +
+     0.3em), és a jobb oldali túlnyúlás majdnem az egész utána jövő szóközt
+     megette: a piros sáv széle a "and"-hez ért. A margók pontosan lefoglalják
+     a bleedet, így a szóköz mindkét oldalon megmarad. */
+  margin-left: 0.12em;
+  margin-right: 0.24em;
 }
 
 /* Közös tipográfia a két szóhoz — a korábbi .highlight nagy Fraunces receptje. */
@@ -104,6 +110,10 @@
   padding: 0.06em 0.1em;
   background: var(--color-red);
   clip-path: inset(0% 100% 0% 0%);
+  /* A sáv szélességét az "Agency" szabja meg (azt kell eltakarnia), a "Studio"
+     viszont keskenyebb — középre zárva a maradék hely két oldalt oszlik el,
+     nem egy üres piros farokként lóg a szó után. */
+  text-align: center;
 }
 
 .studio {
@@ -151,64 +161,87 @@
 
 @media (max-width: 768px) {
   .intro {
-    padding: var(--space-2xl) 0;
+    padding: var(--space-xl) 0;
   }
+
   /* A desktop-hangolt vízszintes eltolások és a nowrap szétverik a keskeny
-     viewportet. Mobilon az első három mondat középre zárt blokk, az eltolások
-     nullázva, a mondatok közt levegő. A 3. mondat egyben marad (a "system."-ot
-     a thirdLine végén jelenítjük meg), a desktop 4. sor pedig rejtve. */
+     viewportet, lépcsőzött kompozícióra pedig nincs hely. A mobil olvasat
+     ezért egyetlen BAL GERINCRE épül: a lead, a kicker és a záró mondat is a
+     konténer bal széléhez zár. Korábban a lead középre, a kicker és a closing
+     balra zárt — az nem kompozíciónak, hanem törésnek látszott. */
+  .composition {
+    text-align: left;
+  }
+
   .firstLine,
   .secondLine,
   .thirdLine {
     transform: none;
   }
+
+  /* Egyenletes ritmus: a három felvezető mondat közt azonos térköz, a záró
+     kicker + closing páros elé (ez a szekció csattanója) nagyobb szünet. */
   .firstLine,
   .secondLine {
-    margin-bottom: 0.9em;
+    margin-bottom: 0.8em;
   }
   .thirdLine {
     margin-bottom: 0;
   }
+  /* A 3. mondat egyben marad (a "system."-ot a thirdLine végén jelenítjük
+     meg), a desktop 4. sor pedig rejtve. */
   .fourthLine {
     display: none;
   }
   .systemMobile {
     display: inline;
   }
+
+  .lead {
+    font-size: clamp(1.15rem, 4.9vw, 1.5rem);
+    line-height: 1.6;
+    text-wrap: pretty;
+  }
+
+  /* A nagy Fraunces szavak a lead line-heightját öröklik, így a sordobozuk
+     ~2.4em-re hízott: ettől lett a piros sáv a sorköz másfélszerese, és ettől
+     tátongott lyuk az első sor fölött. Saját, tömör line-height tartja őket a
+     bekezdés ritmusában. */
+  .highlight,
+  .swapWord {
+    font-size: 1.4em;
+    line-height: 1;
+  }
   .highlight {
-    font-size: 1.45em;
     /* A nagyobb Fraunces szó jobb széle a szóköz ellenére a következő szóhoz
        tapad ("justexecute") — egy hajszálnyi levegő elválasztja. */
     margin-right: 0.12em;
   }
-  /* A swap szavai követik a highlight mobil méretét; a térközt a swap utáni
-     valódi szóköz adja, nincs szükség extra margóra. */
-  .swapWord {
-    font-size: 1.45em;
-  }
-  .lead {
-    font-size: clamp(1.15rem, 4.9vw, 1.5rem);
-    line-height: 1.65;
+  /* A sáv magasságát a betűméret adja; a függőleges padding csak annyi, hogy a
+     "Studio" ne érjen a piros széléhez. */
+  .redaction {
+    padding: 0.04em 0.1em;
   }
 
-  /* Az ecosystem mondat külön bekezdés, balra rendezve, a záró nagybetűs sorral
-     közös bal éllel (mindkettő a konténer bal széléhez zár). */
+  /* Az ecosystem mondat külön bekezdés — a lead-del közös bal éllel, de a záró
+     nagybetűs sorhoz tapasztva: a kettő egy páros. */
   .kicker {
     display: block;
-    text-align: left;
     font-family: var(--font-body);
     font-weight: 400;
     font-size: clamp(1.15rem, 4.9vw, 1.5rem);
     line-height: 1.5;
     letter-spacing: -0.01em;
     color: var(--color-black);
-    margin-top: 1.4em;
-    margin-bottom: 0.3em;
+    text-wrap: pretty;
+    margin-top: 1.5em;
+    margin-bottom: 0.35em;
   }
   .closing {
     white-space: normal;
-    text-align: left;
     margin-top: 0;
-    font-size: clamp(1.6rem, 7.5vw, 2.6rem);
+    font-size: clamp(1.75rem, 8.2vw, 2.6rem);
+    line-height: 1.05;
+    text-wrap: balance;
   }
 }

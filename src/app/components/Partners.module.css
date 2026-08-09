@@ -193,20 +193,41 @@
   .partners {
     min-height: 400vh;
   }
+
+  /* A fejléc a VIEWPORT közepén álljon. A desktop flex-központozás a fejlécet és
+     a hasábokat EGYÜTT centrálta, de a beatek 1–4 alatt a hasábok még láthatatlanok:
+     a tagadás-sor így a felső harmadban lógott, alatta üres fél képernyővel.
+     A 1fr–auto–1fr rács a fejlécet a saját magasságához centrálja, a hasábok pedig
+     a 3. sorba kerülnek. Az `fr` alsó korlátja auto, tehát alacsony viewporton a
+     3. sor a hasábok kedvéért megnő, a fejléc pedig feljebb csúszik — átfedés és
+     levágás helyett szelíd elcsúszás. */
+  .inner {
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+  }
+  .stageHead {
+    grid-row: 2;
+  }
+
   .lineOne,
   .lineTwoHead {
-    font-size: clamp(2.5rem, 11vw, 5rem);
+    font-size: clamp(2.5rem, 13.5vw, 5.5rem);
     line-height: 0.95;
   }
   .script {
     position: static;
     margin-top: 0.08em;
     transform: none;
-    font-size: clamp(2.3rem, 10.5vw, 4.2rem);
+    font-size: clamp(2.3rem, 13vw, 5.25rem);
   }
   .paras {
+    grid-row: 3;
     position: static;
-    margin: clamp(28px, 5vh, 52px) auto 0;
+    align-self: start;
+    /* Az alsó margó is beleszámít a 3. rács-sor auto-minimumába, tehát garantált
+       levegőt hagy a viewport alja és a hasábok közt — nélküle alacsony
+       telefonon a szöveg pont a képernyő aljához ért. */
+    margin: clamp(28px, 5vh, 52px) auto clamp(20px, 4vh, 48px);
     grid-template-columns: 1fr;
     gap: clamp(18px, 3.2vh, 28px);
     max-width: 360px;

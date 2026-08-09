@@ -171,4 +171,28 @@
   .line4 {
     white-space: normal;
   }
+
+  /* A .lead mobilon 16px/1.35 (=21.6px sordoboz), a beépített Fraunces
+     kulcsszavak viszont 1.7em = 27.2px: a nagy glifák MAGASABBAK a sordoboznál,
+     ezért a sorok belelógtak egymásba (a "by Western-European standards." a
+     következő mondatra ült). Kisebb kiemelés + tágabb sorköz tartja szét őket:
+     24.7px glifa egy 26.4px-es sordobozban. */
+  .lead {
+    font-size: 1.05rem;
+    line-height: 1.55;
+    /* a rövid, egy-szavas záró sorok ("minds,") elkerülésére */
+    text-wrap: pretty;
+  }
+  .highlight {
+    font-size: 1.45em;
+  }
+
+  /* A négy mondat eddig egyetlen tömör tömbként folyt; a térköz adja a ritmust
+     és teszi olvashatóvá, hogy hol ér véget az egyik gondolat. */
+  .line2 {
+    margin-top: 0.65em;
+  }
+  .lastBlock {
+    margin-top: 0.75em;
+  }
 }

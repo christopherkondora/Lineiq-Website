@@ -70,14 +70,26 @@ export default function Hero() {
     const waitsForIntro = document.documentElement.hasAttribute("data-intro");
     let onIntroDone: (() => void) | null = null;
 
+    // A pre-paint rejtést (CSS, html[data-enter]) innentől a GSAP inline
+    // stílusai váltják. A levétel és a timeline felépítése UGYANABBAN a
+    // szinkron blokkban történik, tehát a böngésző nem fest közéjük: a
+    // fromTo-tweenek immediateRenderje már a felépítéskor kiírja a kiinduló
+    // állapotot. Ha ezt a sort később hívnánk, pont az a villanás jönne
+    // vissza, amit a CSS-állapot megszüntet.
+    document.documentElement.removeAttribute("data-enter");
+
     const ctx = gsap.context(() => {
       const words = root.querySelectorAll<HTMLElement>("[data-hero-word]");
       const dot = root.querySelector("[data-hero-dot]");
       const sig = root.querySelector("[data-hero-sig]");
       const lineSvg = root.querySelector("[data-hero-line]");
 
-      // A vonalak a szöveg után úsznak be.
+      // A vonalak a szöveg után úsznak be. Az aláírást is itt rejtjük el
+      // inline stílussal: a CSS kezdőállapota a data-enter levételével
+      // megszűnt, a saját tweenje viszont csak később, `to`-val nyitja ki —
+      // enélkül a hidratálástól a belépőjéig végig látszana.
       if (lineSvg) gsap.set(lineSvg, { autoAlpha: 0 });
+      if (sig) gsap.set(sig, { autoAlpha: 0 });
 
       const tl = gsap.timeline({
         delay: waitsForIntro ? 0 : 0.2,
@@ -91,30 +103,43 @@ export default function Hero() {
       // Külön véve a szó lassabban válik láthatóvá, mint amilyen gyorsan
       // elindul: a fedő elvékonyodó fehérjén már a mozdulat ELEJE is átlátszik,
       // nem egy félig kész címsor bukkan fel a végén.
-      tl.from(
+      //
+      // fromTo, nem from: a kiinduló állapotot a CSS is leírja (data-enter),
+      // és a `from` a MEGLÉVŐ értéket venné végállapotnak — vagyis 100%-ról
+      // 100%-ra animálna, azaz sehova. A kiinduló értékek szándékosan
+      // egyeznek a CSS-beliekkel.
+      tl.fromTo(
         words,
-        { yPercent: 100, duration: 1.1, ease: "power3.out", stagger: 0.12 },
+        { yPercent: 100 },
+        { yPercent: 0, duration: 1.1, ease: "power3.out", stagger: 0.12 },
         0
       );
-      tl.from(
+      tl.fromTo(
         words,
-        { autoAlpha: 0, duration: 0.8, ease: "power1.out", stagger: 0.12 },
+        { autoAlpha: 0 },
+        { autoAlpha: 1, duration: 0.8, ease: "power1.out", stagger: 0.12 },
         0
       );
 
       // a pont saját, játékos érkezése — leesik és pattan, a fedettség gyorsan
       // jön, hogy ne örökölje a bounce-ot.
       //
-      // FROM, nem to: a kiinduló rejtettség így a tweené, tehát már a timeline
+      // fromTo, nem to: a kiinduló rejtettség így a tweené, tehát már a timeline
       // FELÉPÍTÉSEKOR érvényes. A `to` változat semmit nem rejtett el — a pont
       // a CSS-ből örökölt teljes fedettséggel, a végleges helye fölött 90
       // pixellel állt a hidratálástól a saját belépőjéig. A fedő
       // elvékonyodásakor tehát egy magában lebegő piros pont fogadta a
       // látogatót, egy másodperccel a hozzá tartozó szó előtt.
       if (dot) {
-        tl.from(dot, { autoAlpha: 0, duration: 0.3, ease: "power1.out" }, "-=0.35").from(
+        tl.fromTo(
           dot,
-          { y: -90, duration: 0.9, ease: "bounce.out" },
+          { autoAlpha: 0 },
+          { autoAlpha: 1, duration: 0.3, ease: "power1.out" },
+          "-=0.35"
+        ).fromTo(
+          dot,
+          { y: -90 },
+          { y: 0, duration: 0.9, ease: "bounce.out" },
           "<"
         );
       }

@@ -69,6 +69,32 @@
   pointer-events: none;
 }
 
+/* ─── A belépő kiinduló állapota, MÁR AZ ELSŐ FESTÉSKOR ──────
+   Az értékek pontosan egyeznek a Hero.tsx fromTo-tweenjeinek kiinduló
+   értékeivel: a CSS és a GSAP ugyanazt az állapotot írja le, így az
+   átvételkor nincs ugrás. A data-enter attribútumot a HomeIntro inline
+   kapu-scriptje teszi fel festés előtt, a Hero effektje pedig a legelső
+   dolgaként leveszi — ugyanabban a tickben, amelyben a timeline-t építi,
+   tehát nincs köztes festés. */
+:global(html[data-enter]) .word {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+:global(html[data-enter]) .dot {
+  opacity: 0;
+  transform: translateY(-90px);
+}
+
+/* Csak az átlátszóság: a .signature saját rotate-jét nem szabad elütni. */
+:global(html[data-enter]) .signature {
+  opacity: 0;
+}
+
+:global(html[data-enter]) .ambientLine {
+  opacity: 0;
+}
+
 /* Shape motion is driven per-frame in Hero.tsx; CSS only breathes opacity. */
 .ambientPath {
   animation: lineGlow 6s var(--ease-in-out) infinite;

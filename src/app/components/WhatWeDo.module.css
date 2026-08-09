@@ -23,6 +23,12 @@
 .inner {
   position: relative;
   z-index: 1;
+  /* A .whatwedo grid, a .container pedig `margin: 0 auto`-val él. Rács-elemen az
+     auto margó elnyomja a stretch-et, így a konténer a TARTALOM szélességére
+     zsugorodott és középre ült — mobilon ez 62px-es fantom-behúzást csinált, a
+     lista kiesett a többi szekció bal gerincéből. Az explicit szélesség
+     visszaadja a stretch-et; az auto margó így már no-op. */
+  width: 100%;
 }
 
 /* ─── Elrendezés ────────────────────────────────────────── */
