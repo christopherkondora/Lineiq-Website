@@ -155,6 +155,19 @@
   color: var(--color-muted);
 }
 
+/* A mező a betűméretéből 31px magas — koppintható minimum alatt, és beviteli
+   mezőnél ez a legrosszabb helyen szűk. Pszeudoelemes kiterjesztés itt nem
+   játszik (inputra nincs ::after, a befoglaló pedig div, nem label, tehát a rá
+   eső koppintás nem fókuszálná a mezőt), a magasság viszont ingyen van: az
+   input egyetlen sorát a böngésző függőlegesen középre teszi, így csak az
+   aláhúzás kerül pár képponttal lejjebb. Egérnél a 31px pontosan célozható,
+   ezért a megkomponált asztali nézet marad, ahogy volt. */
+@media (pointer: coarse) {
+  .input {
+    min-height: 44px;
+  }
+}
+
 /* Szolgáltatás-választó — Wix Madefor címkék elegáns, éles sarkú
    checkboxokkal. Kiválasztáskor a doboz feketére telik és a pipa
    vonalként rajzolódik be. */

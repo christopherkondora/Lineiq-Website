@@ -55,6 +55,27 @@
   transform: scaleX(1);
 }
 
+/* Tapintható találati felület. A CTA vizuális doboza 26px magas — a fekete
+   highlight .box a .swap teljes területét tölti ki, tehát a paddinget nem
+   lehet nagyobbra venni anélkül, hogy a highlight is nagyobb lenne. A 44px-es
+   minimumot ezért egy átlátszó, a doboz fölé nyúló pszeudoelem adja: a
+   koppintás a .swap-en landol, az pedig a befoglaló horgony belsejében van,
+   így a link a találat gazdája. A vizuális tervbe nem nyúl bele.
+
+   Csak durva mutatónál: egérrel a 26px pontosan célozható, a kiterjesztés
+   viszont ott is elfogna eseményt a szomszédjától. */
+@media (pointer: coarse) {
+  .swap::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .box {
     transition: none;

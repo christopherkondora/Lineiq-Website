@@ -157,7 +157,7 @@ export default function Partners() {
                 replace. Built on trust, consistency, and a point of view.
               </p>
               <p>
-                Curious, transparent, ambitious — and a little obsessed with the
+                Curious, transparent, ambitious. And a little obsessed with the
                 details most people never notice.
               </p>
             </div>
@@ -165,10 +165,6 @@ export default function Partners() {
               <p>
                 Setup, a retainer, and a real relationship behind both. We pick up
                 the phone, and we show up in person.
-              </p>
-              <p>
-                Western-European craft, Hungarian roots. Do the work right, and the
-                work sells itself.
               </p>
             </div>
           </div>

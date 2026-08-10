@@ -69,22 +69,47 @@
   padding-top: 60px;
 }
 
+/* A hasábok TARTALOMSZÉLESSÉGŰEK, és a maradék hely egyenletesen oszlik el
+   köztük (space-between) — nem négy egyenlő 1fr sáv.
+
+   Négy 1fr sávnál minden hasáb a saját sávja bal szélén kezdődött, a rövid
+   "Legal" oszlop után pedig ~280px holt hely maradt a jobb margóig: a blokk
+   balra csúszottnak látszott, és a "Connect" pont a viewport felezőpontjára
+   esett (négy egyenlő sávnál a 2. és 3. határa maga a közép).
+
+   Az utolsó hasáb jobbra zárása ezt látszólag megoldotta, valójában viszont
+   elrontotta: a szövegtömbök közti rések 262 / 286 / 518px lettek, tehát a
+   negyedik hasáb leszakadt a másik háromról. A külső szimmetria a BELSŐ ritmus
+   árán jött — rosszabb csere.
+
+   Tartalomszélességű sávokkal mindkettő teljesül: a blokk a bal margótól a jobb
+   margóig ér, és a három rés egyforma. A max-width miatt széles monitoron sem
+   terül szét: a rács 1440px-nél megáll és középre kerül. */
 .footerGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
   gap: var(--space-xl);
   padding: var(--space-lg) var(--container-pad) var(--space-md);
   max-width: var(--container-max);
   margin: 0 auto;
 }
 
+/* Az átlátszóság-skála MÉRT, és megegyezik a Footer.module.css-ével — a főoldal
+   desktop lezárása és a többi oldal footere ugyanaz a tartalom, nem szabad
+   szétcsúszniuk. A gradiens lepel jól dolgozik: a szöveg mögött a kompozit
+   háttér 5–23 közti, tehát gyakorlatilag fekete, a fotó nem üt át. A bukás
+   tisztán az átlátszóságból jött: 0.40 → 3.7:1, a copyright 0.30 → 2.6:1.
+
+     0.70  elsődleges: linkek, stúdió-adat
+     0.55  másodlagos: rovatcím, inaktív csatorna, jogi sor */
 .footerLabel {
   font-family: var(--font-body);
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.55);
   margin-bottom: var(--space-sm);
 }
 
@@ -92,7 +117,7 @@
   font-family: var(--font-body);
   font-size: var(--text-sm);
   line-height: 1.65;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .footerList {
@@ -105,7 +130,7 @@
 .footerList a {
   font-family: var(--font-body);
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.7);
   transition: color 200ms ease;
 }
 
@@ -117,7 +142,7 @@
 .footerSoon {
   font-family: var(--font-body);
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.55);
   cursor: default;
 }
 
@@ -125,7 +150,7 @@
   font-family: var(--font-body);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-wide);
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.55);
   text-align: center;
   padding: var(--space-sm) var(--container-pad) var(--space-lg);
 }

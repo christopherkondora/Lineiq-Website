@@ -136,5 +136,13 @@
      csak ≥901px fut) */
   .row {
     opacity: 1;
+    /* 390px-en a név 35.1px, a padding 2×4px: a sor 43px — egyetlen képponttal
+       a koppintható minimum alatt. A min-height a szándékot mondja ki a
+       padding hangolása helyett, a flex pedig középen tartja a nevet, hogy a
+       hozzáadott hely ne alul gyűljön össze. A ≥901px-es rács ennél amúgy is
+       bőven magasabb sorokat ad, ezért él csak itt. */
+    display: flex;
+    align-items: center;
+    min-height: 44px;
   }
 }

@@ -86,6 +86,26 @@
   color: var(--color-red);
 }
 
+/* 20px magas volt. Itt a pszeudoelemes kiterjesztés a helyes eszköz, nem a
+   min-height: a link egyedül áll a .heroMeta-ban, közvetlenül a hero címsora
+   fölött, tehát a doboz növelése lejjebb tolná a h1-et egy megkomponált
+   nyitóképen. Szomszédja nincs 44px-en belül, így a kiterjesztett felület nem
+   vehet el koppintást senkitől. */
+@media (pointer: coarse) {
+  .back {
+    position: relative;
+  }
+  .back::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+  }
+}
+
 .title {
   font-family: var(--font-display);
   font-size: clamp(3.25rem, 10vw, 9rem);

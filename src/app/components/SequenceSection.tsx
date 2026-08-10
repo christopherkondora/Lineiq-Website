@@ -5,6 +5,14 @@ import Link from "next/link";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
 import styles from "./SequenceSection.module.css";
+import {
+  FOOTER_CHANNELS,
+  FOOTER_LABELS,
+  FOOTER_LEGAL_LINKS,
+  FOOTER_SITEMAP,
+  FOOTER_STUDIO,
+  footerCopyright,
+} from "../data/footer";
 
 const FRAME_COUNT = 40;
 const frameSrc = (i: number) =>
@@ -115,36 +123,50 @@ export default function SequenceSection() {
         <div className={styles.footerOverlay}>
           <div className={styles.footerGrid}>
             <div>
-              <p className={styles.footerLabel}>Studio</p>
-              <p className={styles.footerText}>LineiQ Kft.<br />Budapest, HU</p>
+              <p className={styles.footerLabel}>{FOOTER_LABELS.studio}</p>
+              <p className={styles.footerText}>
+                {FOOTER_STUDIO.name}
+                <br />
+                {FOOTER_STUDIO.city}
+              </p>
             </div>
             <div>
-              <p className={styles.footerLabel}>Sitemap</p>
+              <p className={styles.footerLabel}>{FOOTER_LABELS.sitemap}</p>
               <ul className={styles.footerList}>
-                <li><Link href="/">Home</Link></li>
-                <li><Link href="/#services">Services</Link></li>
-                <li><Link href="/about">About</Link></li>
-                <li><Link href="/contact">Contact</Link></li>
+                {FOOTER_SITEMAP.map((l) => (
+                  <li key={l.href}>
+                    <Link href={l.href}>{l.label}</Link>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>
-              <p className={styles.footerLabel}>Connect</p>
+              <p className={styles.footerLabel}>{FOOTER_LABELS.connect}</p>
               {/* Channels without a live URL render as plain text — no dead links. */}
               <ul className={styles.footerList}>
-                <li><span className={styles.footerSoon}>Instagram</span></li>
-                <li><span className={styles.footerSoon}>LinkedIn</span></li>
-                <li><span className={styles.footerSoon}>Are.na</span></li>
+                {FOOTER_CHANNELS.map((c) => (
+                  <li key={c}>
+                    <span className={styles.footerSoon}>{c}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <div>
-              <p className={styles.footerLabel}>Legal</p>
+              <p className={styles.footerLabel}>{FOOTER_LABELS.legal}</p>
               <ul className={styles.footerList}>
-                <li><Link href="/aszf">ÁSZF</Link></li>
-                <li><Link href="/adatkezelesi-tajekoztato">Adatkezelési tájékoztató</Link></li>
+                {FOOTER_LEGAL_LINKS.map((l) => (
+                  <li key={l.href}>
+                    <Link href={l.href}>{l.label}</Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
-          <p className={styles.footerLegal}>© 2026 LineiQ. All rights reserved.</p>
+          {/* Az évszám korábban be volt égetve ("© 2026"), miközben a Footer.tsx
+              számolta — a kettő januárban szétcsúszott volna. */}
+          <p className={styles.footerLegal}>
+            {footerCopyright(new Date().getFullYear())}
+          </p>
         </div>
       </div>
     </div>

@@ -30,9 +30,14 @@
 }
 
 /* ─── Link columns ─────────────────────────────────────── */
+/* Tartalomszélességű hasábok, a maradék hely egyenletesen elosztva — ugyanaz a
+   megfontolás, mint a SequenceSection overlay-footerénél (a részletes indoklás
+   ott áll). Négy egyenlő 1fr sávnál a rövid utolsó hasáb után holt hely maradt
+   a jobb margóig, és a blokk balra csúszottnak látszott. */
 .row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, auto);
+  justify-content: space-between;
   gap: var(--space-lg);
   padding: var(--space-lg) 0;
   border-top: 1px solid rgba(255, 255, 255, 0.15);
@@ -45,13 +50,24 @@
   gap: var(--space-sm);
 }
 
+
+/* Fehér szöveg átlátszósága fekete (#000) alapon. A két érték mért, nem
+   ízlés: 0.40 mellett a kontraszt 3.7:1, ami normál törzsméretnél elbukja a
+   4.5:1-es AA küszöböt — a rovatcímek, az inaktív csatornák és a copyright sor
+   mind ott ültek. 0.55 → 6.3:1, 0.70 → 9.7:1.
+
+     0.70  elsődleges: linkek, stúdió-adat
+     0.55  másodlagos: rovatcím, inaktív csatorna, jogi sor
+
+   Ugyanez a skála él a SequenceSection overlay-footerében is, hogy a főoldal
+   desktop lezárása és az összes többi oldal footere ne csússzon szét. */
 .label {
   font-family: var(--font-body);
   font-size: var(--text-xs);
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .text {
@@ -85,7 +101,7 @@
 
 /* Channels awaiting a live URL: present but visibly inactive. */
 .soon {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.55);
   cursor: default;
 }
 
@@ -98,7 +114,29 @@
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: var(--tracking-widest);
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* A hasáblisták linkjei 18px magasak — koppintásra kevés. Itt a pszeudoelemes
+   kiterjesztés nem járható: a linkek 4px-es réssel egymás alatt állnak, tehát a
+   44px-re nyújtott találati felületük átfedné egymást, és az átfedésben a
+   DOM-ban később álló link nyerne — a "Services"-re célozva az "About" nyílna.
+   Egymás alatti elemeknél a hely a megoldás, nem a takarás: minden link 44px
+   magas sor lesz, a rés pedig elmarad, mert a sormagasság adja a ritmust.
+
+   A .soon (még élő URL nélküli csatornák) ugyanezt kapja, pedig nem
+   interaktív: nélküle a Connect hasáb 18px-es sorai kilógnának a másik két
+   hasáb 44px-es ritmusából. */
+@media (pointer: coarse) {
+  .list {
+    gap: 0;
+  }
+  .list a,
+  .soon {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -111,9 +149,38 @@
     white-space: normal;
   }
   .row {
+    /* Mobilon két egyenlő hasáb, bal gerincre zárva: itt a sávok kitöltik a
+       helyet, tehát nincs mit elosztani — a space-between kifejezetten
+       visszakapcsolva, nehogy a rács szélére húzza a két oszlopot. */
     grid-template-columns: 1fr 1fr;
+    justify-content: normal;
     gap: var(--space-lg) var(--space-md);
   }
+
+  /* A négy hasáb két sorba tördelve MAGASSÁG szerint párosítva, nem a
+     forrássorrend szerint. A Studio két sornyi cím, a Sitemap négy 44px-es
+     koppintósor: egymás mellett a rács első sora a magasabbhoz igazodik, és a
+     cím alatt ~115px üres lyuk maradt a hasáb közepén.
+
+     Sitemap (4 sor) + Connect (3 sor) az első sorba, Studio (2 sor) + Legal
+     (2 sor) a másodikba: a párok így közel egyforma magasak, a maradék rag
+     pedig a blokk aljára kerül, ahol nem lyuknak látszik.
+
+     Csak a VIZUÁLIS sorrend változik, a DOM-é nem — a hasábok egymástól
+     független csoportok, felolvasva a forrássorrend marad a helyes. */
+  .colSitemap {
+    order: 1;
+  }
+  .colConnect {
+    order: 2;
+  }
+  .colStudio {
+    order: 3;
+  }
+  .colLegal {
+    order: 4;
+  }
+
   .legal {
     flex-direction: column;
     gap: var(--space-sm);

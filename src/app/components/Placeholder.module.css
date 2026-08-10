@@ -80,6 +80,15 @@
   font-weight: 500;
   color: var(--color-black);
   transition: color 300ms var(--ease-out-quad);
+  /* 24px magas volt. Itt valódi magasság kell, nem pszeudoelemes kiterjesztés:
+     az .actions sor `flex-wrap`-el él, tehát keskeny kijelzőn a szomszédos
+     .ctaLink alá kerülhet — két egymás fölötti, 44px-re nyújtott találati
+     felület pedig átfedné egymást. A min-height helyet foglal, ezért nem tud
+     ütközni. Ha egy sorban maradnak, semmi nem mozdul: a .ctaLink amúgy is
+     magasabb ennél. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
 }
 
 .backLink:hover {

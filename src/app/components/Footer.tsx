@@ -2,6 +2,14 @@
 
 import Link from "next/link";
 import styles from "./Footer.module.css";
+import {
+  FOOTER_CHANNELS,
+  FOOTER_LABELS,
+  FOOTER_LEGAL_LINKS,
+  FOOTER_SITEMAP,
+  FOOTER_STUDIO,
+  footerCopyright,
+} from "../data/footer";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -18,43 +26,49 @@ export default function Footer() {
         </div>
 
         <div className={styles.row}>
-          <div className={styles.col}>
-            <p className={styles.label}>Studio</p>
+          <div className={`${styles.col} ${styles.colStudio}`}>
+            <p className={styles.label}>{FOOTER_LABELS.studio}</p>
             <p className={styles.text}>
-              LineiQ Kft.
+              {FOOTER_STUDIO.name}
               <br />
-              Budapest, HU
+              {FOOTER_STUDIO.city}
             </p>
           </div>
-          <div className={styles.col}>
-            <p className={styles.label}>Sitemap</p>
+          <div className={`${styles.col} ${styles.colSitemap}`}>
+            <p className={styles.label}>{FOOTER_LABELS.sitemap}</p>
             <ul className={styles.list}>
-              <li><Link href="/">Home</Link></li>
-              <li><Link href="/#services">Services</Link></li>
-              <li><Link href="/about">About</Link></li>
-              <li><Link href="/contact">Contact</Link></li>
+              {FOOTER_SITEMAP.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href}>{l.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
-          <div className={styles.col}>
-            <p className={styles.label}>Connect</p>
+          <div className={`${styles.col} ${styles.colConnect}`}>
+            <p className={styles.label}>{FOOTER_LABELS.connect}</p>
             {/* Channels without a live URL render as plain text — no dead links. */}
             <ul className={styles.list}>
-              <li><span className={styles.soon}>Instagram</span></li>
-              <li><span className={styles.soon}>LinkedIn</span></li>
-              <li><span className={styles.soon}>Are.na</span></li>
+              {FOOTER_CHANNELS.map((c) => (
+                <li key={c}>
+                  <span className={styles.soon}>{c}</span>
+                </li>
+              ))}
             </ul>
           </div>
-          <div className={styles.col}>
-            <p className={styles.label}>Legal</p>
+          <div className={`${styles.col} ${styles.colLegal}`}>
+            <p className={styles.label}>{FOOTER_LABELS.legal}</p>
             <ul className={styles.list}>
-              <li><Link href="/aszf">ÁSZF</Link></li>
-              <li><Link href="/adatkezelesi-tajekoztato">Adatkezelési tájékoztató</Link></li>
+              {FOOTER_LEGAL_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href}>{l.label}</Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         <div className={styles.legal}>
-          <span>© {year} LineiQ. All rights reserved.</span>
+          <span>{footerCopyright(year)}</span>
           <span>Brand. Code. Signal.</span>
         </div>
       </div>
