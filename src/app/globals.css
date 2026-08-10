@@ -148,8 +148,8 @@ html {
    festi őket a domináns világos hero fölött, köré fehér haló kerül, hogy sötét
    szekción is kirajzolódjanak. */
 :root {
-  --cursor-h: 30px; /* a mark magassága; a line ennek ~1/6.5-e széles */
-  --cursor-w: 38px; /* a doboz szélessége: >= a plus szélessége + haló */
+  --cursor-h: 22px; /* a mark magassága; a line ennek ~1/6.5-e széles */
+  --cursor-w: 28px; /* a doboz szélessége: >= a plus szélessége + haló */
 }
 
 /* A .cursor valós méretű doboz, és JS-ben a kurzor-pontra van középre tolva
