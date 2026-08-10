@@ -16,15 +16,6 @@ export default function Footer() {
   return (
     <footer className={`section--dark ${styles.footer}`}>
       <div className="container">
-        {/* Brand anchor — gives the footer a clear top before the link columns. */}
-        <div className={styles.brand}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-white.svg" alt="LineiQ" className={styles.logo} />
-          <p className={styles.tagline}>
-            Forget being ordinary<span className={styles.dot}>.</span>
-          </p>
-        </div>
-
         <div className={styles.row}>
           <div className={`${styles.col} ${styles.colStudio}`}>
             <p className={styles.label}>{FOOTER_LABELS.studio}</p>
@@ -67,10 +58,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className={styles.legal}>
-          <span>{footerCopyright(year)}</span>
-          <span>Brand. Code. Signal.</span>
-        </div>
+        <p className={styles.legal}>{footerCopyright(year)}</p>
       </div>
     </footer>
   );

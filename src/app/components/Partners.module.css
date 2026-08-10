@@ -184,56 +184,104 @@
 }
 
 /* ─── Mobil finomhangolás az animált színpadhoz ───
-   Kompaktabb tipó; a script és a hasábok a fejléc alatt FOLYNAK (nem abszolút),
-   hogy elférjenek a 100vh-ban és ne fedjék egymást a swap után. */
+   A tipó fokozatai és a hasábok elrendezése hangolódik a szűk viewportra; a
+   script átfedése viszont NEM — az a kompozíció lényege, telefonon is. */
 @media (prefers-reduced-motion: no-preference) and (max-width: 900px) {
-  /* A mobil viewport rövidebb, ezért a takarás 100vh-s ablaka a teljes scroll
-     nagyobb hányada — a wrappert 400vh-ra emeljük, hogy itt is maradjon ≈30vh
-     tiszta statikus hold a hasábok beállása és a Manifesto takarása közt. */
+  /* Telefonon a szekció KÉT képernyőre bomlik: előbb a tagadás→állítás fejléc,
+     majd — a fejléc kiúszása után — a három mondat a letisztult színpadon (a
+     beatek a Partners.tsx-ben). Egy képernyőn a kettő összezsúfolódott: a fejléc
+     alá bepréselt hasábok elvették a levegőt, és a szekció nyugodt helyett
+     tömöttnek hatott.
+
+     A wrapper 400vh helyett 520vh: a két külön képernyő két beattel többe kerül
+     (fejléc-kiúszás + mondatok érkezése), és a takarás 100vh-s ablaka fölött így
+     is marad ≈35vh tiszta statikus hold, mielőtt a Manifesto takarni kezd. */
   .partners {
-    min-height: 400vh;
+    min-height: 520vh;
   }
 
-  /* A fejléc a VIEWPORT közepén álljon. A desktop flex-központozás a fejlécet és
-     a hasábokat EGYÜTT centrálta, de a beatek 1–4 alatt a hasábok még láthatatlanok:
-     a tagadás-sor így a felső harmadban lógott, alatta üres fél képernyővel.
-     A 1fr–auto–1fr rács a fejlécet a saját magasságához centrálja, a hasábok pedig
-     a 3. sorba kerülnek. Az `fr` alsó korlátja auto, tehát alacsony viewporton a
-     3. sor a hasábok kedvéért megnő, a fejléc pedig feljebb csúszik — átfedés és
-     levágás helyett szelíd elcsúszás. */
+  /* A fejléc és a hasábok UGYANABBAN a rácscellában állnak, mindkettő a viewport
+     közepére zárva — sosem látszanak egyszerre, tehát nem fedik egymást, viszont
+     mindkettő a saját képernyőjének a közepén ül. (Korábban 1fr–auto–1fr rács
+     tartotta őket egymás alatt; az ott leírt "fejléc a felső harmadban lóg"
+     problémát most maga a szétválasztás oldja meg.) */
   .inner {
     display: grid;
-    grid-template-rows: 1fr auto 1fr;
+    place-items: center;
+  }
+  .stageHead,
+  .paras {
+    grid-area: 1 / 1;
   }
   .stageHead {
-    grid-row: 2;
+    width: 100%;
   }
 
-  .lineOne,
-  .lineTwoHead {
+  /* A tagadás-sor mérete a HOSSZÁHOZ van kötve: "We don't take on clients" öt szó,
+     és 56px fölött már három sorra esik szét a 350px-es konténerben. */
+  .lineOne {
     font-size: clamp(2.5rem, 13.5vw, 5.5rem);
     line-height: 0.95;
   }
-  .script {
-    position: static;
-    margin-top: 0.08em;
-    transform: none;
-    font-size: clamp(2.3rem, 13vw, 5.25rem);
+
+  /* Az állítás viszont három rövid szó, tehát elbírja a nagyobb fokozatot — és
+     el is kell bírnia: ez a szekció zárómondata, a tagadás csak felvezeti.
+     A kettő sosem látszik egyszerre (ugyanaz a rácscella, a swap kapcsolja őket),
+     így az eltérő méret nem következetlenség, hanem a dramaturgia része. */
+  .lineTwoHead {
+    font-size: clamp(3rem, 18vw, 6.5rem);
+    line-height: 0.95;
   }
+
+  /* A script telefonon is RÁÚSZIK a "We take on"-ra, ahogy desktopon — a korábbi
+     static/alá-folyatás két különálló sorra bontotta azt, ami egy gesztus.
+     Itt csak a fokozatot állítjuk; a pozicionálást (absolute, left 50%, top 100%,
+     translate(-50% - 0.15em, -60%)) a fenti no-preference blokk adja, minden
+     szélességen ugyanaz. */
+  .script {
+    font-size: clamp(2.8rem, 17vw, 6rem);
+  }
+
+  /* A három mondat a saját képernyőjén: egy hasáb, bőven mért közökkel. A rács
+     gap-je a 2. és 3. mondat közé esik (külön .col-ban vannak), a p + p margó az
+     1. és 2. közé — a kettőnek EGYENLŐNEK kell lennie, különben a hármas ritmus
+     megbicsaklik. */
   .paras {
-    grid-row: 3;
     position: static;
-    align-self: start;
-    /* Az alsó margó is beleszámít a 3. rács-sor auto-minimumába, tehát garantált
-       levegőt hagy a viewport alja és a hasábok közt — nélküle alacsony
-       telefonon a szöveg pont a képernyő aljához ért. */
-    margin: clamp(28px, 5vh, 52px) auto clamp(20px, 4vh, 48px);
+    margin: 0;
     grid-template-columns: 1fr;
-    gap: clamp(18px, 3.2vh, 28px);
-    max-width: 360px;
+    gap: clamp(30px, 5.5vh, 52px);
+    max-width: 340px;
   }
   .col p {
-    font-size: clamp(0.9rem, 3.6vw, 1.05rem);
-    line-height: 1.4;
+    font-size: clamp(0.95rem, 3.8vw, 1.1rem);
+  }
+  .col p + p {
+    margin-top: clamp(30px, 5.5vh, 52px);
+  }
+}
+
+/* ─── Kiemelt kulcsszavak a hasábokban (telefon) ───
+   Szándékosan NEM a fenti, mozgásra kapuzott blokkban: ez tipográfia, nem
+   animáció. A reduced-motion-t kérő látogató statikus színpadot kap, de ugyanazt
+   a szövegképet — a kiemelés ott is kell. */
+@media (max-width: 900px) {
+  /* Tágabb sorköz, mint desktopon (1.4): a kiemelt szó 1.45em-es glifái
+     MAGASABBAK a törzsszöveg sordobozánál, szűkebb sorközzel belelógnának a
+     szomszédos sorba. Ugyanez a korrekció él a Manifesto .lead-jén. */
+  .col p {
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  /* Ugyanaz a gesztus, mint a Manifesto .highlight-ja: Fraunces, nagyobb fokozat,
+     szoros sorköz — kiemelkedik a törzsszövegből, de a sorban marad. */
+  .kw {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.45em;
+    line-height: 0.95;
+    letter-spacing: var(--tracking-tight);
+    font-variation-settings: "opsz" 75;
   }
 }

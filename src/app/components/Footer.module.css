@@ -1,32 +1,10 @@
+/* A footer csak lezárás, nem önálló szekció: négy linkhasáb és egy jogi sor.
+   Volt itt egy márka-blokk is (fehér logó + "Forget being ordinary."), de a
+   footer így telefonon 730px magas lett — egy majdnem üres teljes képernyő,
+   amit a felhasználó holt térnek látott. A logó a navbarban amúgy is végig ott
+   van, a szlogen pedig a hero dolga; a footerben mindkettő ismétlés volt. */
 .footer {
-  padding: var(--space-2xl) 0 var(--space-lg);
-}
-
-/* ─── Brand anchor ─────────────────────────────────────── */
-.brand {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-lg);
-  padding-bottom: var(--space-lg);
-}
-
-.logo {
-  width: clamp(132px, 16vw, 200px);
-  height: auto;
-}
-
-.tagline {
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2.4vw, 2rem);
-  font-weight: 500;
-  line-height: 1.1;
-  color: rgba(255, 255, 255, 0.92);
-  white-space: nowrap;
-}
-
-.dot {
-  color: var(--color-red);
+  padding: var(--space-xl) 0 var(--space-lg);
 }
 
 /* ─── Link columns ─────────────────────────────────────── */
@@ -39,8 +17,7 @@
   grid-template-columns: repeat(4, auto);
   justify-content: space-between;
   gap: var(--space-lg);
-  padding: var(--space-lg) 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: var(--space-lg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -107,8 +84,6 @@
 
 /* ─── Legal ────────────────────────────────────────────── */
 .legal {
-  display: flex;
-  justify-content: space-between;
   padding-top: var(--space-lg);
   font-family: var(--font-body);
   font-size: var(--text-xs);
@@ -140,21 +115,64 @@
 }
 
 @media (max-width: 768px) {
-  .brand {
+  /* Telefonon a footer ÖNÁLLÓ KÉPERNYŐ: kitölt egy teljes viewportot, és a
+     tartalom függőlegesen középen ül benne. Az oldal aljára érve így a footer
+     az egész kép — a fölötte lévő szekció (a főoldalon a Manifesto stúdió-
+     fotója) nem lóg be a képernyő tetejébe.
+
+     100vh és nem 100dvh: a dvh a böngésző címsorának be- és kicsúszásakor menet
+     közben változik, tehát az oldal alján a dokumentum magassága is változna —
+     ez ugrálást okoz pont ott, ahol a felhasználó megáll. A vh a NAGY viewportra
+     hivatkozik, így a footer minden címsor-állapotban legalább akkora, mint a
+     látható terület: a takarás garantált, reflow nélkül. */
+  .footer {
+    min-height: 100vh;
+    display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-md);
+    justify-content: center;
+    padding: var(--space-lg) 0;
   }
-  .tagline {
-    white-space: normal;
-  }
+
   .row {
-    /* Mobilon két egyenlő hasáb, bal gerincre zárva: itt a sávok kitöltik a
-       helyet, tehát nincs mit elosztani — a space-between kifejezetten
-       visszakapcsolva, nehogy a rács szélére húzza a két oszlopot. */
+    /* Mobilon két egyenlő hasáb, mindegyik a saját fél-sávjában középre zárva —
+       a blokk így a képernyő közepére szimmetrikus. */
     grid-template-columns: 1fr 1fr;
     justify-content: normal;
-    gap: var(--space-lg) var(--space-md);
+    /* A rés most HIERARCHIÁT hordoz, nem csak levegőt ad. Korábban a
+       rovatcím→első elem (39px), az elemek közti (44px) és a két hasábsor közti
+       (46px) távolság majdnem azonos volt: semmi nem csoportosult, a footer
+       egyenletes szövegmasszának látszott. Rovaton BELÜL sűrű, a két rovatsor
+       KÖZÖTT tág — ettől lesz négy olvasható blokk egy lista helyett. */
+    gap: var(--space-xl) var(--space-md);
+    padding-bottom: var(--space-lg);
+  }
+
+  /* A rovatcím és az első elem összetartozik; a 44px-es koppintósor amúgy is ad
+     ~14px optikai levegőt a szöveg fölé, tehát a saját rés szinte nulla lehet. */
+  .col {
+    align-items: center;
+    text-align: center;
+    gap: 2px;
+  }
+
+  /* A koppintósor 44px-ről 40px-re szűkül. A sormagasság ITT a linkek közti
+     távolság is (a lista rése 0), tehát ez az egyetlen szabályozó — 44px-nél a
+     négy menüpont széteső listának látszott. 40px továbbra is bőven a WCAG 2.2
+     AA 24px-es célméret-küszöbe fölött van, és a lényeg megmarad: a sornak VALÓS
+     magassága van, nem pszeudoelemes túlnyúlása, tehát a szomszédos linkek
+     találati felülete nem fedi egymást. */
+  .list a,
+  .soon {
+    justify-content: center;
+    min-height: 40px;
+  }
+
+  /* A 14px-es lista telefonon apró; a koppintósorban ráadásul veszít is a
+     súlyából. 1rem az a méret, ahol a link még nem menü-főcím, de olvasható. */
+  .list a,
+  .soon,
+  .text {
+    font-size: 1rem;
   }
 
   /* A négy hasáb két sorba tördelve MAGASSÁG szerint párosítva, nem a
@@ -182,7 +200,7 @@
   }
 
   .legal {
-    flex-direction: column;
-    gap: var(--space-sm);
+    padding-top: var(--space-lg);
+    text-align: center;
   }
 }

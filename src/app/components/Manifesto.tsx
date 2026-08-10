@@ -136,11 +136,18 @@ export default function Manifesto() {
                 <span className={styles.highlight}>mind</span> and the{" "}
                 <span className={styles.highlight}>taste.</span>
               </span>
-              <span className={styles.lastBlock}>
-                <span className={styles.line3} data-lead-line>
+              {/* A záró tömb EGY animált egység, nem két külön sor. Telefonon a
+                  két mondat egyetlen szövegfolyamban tördelődik (lásd
+                  Manifesto.module.css, .lastBlock text-wrap: balance), ott tehát
+                  inline elem — inline elemre viszont nem hat a transform, így a
+                  data-lead-line-nak a blokkon kell ülnie, különben a felemelkedés
+                  mobilon némán elmarad, és csak a beúszás maradna. A piros sáv
+                  amúgy is egy gesztusként fogja össze a két mondatot. */}
+              <span className={styles.lastBlock} data-lead-line>
+                <span className={styles.line3}>
                   Brand, content and code from creative minds,
-                </span>
-                <span className={styles.line4} data-lead-line>
+                </span>{" "}
+                <span className={styles.line4}>
                   with technical and theoretical{" "}
                   <span className={styles.highlight}>expertise.</span>
                 </span>

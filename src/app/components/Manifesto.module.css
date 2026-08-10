@@ -163,6 +163,15 @@
   .manifesto {
     min-height: 0;
   }
+
+  /* A háttér narratív íve telefonon kikapcsolva. A 200px magas görbe a széles
+     kompozícióban finom aláhúzás, a szűk mobilban viszont átvágja a
+     szövegtömböt, és mivel a szekció itt a tartalom magasságára zsugorodik
+     (min-height: 0), a szöveg alá és a stúdió-fotó fölé is kilóg — dísz helyett
+     zaj. A rajzoló GSAP-animáció futhat tovább egy rejtett elemen. */
+  .narrativeLine {
+    display: none;
+  }
   .grid {
     grid-template-columns: 1fr;
     gap: var(--space-xl);
@@ -170,6 +179,36 @@
   /* Full-width copy on phones: let the long run wrap rather than overflow. */
   .line4 {
     white-space: normal;
+  }
+
+  /* 1. mondat: a törés a vessző UTÁN essen. Szabad tördeléssel a sorvég a
+     kiemelt tagmondat KÖZEPÉRE esett ("by Western-" / "European standards."),
+     ami egy kötőjellel kettévágott márkaállítás. Saját blokként a két
+     gondolat két sor: "A Hungarian studio," / "by Western-European standards." */
+  .line1 .highlight {
+    display: block;
+  }
+
+  /* 3. mondat: a két tagmondat telefonon EGY szövegfolyam. Külön blokként a
+     tördelés nem tudott kiegyenlíteni: az első mondat 248 + 135px-es csonka
+     párra esett, a második pedig egyetlen 320px-es sorként futott majdnem a
+     margóig — három sor, háromféle szélességgel. Egy folyamban a
+     text-wrap: balance közel azonos szélességű sorokra osztja az egészet.
+
+     A .line3/.line4 blokk→inline váltás csak itt él; desktopon a két mondat
+     külön sor marad (ott a nowrap-es egysoros kompozíció a lényeg). */
+  .lastBlock {
+    text-wrap: balance;
+  }
+  .line3,
+  .line4 {
+    display: inline;
+  }
+
+  /* A jelölősáv 3px-en telefonon vaskos hasáb a 16px-es szöveg mellett — ugyanaz
+     a gesztus 1px-en tartja a súlyarányt. */
+  .lastBlock::before {
+    width: 1px;
   }
 
   /* A .lead mobilon 16px/1.35 (=21.6px sordoboz), a beépített Fraunces
