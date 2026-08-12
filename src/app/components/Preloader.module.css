@@ -46,10 +46,11 @@
    A min-width nem esztétikai, hanem olvashatósági korlát. A sáv vastagsága a
    jel szélességéhez kötött, tehát a keskeny jel vékony sávot jelent — és egy
    CSS pixel alatt a sáv már nem feketén rajzolódik ki, hanem szürkére simul: a
-   folyamatjelző pont azt veszítené el, amitől sáv. A 190px még a 7.5 egységes
-   hajszálvonalhoz volt méretezve (ott ez volt az egy egész pixel határa); a
-   mostani BAR_THICK 16 mellett a határ jóval lejjebb van, a 190px innentől
-   tartalék, nem küszöb. */
+   folyamatjelző pont azt veszítené el, amitől sáv. A 190px a 7.5 egységes
+   hajszálvonalhoz volt méretezve (ott ez volt az egy egész pixel határa). A
+   mostani BAR_THICK 8 mellett a 190px-es jel 1.11px-et ad — a küszöb tehát megint
+   közel van, és a min-width megint küszöb, nem tartalék. Ha a sáv ennél vékonyabb
+   lesz, ezt is emelni kell. */
 .mark {
   /* a lepel abszolút, tehát festési sorrendben a statikus svg fölé kerülne */
   position: relative;

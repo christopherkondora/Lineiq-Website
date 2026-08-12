@@ -51,22 +51,33 @@ const projects = [
   },
 ];
 
+// Három mód, egyetlen szekció. A `diagonal` a pinelt, széles nézetű
+// koreográfia; a `stacked` a telefon függőleges kártyalistája a SAJÁT
+// koreográfiájával; a `static` a csökkentett mozgást kérő látogatóé, ahol
+// egyik JS-effekt sem épül fel és a CSS base layout az igazság.
+type Mode = "static" | "diagonal" | "stacked";
+
 export default function Work() {
   const rootRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
-  const [enabled, setEnabled] = useState(false);
+  const [mode, setMode] = useState<Mode>("static");
 
-  // Decide whether to run the diagonal build: client, motion allowed, AND a
-  // wide-enough viewport. Mobilon (≤768px) a pinelt diagonális koreográfia
-  // összepréselődik a magas-keskeny viewportben, ezért kikapcsoljuk és a
-  // statikus, egymás-alá-rakott fallback layout (kép + név + leírás) jelenik
-  // meg. A breakpoint átlépésére (resize/forgatás) újraértékeljük.
+  // Melyik mód fusson: kliens, engedélyezett mozgás ÉS elég széles viewport.
+  // Mobilon (≤768px) a pinelt diagonális koreográfia összepréselődik a
+  // magas-keskeny viewportben, ezért ott nem ez, hanem az egymás-alá-rakott
+  // layout fut — de a 2026-08-12-i változtatás óta az sem mozdulatlan, saját
+  // beatjei vannak (lásd a stacked effektet lentebb). A breakpoint átlépésére
+  // (resize/forgatás) újraértékeljük.
+  //
+  // A `static` kezdőérték szándékos: szerveren és az első festéskor a base
+  // layout érvényes, a mód csak a hidratálás után dől el.
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
     const wide = window.matchMedia("(min-width: 768px)");
-    const update = () => setEnabled(!reduce.matches && wide.matches);
+    const update = () =>
+      setMode(reduce.matches ? "static" : wide.matches ? "diagonal" : "stacked");
     update();
     wide.addEventListener("change", update);
     reduce.addEventListener("change", update);
@@ -79,7 +90,7 @@ export default function Work() {
   // Build the pin only AFTER the .isDiagonal class is committed to the DOM,
   // so ScrollTrigger measures the diagonal layout (not the stacked fallback).
   useEffect(() => {
-    if (!enabled) return;
+    if (mode !== "diagonal") return;
 
     gsap.registerPlugin(ScrollTrigger, SplitText);
     const root = rootRef.current;
@@ -329,12 +340,211 @@ export default function Work() {
       brandSplit?.revert();
       ctx.revert();
     };
-  }, [enabled]);
+  }, [mode]);
+
+  // ─── Stacked mód (telefon) koreográfiája ────────────────────────────────
+  // A diagonális pin ≤768px-en ki van kapcsolva, és a helyére lépő függőleges
+  // kártyalista mozdulatlan volt: az EGYETLEN néma szekció egy egyébként végig
+  // görgetésre vezérelt oldalon. Nem a diagonális koreográfia portja — az pont
+  // azért van kikapcsolva, mert a magas-keskeny viewportben összepréselődik —,
+  // hanem a szekció saját szótára a lista formátumához igazítva:
+  //
+  //   (1) a fotó ALULRÓL FELFELÉ tárul fel (clip-wipe), a keret marad a helyén,
+  //   (2) a név BETŰNKÉNT írja be magát — pontosan az a recept, amivel a
+  //       diagonális mód is cseréli a nevet (revealBrand), tehát a két nézet
+  //       ugyanazt a gesztust használja, csak más ürüggyel,
+  //   (3) a leírás egy ütemmel később emelkedik be.
+  //
+  // IDŐZÍTETT belépők, NEM scrub-eltek — és minden elem a SAJÁT triggerén.
+  // Az első verzió mindkettőt fordítva csinálta, és emiatt telefonon gyakorlatilag
+  // láthatatlan volt. A két ok, külön:
+  //
+  //  (a) Scrub egy nem-pinelt listán = gyors pöccintésnél a belépő azonnal
+  //      lefut. A Lenis a touch-ot NEM simítja (SmoothScroll.tsx: csak
+  //      smoothWheel), tehát telefonon nyers, lendületes a görgetés, a `scrub: 1`
+  //      pedig még egy MÁSODPERC késleltetést is rátett: mire az idővonal
+  //      utolérte magát, a kártya már rég a helyén állt. A Partners azért bírja a
+  //      scrubot, mert PINELT — ott 730vh scroll-budget tartja a színpadot a
+  //      képernyőn. Egy szabadon elgörgő kártyalistának nincs ilyen budgetje.
+  //
+  //  (b) A három elem a kártyán BELÜL nagyon eltérő mélységben ül (a kép 0px, a
+  //      név ~298px, a leírás ~387px a kártya tetejétől). Egyetlen, a KÁRTYA
+  //      pozíciójára kötött ablakból ez azt jelentette, hogy a név a saját
+  //      animációja alatt még a hajtás alatt volt: a betűk a képernyőn kívül
+  //      írták be magukat. Ezért látszott CSAK a leírás — az az egy beat ért
+  //      véget pont akkor, amikor a bekezdés végre a képernyőre került.
+  //
+  // A javítás mindkettőre ugyanaz: minden elem akkor induljon, amikor ŐMAGA lép
+  // be a képbe, és utána a saját tempójában játsszon le. A kép → név → leírás
+  // sorrendet így nem az idővonal tartja, hanem a függőleges elrendezés — ezek
+  // ebben a sorrendben lépnek be a képernyőre, tehát ebben a sorrendben is
+  // indulnak, bármilyen kártya- és viewport-magasság mellett.
+  //
+  // A `reverse` a toggleActions-ben megtartja a visszafelé-játszást, ami miatt
+  // eredetileg a scrub mellett érveltem — csak most nem a láthatóság árán.
+  useEffect(() => {
+    if (mode !== "stacked") return;
+
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+    const root = rootRef.current;
+    if (!root) return;
+
+    // A ctx-en kívül, mert futásidőben készülnek: a revert() nem tartja őket
+    // számon, a takarításnak kézzel kell visszaadnia a sima szövegcsomópontot.
+    const splits: SplitText[] = [];
+
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray<HTMLElement>("[data-page]", root);
+
+      cards.forEach((card) => {
+        const frame = card.querySelector<HTMLElement>("[data-feature]");
+        const img = card.querySelector<HTMLElement>("[data-feature] img");
+        const brand = card.querySelector<HTMLElement>("[data-caption-brand]");
+        const desc = card.querySelector<HTMLElement>("[data-caption-desc]");
+
+        // Folyamatos parallax a kereten BELÜL, a kártya teljes áthaladására
+        // kötve. Ez az, ami a listát élővé teszi két belépő között — enélkül a
+        // szekció a reveal után visszaáll mozdulatlannak.
+        //
+        // A skálázás nem díszítés, hanem a parallax mozgástere: az `object-fit:
+        // cover` kép pontosan kitölti a keretet, tehát eltolva felül/alul kilógna
+        // a háttér. 1.14 = 7% ráhagyás mindkét irányban, a ±5%-os elmozdulás
+        // ezen belül marad. A kettő EGYÜTT mozog: ha a yPercent nő, a scale is
+        // kell hogy nőjön.
+        if (img) {
+          gsap.set(img, { scale: 1.14 });
+          gsap.fromTo(
+            img,
+            { yPercent: -5 },
+            {
+              yPercent: 5,
+              ease: "none",
+              scrollTrigger: {
+                trigger: card,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+                invalidateOnRefresh: true,
+              },
+            }
+          );
+        }
+
+        // Közös trigger-recept. A `start` mindig az ELEM saját teteje a viewport
+        // alsó harmadában: elég korán ahhoz, hogy a mozdulat eleje is látszódjon,
+        // elég későn ahhoz, hogy ne a képernyőn kívül induljon.
+        const onEnter = (trigger: HTMLElement, start = "top 86%") => ({
+          trigger,
+          start,
+          toggleActions: "play none none reverse",
+          invalidateOnRefresh: true,
+        });
+
+        // (1) a fotó FENTRŐL LEFELÉ tárul fel, és korán indul.
+        //
+        // Az irány itt nem ízlés kérdése, hanem geometriáé. A kép 1:1, tehát egy
+        // 390px széles telefonon ~350px magas, a viewport 664px — a fotó a
+        // képernyő több mint felét elfoglalja, és mindig ALULRÓL úszik be. Egy
+        // alulról-felfelé bomló wipe ezért a kép ALSÓ élétől indulna, ami a
+        // trigger pillanatában még bőven a hajtás alatt van: a mozdulat első
+        // kétharmada a képernyőn kívül futna le. Fentről lefelé viszont a wipe
+        // pont azon a sávon dolgozik, amelyik már látszik.
+        //
+        // Ezért indul korán is (top 92%): amint a fotó felső éle megjelenik, a
+        // feltárulás már megy. Későbbi triggerrel egy nagy, üres fehér doboz
+        // görögne be a képbe, és csak utána kapcsolna — a clip a keret hátterét
+        // (#f0f0f0) is elfedi.
+        //
+        // A clip a KERETEN van, nem a képen: így a parallaxot vivő <img>
+        // transformja érintetlen marad, a két gesztus nem ír ugyanabba a
+        // tulajdonságba.
+        if (frame) {
+          gsap.set(frame, { clipPath: "inset(0% 0% 100% 0%)" });
+          gsap.to(frame, {
+            clipPath: "inset(0% 0% 0% 0%)",
+            ease: "power2.out",
+            duration: 1.1,
+            scrollTrigger: onEnter(frame, "top 92%"),
+          });
+        }
+
+        // (2) a név betűnként. A .captionBrand mix-blend-mode: difference-szel
+        // fut, és a fotó aljára lóg — a betűk tehát menet közben váltanak
+        // fehérből feketébe, ahogy átlépik a kép alsó élét. A tweenek a
+        // KARAKTEREKEN vannak, nem a blokkon: a blend a szülőn marad, a
+        // gyerekek transformja nem bontja meg a blend-kontextust.
+        //
+        // A trigger a NÉVEN van, nem a kártyán — ez volt az eredeti hiba lényege.
+        if (brand) {
+          const split = new SplitText(brand, { type: "chars" });
+          splits.push(split);
+          gsap.set(split.chars, { display: "inline-block" });
+
+          // set + to, NEM from: egy stagger-elt `from` nem tartja meg a kiinduló
+          // állapotot minden célponton (mérve csak az ELSŐ karakter volt rejtve,
+          // a maradék öt teljes fedettséggel állt, majd újraanimálta magát). A
+          // kiinduló állapotot ezért kézzel írjuk ki — ugyanaz a recept, mint a
+          // Partners lineTwo-jánál.
+          gsap.set(split.chars, { yPercent: 45, autoAlpha: 0 });
+          gsap.to(split.chars, {
+            yPercent: 0,
+            autoAlpha: 1,
+            ease: "power3.out",
+            stagger: 0.055,
+            duration: 0.55,
+            // 80%, nem 90%: a névnek a saját animációja alatt LÁTSZANIA kell.
+            // 90%-nál a felirat a képernyő legalsó sávjában írná be magát,
+            // vagyis megismételné az eredeti hibát, csak kisebb léptékben.
+            scrollTrigger: onEnter(brand, "top 80%"),
+          });
+        }
+
+        // (3) a leírás. Külön triggeren, de a névnél valamivel későbbi
+        // belépéssel: a kártya sorrendje (kép → név → szöveg) így olvasási
+        // sorrend is lesz, és mivel a leírás fizikailag a név ALATT van, magától
+        // is később ér a képbe — a kettő egymást erősíti.
+        if (desc) {
+          gsap.set(desc, { y: 20, autoAlpha: 0 });
+          gsap.to(desc, {
+            y: 0,
+            autoAlpha: 1,
+            ease: "power2.out",
+            duration: 0.7,
+            scrollTrigger: onEnter(desc, "top 85%"),
+          });
+        }
+      });
+
+      // A záró CTA ugyanazzal az emelkedéssel érkezik, mint a leírások — a
+      // lista végpontja, nem külön gesztus. Ugyanaz az időzített recept.
+      const cta = root.querySelector<HTMLElement>("[data-stacked-cta]");
+      if (cta) {
+        gsap.set(cta, { y: 20, autoAlpha: 0 });
+        gsap.to(cta, {
+          y: 0,
+          autoAlpha: 1,
+          ease: "power2.out",
+          duration: 0.7,
+          scrollTrigger: {
+            trigger: cta,
+            start: "top 90%",
+            toggleActions: "play none none reverse",
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+    }, root);
+
+    return () => {
+      splits.forEach((s) => s.revert());
+      ctx.revert();
+    };
+  }, [mode]);
 
   return (
     <section
       ref={rootRef}
-      className={`${styles.work} ${enabled ? styles.isDiagonal : ""}`}
+      className={`${styles.work} ${mode === "diagonal" ? styles.isDiagonal : ""}`}
       id="work"
     >
       <div ref={stageRef} className={styles.stage}>
@@ -349,16 +559,21 @@ export default function Work() {
               style={{ "--i": i } as CSSProperties}
             >
               <div className={styles.inner} data-inner>
-                <div className={styles.feature}>
+                <div className={styles.feature} data-feature>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={p.image} alt={p.client} className={styles.featureImg} />
                 </div>
               </div>
               {/* Statikus (mobil / reduced-motion) nézet felirata — diagonális
-                  módban elrejtve, ott a swap-elő .brand/.copy viszi a szöveget. */}
+                  módban elrejtve, ott a swap-elő .brand/.copy viszi a szöveget.
+                  A data-* horgokra a stacked mód koreográfiája épül. */}
               <div className={styles.caption}>
-                <h3 className={styles.captionBrand}>{p.client}</h3>
-                <p className={styles.captionDesc}>{p.desc}</p>
+                <h3 className={styles.captionBrand} data-caption-brand>
+                  {p.client}
+                </h3>
+                <p className={styles.captionDesc} data-caption-desc>
+                  {p.desc}
+                </p>
               </div>
             </Link>
           ))}
@@ -366,7 +581,7 @@ export default function Work() {
 
         {/* Csak a statikus (stacked) nézetben: a diagonális mód a cornerCta-t
             használja a saját pinelt sarkában. */}
-        <div className={styles.stackedCta}>
+        <div className={styles.stackedCta} data-stacked-cta>
           <SplashLink href="/work" className={styles.cornerCtaLink}>
             <CtaSwap defaultLabel="All our work ↗" hoverLabel="Let's see ↗" />
           </SplashLink>

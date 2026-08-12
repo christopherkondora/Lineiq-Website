@@ -89,10 +89,19 @@ const PARK_OVERSHOOT = 4;
  *  kellett, de a folyamatjelző vastagsága ettől még döntés — ugyanaz a viszony,
  *  mint a TRACK_X1 és a mért LINE_X1 között, ezért itt lakik, nem ott.
  *
- *  7.5 egység a 300 pixeles jelnél 1.6 képpont: tipográfiai hajszálvonal, nem
- *  folyamatjelző. A vastagabb sáv a mért túllövéseket továbbra is elfedi (csak
- *  bővebben), a felfedés logikája pedig változatlan. */
-const BAR_THICK = 16;
+ *  Rendered thickness is BAR_THICK × (mark width ÷ VIEWBOX.w 1365), so one
+ *  constant serves two mark sizes: 300px on desktop, 52vw on phones.
+ *
+ *    16 → 3.5px desktop / 2.4px at 390px — a bar, but a heavy one.
+ *     8 → 1.8px desktop / 1.2px at 390px / 1.1px at 360px.
+ *
+ *  8 is close to the floor and the floor here is geometric, not aesthetic:
+ *  below ~6.8 the bar stops covering the L's foot at 376.9 and the clip
+ *  (CLIP_BOTTOM) starts shaving it instead. Under 1 rendered pixel the bar also
+ *  anti-aliases to grey rather than drawing black, which is what killed the
+ *  earlier 7.5 — but that was against a 109px mark, and at today's 52vw the
+ *  same constant clears a pixel on every phone width down to 320. */
+const BAR_THICK = 8;
 
 /** A klip alja = a SÁV alja, nem az alapvonal: az L talpa és az e túllövése a
  *  sáv vastagságába lóg bele, azt a sáv takarja. Együtt mozog a vastagsággal. */

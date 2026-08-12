@@ -106,6 +106,19 @@
   background: var(--color-red);
 }
 
+/* A hyphen is a break opportunity, so once a column got tight enough the browser
+   split the compound itself and shipped "by Western-" / "European standards." —
+   a brand claim cut in half at the hyphen. Held together, the worst break
+   available is the space before "standards."
+
+   NOT scoped to phones, even though that is where it was reported: the same
+   split happens on desktop between 901 and 1023px, where the grid is already two
+   columns but the copy column is still narrow. It just needed a laptop-width
+   window to be seen. */
+.nobreak {
+  white-space: nowrap;
+}
+
 .highlight {
   font-family: var(--font-display);
   font-weight: 500;
@@ -181,12 +194,42 @@
     white-space: normal;
   }
 
+  /* Headline. `text-statement` is clamp(2.5rem, 7vw, …) — the 7vw never wins on
+     a phone, so the 2.5rem floor held the headline at a flat 40px no matter how
+     narrow the screen got. At 390px "We didn't lose taste to AI." measured 347px
+     inside a 350px column: it fit, but with 3px to spare, which is not fitting,
+     it is luck. Below ~385px the luck ran out and "AI." dropped to a line of its
+     own. Made fluid so the line scales with the column instead, with ≥8px of
+     slack from 320px up. Two class names deep to beat the global utility
+     regardless of stylesheet order. */
+  .copy .heading {
+    font-size: clamp(1.9rem, 9.6vw, 2.5rem);
+  }
+
+  /* Belt and braces for the same orphan: real devices do not measure text
+     exactly like Chromium (this break was reported from a OnePlus Nord 3 that
+     the emulator would not reproduce), and a larger Android font scale can eat
+     the slack above. If the headline wraps anyway, balance splits it evenly
+     rather than stranding a two-character last line. */
+  .headLine > span {
+    text-wrap: balance;
+  }
+
   /* 1. mondat: a törés a vessző UTÁN essen. Szabad tördeléssel a sorvég a
      kiemelt tagmondat KÖZEPÉRE esett ("by Western-" / "European standards."),
      ami egy kötőjellel kettévágott márkaállítás. Saját blokként a két
      gondolat két sor: "A Hungarian studio," / "by Western-European standards." */
   .line1 .highlight {
     display: block;
+    /* Smaller than the other keywords (1.45em) because it is not a keyword — it
+       is a whole clause, thirty characters holding a line on its own, and it is
+       the only highlight on the page long enough to be at risk of wrapping.
+       Making the fluid .lead smaller did little for it: the column shrinks with
+       the font, so the ratio barely moved and the break point only came down
+       from ~340 to 328px. Taking this one string to 1.32em is what actually buys
+       the margin. "mind", "taste." and "expertise." keep the full 1.45em — a
+       single word can pop harder than a sentence without looking oversized. */
+    font-size: 1.32em;
   }
 
   /* 3. mondat: a két tagmondat telefonon EGY szövegfolyam. Külön blokként a
@@ -217,11 +260,17 @@
      következő mondatra ült). Kisebb kiemelés + tágabb sorköz tartja szét őket:
      24.7px glifa egy 26.4px-es sordobozban. */
   .lead {
-    font-size: 1.05rem;
+    /* Fluid rather than a flat 1.05rem, for the reason the headline is fluid: at
+       a fixed 16.8px the 1.45em keywords are 24.4px whatever the screen, so
+       "by Western-European standards." stayed one fixed width while the column
+       shrank under it. Caps at the old 1.05rem, so 390px and up render exactly
+       as before. */
+    font-size: clamp(0.95rem, 4.4vw, 1.05rem);
     line-height: 1.55;
     /* a rövid, egy-szavas záró sorok ("minds,") elkerülésére */
     text-wrap: pretty;
   }
+
   .highlight {
     font-size: 1.45em;
   }

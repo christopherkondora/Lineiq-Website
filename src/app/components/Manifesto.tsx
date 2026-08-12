@@ -129,7 +129,15 @@ export default function Manifesto() {
             <p className={styles.lead}>
               <span className={styles.line1} data-lead-line>
                 A Hungarian studio,{" "}
-                <span className={styles.highlight}>by Western-European standards.</span>
+                {/* "by Western-European" is held as one unbreakable run. The
+                    hyphen alone was the first bug (it split the compound); once
+                    that was fixed the two-word remainder stranded "by" on a line
+                    of its own at ~900px. The only break left in the clause is the
+                    space before "standards." */}
+                <span className={styles.highlight}>
+                  <span className={styles.nobreak}>by Western-European</span>{" "}
+                  standards.
+                </span>
               </span>
               <span className={styles.line2} data-lead-line>
                 Everyone uses AI. The difference is the{" "}

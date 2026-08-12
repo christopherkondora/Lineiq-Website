@@ -119,12 +119,63 @@ export default function Partners() {
               5.4
             );
           }
-          // (5b) a három mondat a letisztult színpadra érkezik, egyesével
+
+          // (5b) FOCUS PASS. The three sentences arrive together, but not equal:
+          // the first is lit, the other two sit at DIM. Scroll then walks the
+          // focus down the block, one sentence at full black at a time.
+          //
+          // Why not a plain stagger-in (what this used to be): three sentences
+          // landing within half a screen read as one grey mass, which is what the
+          // per-word highlight was patching over. The pacing is the real fix.
+          //
+          // NO RESOLVE. The pass does not end with all three lit — the ones you
+          // have already read stay grey and the Manifesto's panel covers a block
+          // with a single sentence still lit. Bringing them all back up made the
+          // section re-open just as it should be closing, and it re-flattened the
+          // hierarchy the pass had just spent three beats building.
+          //
+          // DIM is presentational only; the copy is in the DOM at full strength
+          // for assistive tech, and this whole branch is gated on
+          // prefers-reduced-motion: no-preference, so the reduced-motion visitor
+          // gets the static CSS base with every sentence at full opacity.
+          const DIM = 0.3;
+          const [p1, p2, p3] = paras;
+
+          // Only p2/p3 get the dim baseline; p1 keeps the stylesheet's opacity 1.
+          // The arrival tweens below are `from`, so each lands on whatever its
+          // target currently is — p1 on 1, p2/p3 on DIM. Doing it this way (rather
+          // than dimming all three and tweening p1 back up) keeps exactly one
+          // tween writing opacity per element per interval.
+          gsap.set([p2, p3].filter(Boolean), { opacity: DIM });
+
+          // Arrival at 6.4 rather than 6.2: a short beat of empty stage after the
+          // headline leaves, so the sentences are not stepping on its exit.
+          // p1 arrives already lit — the reader should not have to wait through a
+          // beat before there is something to read.
+          if (p1) {
+            tl.from(p1, { y: 24, autoAlpha: 0, ease: "none", duration: 0.9 }, 6.4);
+          }
+          // p2 and p3 arrive dim, close behind — enough to show the block has
+          // three parts (so the reader knows how much is left) without pulling
+          // the eye off p1.
           tl.from(
-            paras,
-            { y: 28, autoAlpha: 0, ease: "none", stagger: 0.35, duration: 0.9 },
-            6.2
+            [p2, p3].filter(Boolean),
+            { y: 24, autoAlpha: 0, ease: "none", stagger: 0.16, duration: 0.9 },
+            6.75
           );
+
+          // Focus hand-offs. Dwells are ≈2 timeline units ≈ 74vh of scroll at this
+          // section's density — about three quarters of a screen of thumb travel
+          // per sentence. They were ≈1.15 units, and p1 was worse than that: it
+          // only held focus from 7.0 to 7.7, a quarter screen, because its arrival
+          // ate most of the slot. p1 now gets its dwell measured from the moment
+          // it finishes arriving (7.3), which is why the first hand-off is late.
+          const handOff = (from: HTMLElement | undefined, to: HTMLElement | undefined, at: number) => {
+            if (from) tl.to(from, { opacity: DIM, ease: "none", duration: 0.5 }, at);
+            if (to) tl.to(to, { opacity: 1, ease: "none", duration: 0.5 }, at);
+          };
+          handOff(p1, p2, 9.4);
+          handOff(p2, p3, 11.9);
         } else {
           tl.from(
             paras,
@@ -142,10 +193,14 @@ export default function Partners() {
         // az idővonalat — a farok a teljes scroll 44%-a, a 420vh wrapper 320vh-s
         // görgetéséből ≈140vh, tehát ≈40vh tiszta hold a takarás előtt.
         //
-        // Telefon: az utolsó mondat 7.8-nál áll be, a 3.7-es hold 11.5-re zár — a
-        // farok a scroll 32%-a, az 520vh wrapper 420vh-s görgetéséből ≈135vh,
-        // tehát szintén ≈35vh tiszta hold.
-        if (isMobile) tl.to({}, { duration: 3.7 }, 7.8);
+        // Mobile: the last hand-off finishes at 12.4, and the 4.7 hold closes the
+        // timeline at 17.1. The tail is 27.5% of the scroll, which out of the
+        // 730vh wrapper's 630vh of scroll is ≈173vh — and that tail is doing two
+        // jobs now that nothing resolves after it. The first ≈73vh is p3's dwell,
+        // matching the ≈74vh the other two get; the remaining ≈100vh is the
+        // Manifesto's cover window. Get this wrong in the short direction and the
+        // black panel starts sliding while p3 is still being read.
+        if (isMobile) tl.to({}, { duration: 4.7 }, 12.4);
         else tl.to({}, { duration: 4.2 }, 5.4);
 
         return () => {
@@ -194,30 +249,32 @@ export default function Partners() {
             </div>
           </div>
 
-          {/* (5) magyarázat */}
+          {/* (5) magyarázat.
+
+              No per-word highlight here. The inline Fraunces upsize is already
+              the page's default emphasis gesture (Intro, then the Manifesto one
+              screen later), so spending it here made the section's payoff read
+              as more of the same — and it competed with the two gestures this
+              section actually owns: the red redaction and the Kranky script.
+              On mobile the emphasis is temporal instead (the focus pass above):
+              the sentences carry no decoration, scroll decides which one is
+              being read. Desktop is unchanged — there the columns stay the
+              composition's corner ornaments, never the main read. */}
           <div className={styles.paras} data-paras>
-            {/* Mondatonként EGY kiemelt kulcsszó, a Manifesto receptje szerint
-                (Fraunces, nagyobb fokozat). Telefonon a három mondat 16px-es
-                folyószövegként egyforma súlyú masszává állt össze; a kiemelés adja
-                vissza, hol van a mondat súlypontja. Desktopon a .kw inert — ott a
-                hasábok a kompozíció sarokdíszei, nem a fő olvasnivaló. */}
             <div className={styles.col}>
               <p>
-                That&apos;s the difference: a studio you{" "}
-                <span className={styles.kw}>keep</span>, not a vendor you replace.
-                Built on trust, consistency, and a point of view.
+                That&apos;s the difference: a studio you keep, not a vendor you
+                replace. Built on trust, consistency, and a point of view.
               </p>
               <p>
-                Curious, transparent, ambitious. And a little{" "}
-                <span className={styles.kw}>obsessed</span> with the details most
-                people never notice.
+                Curious, transparent, ambitious. And a little obsessed with the
+                details most people never notice.
               </p>
             </div>
             <div className={styles.col}>
               <p>
                 Setup, a retainer, and a real relationship behind both. We pick up
-                the phone, and we show up{" "}
-                <span className={styles.kw}>in person.</span>
+                the phone, and we show up in person.
               </p>
             </div>
           </div>
