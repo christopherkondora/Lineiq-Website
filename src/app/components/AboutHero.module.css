@@ -1,0 +1,61 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  /* svh, so the section is the *visible* viewport on mobile rather than the
+     taller one behind a collapsed address bar. vh first as the fallback. */
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  /* Symmetric, so the centred statement lands on the optical centre. It used to
+     carry extra top padding to clear the fixed navbar back when the content was
+     top-anchored under a label; centred, that only pushed the heading low.
+     space-3xl still clears the navbar on its own. */
+  padding: var(--space-3xl) 0;
+  background: var(--color-white);
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* 0.95 locally, not via --leading-tight: that token also drives .text-statement
+   and .text-signature, so lowering it would reflow the homepage hero and every
+   statement section on the site. At display size the inherited 1.1 left the
+   three lines reading as separate rows instead of one block. */
+.heading {
+  margin: 0;
+  line-height: 0.95;
+}
+
+/* Each line is its own overflow mask so the rise reads as type coming up from
+   behind a rule rather than the whole block sliding.
+
+   The padding/negative-margin pair is what makes 0.95 survivable: at that
+   leading the line box is shorter than the glyphs need, so the mask would clip
+   the tail of the "g" in "building." The padding gives the descender room, the
+   equal negative margin takes the space back out of the layout. Tune the value
+   against the actual Fraunces descender rather than trusting it blind. */
+.headLine {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.18em;
+  margin-bottom: -0.18em;
+}
+
+.headLine > span {
+  display: block;
+  will-change: transform;
+}
+
+/* The only red on this screen. */
+.hyphen {
+  color: var(--color-red);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-2xl) 0;
+  }
+}

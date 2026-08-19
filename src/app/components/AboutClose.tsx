@@ -3,11 +3,11 @@
 import { useEffect, useRef } from "react";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
-import styles from "./RolunkClose.module.css";
+import styles from "./AboutClose.module.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export default function RolunkClose() {
+export default function AboutClose() {
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {

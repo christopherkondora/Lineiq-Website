@@ -1,0 +1,109 @@
+.beliefs {
+  background: var(--color-white);
+}
+
+.head {
+  max-width: 760px;
+  margin-bottom: var(--space-2xl);
+}
+
+.title {
+  /* zeroed with the section label that used to sit above it */
+  margin-top: 0;
+  max-width: 18ch;
+}
+
+.lead {
+  margin-top: var(--space-lg);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--color-black);
+  max-width: 54ch;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Two-column editorial row: the belief hangs left, its reasoning right, with a
+   hairline that draws itself as the row arrives. */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--grid-gutter);
+  align-items: start;
+  padding: var(--space-xl) 0;
+}
+
+.rowRule {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--color-border);
+  transform-origin: left center;
+}
+
+.index {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  font-weight: 500;
+  color: var(--color-muted);
+  padding-top: 0.65em;
+  transition: color var(--duration-base) var(--ease-out-expo);
+}
+
+.row:hover .index {
+  color: var(--color-red);
+}
+
+.beliefTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 500;
+  font-variation-settings: "opsz" 75;
+  color: var(--color-black);
+}
+
+.beliefBody {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: var(--color-black);
+  max-width: 46ch;
+  padding-top: 0.35em;
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: var(--space-md);
+    padding: var(--space-lg) 0;
+  }
+
+  /* The reasoning drops under the belief and lines up with it, not with the
+     number gutter. */
+  .beliefBody {
+    grid-column: 2;
+    margin-top: var(--space-sm);
+    max-width: 100%;
+  }
+
+  .index {
+    padding-top: 0.4em;
+  }
+
+  .lead {
+    font-size: var(--text-base);
+  }
+}

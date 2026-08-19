@@ -1,0 +1,117 @@
+.refusals {
+  position: relative;
+  overflow: hidden;
+}
+
+.head {
+  max-width: 720px;
+  margin-bottom: var(--space-2xl);
+}
+
+.title {
+  /* zeroed with the section label that used to sit above it */
+  margin-top: 0;
+  color: var(--color-white);
+}
+
+.lead {
+  margin-top: var(--space-lg);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 52ch;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-xl);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+/* Red tick standing in for a list marker; wipes in with the row. */
+.tick {
+  display: block;
+  height: 2px;
+  width: 64px;
+  margin-top: 0.75em;
+  background: var(--color-red);
+  transform-origin: left center;
+}
+
+.refusal {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 2.6vw, 2.1rem);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 500;
+  font-variation-settings: "opsz" 90;
+  color: var(--color-white);
+  max-width: 30ch;
+}
+
+/* The Limitation sits apart from the refusals: quieter type, hairline border,
+   indented to the same column as the refusal text. */
+.limitation {
+  margin-top: var(--space-3xl);
+  margin-left: calc(64px + var(--space-lg));
+  padding-top: var(--space-lg);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  max-width: 62ch;
+}
+
+.limitationLabel {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.limitationBody {
+  margin-top: var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+@media (max-width: 768px) {
+  .lead {
+    font-size: var(--text-base);
+  }
+
+  .item {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .tick {
+    width: 48px;
+    margin-top: 0;
+  }
+
+  .refusal {
+    max-width: 100%;
+  }
+
+  .limitation {
+    margin-left: 0;
+    margin-top: var(--space-2xl);
+  }
+
+  .limitationBody {
+    font-size: var(--text-base);
+  }
+}

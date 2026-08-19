@@ -1,0 +1,76 @@
+/* No .section padding class here: this one is sized by its stage, not by the
+   site's vertical rhythm. It shares AboutOrigin's black with no seam between
+   them, which is what makes the pin invisible: there is no edge to catch as the
+   previous section slides under it. */
+.compounds {
+  position: relative;
+}
+
+.stage {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  /* Clips the word at the top edge as it leaves. When pinned, the stage is the
+     viewport, so this edge and the viewport edge are the same line. */
+  overflow: hidden;
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+}
+
+/* Left-aligned to the container, on the same vertical line as the hero heading
+   and the origin prose. .text-statement supplies the size, opsz and tracking. */
+.sentences {
+  margin: 0;
+  color: var(--color-white);
+  max-width: 100%;
+}
+
+/* Holds its space so the sentence never reflows once the display copy takes
+   over, and stays in the accessibility tree. JS sets opacity to 0. */
+.inlineWord {
+  display: inline-block;
+}
+
+/* Rendered at final display size and scaled down to meet the sentence, so the
+   type is never a stretched bitmap. Out of flow, nowrap, and scaled about its
+   own centre so x/y only ever moves centre to centre. Invisible until JS has
+   measured it: without JS the plain sentence is what shows. */
+.big {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  transform-origin: center center;
+  color: var(--color-white);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform;
+}
+
+/* Unpinned, the section is exactly one viewport, so the moment you scroll at all
+   the next section starts showing: the word would land at full width with white
+   already filling the lower half of the screen. This is the runway that keeps
+   the frame black until the growth is finished. Slightly longer than
+   FLOW_RANGE_VH so the black outlasts the motion rather than ending with it. */
+@media (max-width: 767px) {
+  .compounds {
+    padding-bottom: 55vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .big {
+    display: none;
+  }
+
+  /* No growth to make room for. */
+  .compounds {
+    padding-bottom: 0;
+  }
+}

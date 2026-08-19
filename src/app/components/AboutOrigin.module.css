@@ -1,0 +1,53 @@
+.origin {
+  position: relative;
+  overflow: hidden;
+}
+
+/* The label used to hang in a narrow left gutter with the story in a wide
+   column beside it. With the label gone the grid went too: the copy now starts
+   at the container's left edge, on the same vertical line as the hero heading.
+
+   620px rather than the old 720px, and the reason the cap is in px at all no
+   longer applies: it was px because Fraunces' ch unit was too narrow to cap
+   with. In Wix at this size 620px lands around a 62 character measure. */
+.copy {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+}
+
+/* Wix, not Fraunces. ~90 words of display serif at 1.85rem was three sections'
+   worth of Fraunces in a row (hero, this, the Ism) and it flattened the page's
+   rhythm. This is a lede register: bigger than body copy, plainly not a
+   heading.
+
+   Everything Fraunces-specific went with the family. opsz is an axis that only
+   exists on Fraunces. Negative tracking flatters a display serif and cramps a
+   sans at reading size. And weight 500 reads near-bold here, because white on
+   black picks up optical weight the same text would not have on white. */
+.para {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  line-height: 1.6;
+  letter-spacing: var(--tracking-normal);
+  font-weight: 400;
+  color: var(--color-white);
+}
+
+.para + .para {
+  margin-top: 1.1em;
+}
+
+/* Lit by default so the section is readable with no JS and under reduced
+   motion; the wave dims them back down before brightening on scroll. */
+.word {
+  opacity: 1;
+  will-change: opacity;
+}
+
+@media (max-width: 900px) {
+  .copy {
+    max-width: 100%;
+  }
+}
