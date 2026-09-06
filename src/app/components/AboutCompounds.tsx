@@ -19,6 +19,14 @@ import styles from "./AboutCompounds.module.css";
 // centre, so scaling it in place would push it off the right edge long before it
 // reached full width.
 
+// Share of the viewport the word spans at full size. Not 1: the tracking is
+// negative, so the layout box is one letter-space narrower than the ink it
+// holds, and the "c" carries a negative left bearing on top of that. Measured,
+// a box set to exactly 100% put ~8px of ink outside itself and the outer
+// strokes of the c and the s were shaved off against the screen edges. The
+// margin also absorbs the same effect coming out a different size in another
+// engine, which matters because the phone this is for is not this one.
+const FILL = 0.98;
 // Share of the word's own height that sits above the viewport at full size. The
 // reader has already read the word by then, so this is tuned by how the motion
 // feels rather than by whether the word is still legible.
@@ -27,12 +35,28 @@ const EXIT_CROP = 0.3;
 const PIN_VH = 1.5;
 // Share of the scrub spent fading the surrounding words.
 const FADE_SHARE = 0.28;
-// Unpinned (mobile) range, in viewports. Ordinary scroll supplies the upward
-// travel here, so this only has to cover the growth: the word reaches full size
-// at roughly the moment page scroll has carried it to the top edge.
-const FLOW_RANGE_VH = 0.5;
+// Share of the scrub spent growing. The rest is the exit. Two beats rather than
+// one: the word finishes at full width, standing still and whole, and only then
+// lifts. Measured, the single-motion version reached full width at the exact
+// frame it crossed the top edge — 42px of a 99px word already gone on a phone —
+// so the size the whole section is built around was never actually seen.
+const GROW_SHARE = 0.68;
+// Share of the exit travel spent before the growth is finished. Without it the
+// word held perfectly still and then set off, and a standing start reads as a
+// jolt however smooth each half is on its own. It now creeps upward under the
+// last of the growth — about 60px on a phone — so the exit is a change of pace
+// rather than a change of state.
+const DRIFT_SHARE = 0.15;
 
-type Mode = "static" | "pinned" | "flow";
+// The phone used to run an unpinned variant: one viewport, no pin, and ordinary
+// page scroll supplying the upward travel. It was built that way to dodge the
+// iOS address bar, and the cost was that the word was already leaving while it
+// was still growing — you never saw it at full width standing still. It now
+// runs the same pinned motion as the desktop. The address bar is survivable
+// because ScrollTrigger pins by transform rather than position:fixed on touch,
+// and because the resize handler below ignores height-only changes, which is
+// exactly what an address bar collapse looks like.
+type Mode = "static" | "pinned";
 
 // useLayoutEffect so the measured position of the display copy is committed
 // before paint; with a plain useEffect the unpositioned word flashes.
@@ -56,16 +80,10 @@ export default function AboutCompounds() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const wide = window.matchMedia("(min-width: 768px)");
-    const update = () =>
-      setMode(reduce.matches ? "static" : wide.matches ? "pinned" : "flow");
+    const update = () => setMode(reduce.matches ? "static" : "pinned");
     update();
-    wide.addEventListener("change", update);
     reduce.addEventListener("change", update);
-    return () => {
-      wide.removeEventListener("change", update);
-      reduce.removeEventListener("change", update);
-    };
+    return () => reduce.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
@@ -111,7 +129,7 @@ export default function AboutCompounds() {
       // word would end up wider than the space it is supposed to span and get
       // clipped at both edges exactly when it lands.
       const viewport = document.documentElement.clientWidth;
-      const finalSize = probe * (viewport / probeWidth);
+      const finalSize = probe * ((viewport * FILL) / probeWidth);
       big.style.fontSize = `${finalSize}px`;
 
       const stageRect = stage.getBoundingClientRect();
@@ -131,7 +149,13 @@ export default function AboutCompounds() {
 
       const startScale = inlineRect.width / bigRect.width;
       const start = { x: inlineC.x - bigC.x, y: inlineC.y - bigC.y };
-      const endX = stageRect.width / 2 - bigC.x;
+      // Centred on the viewport, not on the stage. The stage is measured before
+      // ScrollTrigger inserts its pin spacer, and that shifts it a few px — with
+      // the word sized to exactly the viewport width there is no tolerance for
+      // that, and it was landing 7px left, clipping the c and the s. Horizontal
+      // position does not move when the pin engages, so viewport coordinates are
+      // both simpler and the frame the word is actually sized against.
+      const endX = viewport / 2 - (bigRect.left + bigRect.width / 2);
       // Full size, with EXIT_CROP of the word's height already above the top
       // edge: centre sits at (0.5 - EXIT_CROP) of its own height from the top.
       const endY = (0.5 - EXIT_CROP) * bigRect.height - bigC.y;
@@ -148,46 +172,56 @@ export default function AboutCompounds() {
       });
 
       const fades = gsap.utils.toArray<HTMLElement>("[data-fade]", root);
-      const pinned = mode === "pinned";
 
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root,
           start: "top top",
-          end: () =>
-            "+=" +
-            window.innerHeight * (pinned ? PIN_VH : FLOW_RANGE_VH),
+          end: () => "+=" + window.innerHeight * PIN_VH,
           // scrub:true rather than a lag value, and no anticipatePin, for the
           // reasons Work.tsx spells out: Lenis already smooths scroll position
           // globally, so a second smoothing pass here collapses responsiveness
           // right at the seam.
           scrub: true,
-          ...(pinned ? { pin: stage } : {}),
+          pin: stage,
           invalidateOnRefresh: true,
         },
       });
 
       tl.to(fades, { opacity: 0, ease: "none", duration: FADE_SHARE }, 0);
+
+      // Beat one: to centre, and up to full width, with y left alone. Growth and
+      // fade both run from the start, so on a linear curve the word is already
+      // ~18% larger while "thing that" is only a third faded and it ploughs
+      // through the words it is replacing. inOut, not in: the slow head still
+      // holds it back until the sentence has cleared, and the slow tail lands it
+      // at full width rather than slamming into it.
+      tl.to(
+        big,
+        { x: endX, scale: 1, ease: "power2.inOut", duration: GROW_SHARE },
+        0
+      );
+
+      // The creep. Starts once the sentence has gone, from a standstill, and
+      // accelerates — so at the moment the growth ends the word is already
+      // moving and there is nothing to start.
       tl.to(
         big,
         {
-          x: endX,
-          // Unpinned, the page itself carries the word upward, so the scrub only
-          // has to grow it. Animating y as well would double the travel.
-          ...(pinned ? { y: endY } : {}),
-          scale: 1,
-          // The one tween that is not linear. Growth and fade both run from the
-          // start, so with a linear curve the word is already ~18% larger and
-          // drifting left while "thing that" is only a third faded, and it
-          // ploughs straight through the words it is replacing. power2.in holds
-          // it almost still until the sentence has cleared, then accelerates.
-          // Still one continuous motion, and it makes the exit read as a
-          // take-off rather than a constant crawl.
+          y: start.y + (endY - start.y) * DRIFT_SHARE,
           ease: "power2.in",
-          duration: 1,
+          duration: GROW_SHARE - FADE_SHARE,
         },
-        0
+        FADE_SHARE
       );
+
+      // Beat two: the exit, and it is linear on purpose. The travel is about the
+      // same distance as the scroll that drives it, so at constant speed the
+      // word rises at very nearly the speed of the page — which means when the
+      // pin lets go, nothing changes. That seam is the whole reason this motion
+      // was built as one gesture in the first place; sequencing keeps it closed
+      // as long as the last beat is the one still moving at the release.
+      tl.to(big, { y: endY, ease: "none", duration: 1 - GROW_SHARE }, GROW_SHARE);
     }, root);
 
     return () => ctx.revert();

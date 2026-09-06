@@ -15,18 +15,58 @@
   background: var(--color-white);
 }
 
+
 .inner {
   position: relative;
   z-index: 1;
+  /* The heading is sized against this box rather than the viewport. See
+     .heading for why that is the only thing that makes the breaks hold.
+
+     width is what makes the box measurable. This element is a flex item — the
+     hero centres its content — so it was shrink-to-fitting its own text, which
+     means the box the heading is measured against WAS the heading. Circular,
+     and inline-size containment resolves that circle by contributing nothing:
+     the container collapses to its padding and the type computes to 0px. A
+     definite width breaks the circle. max-width: 1440 and the auto margins on
+     .container still do the centring. */
+  width: 100%;
+  container-type: inline-size;
 }
 
 /* 0.95 locally, not via --leading-tight: that token also drives .text-statement
    and .text-signature, so lowering it would reflow the homepage hero and every
    statement section on the site. At display size the inherited 1.1 left the
    three lines reading as separate rows instead of one block. */
+
+/* The font size is set against the container, not the viewport, and this is the
+   fix rather than a refinement. .text-hero is 11vw, but the measure is
+   viewport minus a container pad that steps 20px -> 48px at 768 and then stops
+   growing while the type keeps going. So the type outgrew the measure and the
+   longest line wrapped — not only on a phone: it wrapped at 320-600, and again
+   at 834, 900, 1024 and 1200, which is most laptops once the scrollbar is
+   counted. It survived at 640-768 and at 1440 by a margin of about one pixel.
+   Breaks set for a measure cannot hold if the type is sized against something
+   else.
+   
+   12cqw is 100 / 8.269, the width of "brands worth building." in em, measured
+   in the real face at the real settings — so the longest line lands just inside
+   the measure at every width and the block reads as filling it, which is what
+   the desktop set was doing on purpose at 1440. min() keeps the old 10rem cap,
+   which is what the container hits above 1536.
+   
+   Re-measure both coefficients if the statement is ever re-cut. */
 .heading {
   margin: 0;
   line-height: 0.95;
+  font-size: min(10rem, 12cqw);
+}
+
+.linesWide {
+  display: block;
+}
+
+.linesNarrow {
+  display: none;
 }
 
 /* Each line is its own overflow mask so the rise reads as type coming up from
@@ -57,5 +97,23 @@
 @media (max-width: 768px) {
   .hero {
     padding: var(--space-2xl) 0;
+  }
+}
+
+/* Below this the three-line set is a whisper: sized to fit a phone measure it
+   lands around 40px, which is not a hero. Four shorter lines let the type run
+   at ~60px on the same screen and fill the measure the way the desktop set
+   does. 17.8cqw is 100 / 5.552, "worth building." being the longest of them. */
+@media (max-width: 599px) {
+  .heading {
+    font-size: 17.8cqw;
+  }
+
+  .linesWide {
+    display: none;
+  }
+
+  .linesNarrow {
+    display: block;
   }
 }

@@ -3,6 +3,28 @@
   overflow: hidden;
 }
 
+/* 1280, not the 900 the copy uses, and the reason is that these two things
+   scale differently. The column is a fixed 620px measure pinned to the left
+   edge; the line is a viewBox stretched to the section's width. So the gap
+   between them is not constant — it closes as the viewport narrows, and below
+   about 1280px the loop's left flank arrives on top of the second paragraph.
+   There is no tuning that fixes it: at 1000px wide there are 332px between the
+   column and the right edge, and the loop alone is 325 of them. */
+@media (min-width: 1280px) {
+  .origin {
+    padding-bottom: 320px;
+  }
+}
+
+/* The bottom pad is the line's room, not spacing. The section's own 128px left
+   the entry point 23px under the last line of copy, which is not "below the
+   text", it is "against it" — and there was nothing under it to fall into. At
+   320px the line enters 155px clear and has a full band to sag through before
+   it climbs. It costs nothing visually: the section below is black too, so the
+   extra height reads as air rather than as a gap. Desktop only, since the line
+   is. */
+
+
 /* The label used to hang in a narrow left gutter with the story in a wide
    column beside it. With the label gone the grid went too: the copy now starts
    at the container's left edge, on the same vertical line as the hero heading.
@@ -46,8 +68,46 @@
   will-change: opacity;
 }
 
+/* The line drawn behind the prose. It fills the section box exactly, and the
+   path is authored in that box's desktop pixels (1440x613), so "keep off the
+   copy" is a geometry problem solved in the path itself rather than with
+   guesswork here.
+
+   preserveAspectRatio="none" follows the hero's ambient line: the box stretches
+   with the viewport. non-scaling-stroke on the path is what keeps 2px at 2px
+   while it does. */
+.line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* pathLength="1" normalises the path, so the dash can be written here without
+   measuring it. Hidden is the default state on purpose: the line is decoration,
+   and a no-JS visitor losing it costs less than every visitor seeing it fully
+   drawn for the moment before hydration. */
+.linePath {
+  fill: none;
+  stroke: var(--color-red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
 @media (max-width: 900px) {
   .copy {
     max-width: 100%;
+  }
+}
+
+/* No line on a phone, and none on a narrow desktop either: below this width the
+   copy leaves it nowhere to run that is not across the words. */
+@media (max-width: 1279px) {
+  .line {
+    display: none;
   }
 }

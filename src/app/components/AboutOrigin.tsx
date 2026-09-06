@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import styles from "./AboutOrigin.module.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ORIGIN_LINE } from "./aboutOriginLine";
 
 // The origin story (World.md §2, the canonical origin, condensed). The diagonal
 // word-wave is salvaged from the old RolunkCulture, which spent a full viewport
@@ -24,6 +25,7 @@ const PARAGRAPHS = [
 
 export default function AboutOrigin() {
   const rootRef = useRef<HTMLElement>(null);
+  const lineRef = useRef<SVGPathElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -32,9 +34,16 @@ export default function AboutOrigin() {
     if (!root) return;
 
     const words = gsap.utils.toArray<HTMLElement>("[data-word]", root);
+    // Matches the CSS breakpoint that hides the line. It is wider than the
+    // copy's own 900 on purpose: the column is a fixed measure and the line is
+    // a stretched viewBox, so they close on each other as the viewport narrows.
+    const line = window.matchMedia("(min-width: 1280px)").matches
+      ? lineRef.current
+      : null;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       gsap.set(words, { opacity: 1 });
+      if (line) gsap.set(line, { strokeDashoffset: 0 });
       return;
     }
 
@@ -50,11 +59,18 @@ export default function AboutOrigin() {
       const min = Math.min(...diags);
       const span = Math.max(...diags) - min || 1;
 
+      // The end moved from "center 42%" when the line arrived. The copy is
+      // visible almost from the moment the section enters, but the line's band
+      // sits ~500px below it and is only fully on screen near the bottom of the
+      // old window — so the draw had nowhere to happen that you could watch.
+      // Ending on the section's bottom rather than its centre buys that runway.
+      // The words simply light over a slightly longer scroll; the last of them
+      // still lands while the paragraph is on screen.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: root,
           start: "top 78%",
-          end: "center 42%",
+          end: "bottom 65%",
           scrub: 0.6,
         },
       });
@@ -71,6 +87,41 @@ export default function AboutOrigin() {
           t * (1 - BAND)
         );
       });
+
+      // The timeline is exactly 1 long (the last word starts at 1 - BAND and
+      // runs for BAND), so a duration-1 tween at 0 is the sync: the pen reaches
+      // the right edge on the same scroll frame as the last word lights.
+      //
+      // pathLength="1" on the path is what lets the dash live in CSS, where it
+      // starts hidden. Measuring with getTotalLength() would mean painting the
+      // finished line until hydration got round to hiding it.
+      // LINE_START: where in the timeline the pen sets off. Not 0, and the
+      // reason is geometry rather than taste. The trigger opens with the
+      // section's top at 78% of the viewport, which puts the line's entry
+      // point — 640 down a 805 box — about 440px below the fold. It scrolls
+      // into view just under halfway through the window, and drawing before
+      // then spends the gesture off screen: the line would appear to have
+      // always been there. Starting late puts the whole draw on screen, and it
+      // still lands on the same frame as the last word.
+      //
+      // autoRound: false is not optional here. CSSPlugin rounds pixel values to
+      // whole numbers by default, and with pathLength normalised to 1 the whole
+      // draw lives between 1 and 0 — so the rounded version has exactly two
+      // frames, and the line snaps into existence halfway down the section
+      // instead of drawing.
+      if (line) {
+        const LINE_START = 0.45;
+        tl.to(
+          line,
+          {
+            strokeDashoffset: 0,
+            ease: "none",
+            duration: 1 - LINE_START,
+            autoRound: false,
+          },
+          LINE_START
+        );
+      }
     }, root);
 
     return () => ctx.revert();
@@ -82,6 +133,21 @@ export default function AboutOrigin() {
       className={`section section--dark ${styles.origin}`}
       id="origin"
     >
+      <svg
+        className={styles.line}
+        viewBox="0 0 1440 805"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          ref={lineRef}
+          className={styles.linePath}
+          d={ORIGIN_LINE}
+          pathLength="1"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+
       <div className="container">
         <div className={styles.copy}>
           {PARAGRAPHS.map((para, pi) => (

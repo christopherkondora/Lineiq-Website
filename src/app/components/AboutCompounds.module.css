@@ -53,24 +53,13 @@
   will-change: transform;
 }
 
-/* Unpinned, the section is exactly one viewport, so the moment you scroll at all
-   the next section starts showing: the word would land at full width with white
-   already filling the lower half of the screen. This is the runway that keeps
-   the frame black until the growth is finished. Slightly longer than
-   FLOW_RANGE_VH so the black outlasts the motion rather than ending with it. */
-@media (max-width: 767px) {
-  .compounds {
-    padding-bottom: 55vh;
-  }
-}
+/* The phone's 55vh of runway went with the unpinned variant it existed for: an
+   unpinned section is exactly one viewport, so any scroll at all revealed the
+   next section's white under a word that was still growing. A pin holds the
+   frame by itself. */
 
 @media (prefers-reduced-motion: reduce) {
   .big {
     display: none;
-  }
-
-  /* No growth to make room for. */
-  .compounds {
-    padding-bottom: 0;
   }
 }

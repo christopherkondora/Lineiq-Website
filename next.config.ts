@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
   // néma marad: az oldal statikus lapnak látszik. Ezek a minták engedik át a
   // telefonos teszt-originokat. Produkcióban nincs hatása.
   allowedDevOrigins: [
+    // A böngésző-vezérelt tesztek (Playwright) alapból 127.0.0.1-re mennek, és
+    // a Next CSAK a "localhost" nevet engedi implicit — a numerikus alak
+    // ugyanúgy blokkolódik, mint egy LAN-IP, vagyis a headless futás egy nem
+    // hidratált oldalt mér.
+    "127.0.0.1",
     "10.68.*.*",
     "192.168.*.*",
     "172.16.*.*",
