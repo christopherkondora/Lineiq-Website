@@ -5,7 +5,6 @@ import AboutCompounds from "../components/AboutCompounds";
 import AboutBeliefs from "../components/AboutBeliefs";
 import AboutFounders from "../components/AboutFounders";
 import AboutRefusals from "../components/AboutRefusals";
-import AboutMentors from "../components/AboutMentors";
 import BookshelfSection from "../components/BookshelfSection";
 import AboutClose from "../components/AboutClose";
 import Footer from "../components/Footer";
@@ -37,10 +36,12 @@ export default function AboutPage() {
       <AboutBeliefs />
       <AboutFounders />
       <AboutRefusals ageSentence={ageSentence(ages)} />
-      {/* People, then the books. The two sections are separate on purpose: the
-          mentors are whose thinking runs the studio, the shelf is what we read.
-          The rosters do not overlap. */}
-      <AboutMentors />
+      {/* AboutMentors used to sit here: five names the studio runs on, rendered
+          as initials in rectangles. It was cut on 2026-09-07. The roster was
+          never confirmed, and structurally it was the borrowed-authority
+          section, five famous people standing in for our own claims. The shelf
+          stays because the commentary on it is signed and first-person. The
+          roster itself is not lost: it lives in the vault at World.md §4. */}
       <BookshelfSection />
       <AboutClose />
       <Footer />

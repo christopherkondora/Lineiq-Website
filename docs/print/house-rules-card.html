@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>LineiQ - The House Rules</title>
+
+<!--
+  The House Rules Card. One page, all twelve, for the wall.
+  Source: Kontrast Vault, identity/Principles.md (draft v1, 2026-06-01).
+
+  PRINTING
+    Open in Chrome. Ctrl+P. Save as PDF, or print direct.
+    Paper: A3 portrait. Margins: None. Background graphics: ON
+    (the red will not print without it).
+    For A4: change the @page size to "A4 portrait" and set --sheet-w / --sheet-h
+    to 210mm / 297mm. Everything is sized off those two values and reflows.
+
+  Fonts load from Google, so be online when you print. Offline, the card falls
+  back to Georgia and a system sans and the whole point of it is lost.
+
+  This is a template. Swap the <ol> contents and the title to produce the
+  Positioning card and the Voice card for the same wall.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Wix+Madefor+Display:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+  /* Tokens lifted from the site's globals.css, so the card and the screen are
+     the same object in two different media. */
+  :root {
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-red: #da0303;
+    --color-muted: #8a8a8a;
+    --color-border: #d8d8d8;
+
+    --font-display: "Fraunces", Georgia, serif;
+    --font-body: "Wix Madefor Display", system-ui, sans-serif;
+
+    --tracking-tight: -0.03em;
+    --tracking-wide: 0.05em;
+    --tracking-widest: 0.15em;
+
+    --sheet-w: 297mm;
+    --sheet-h: 420mm;
+    --margin: 20mm;
+  }
+
+  @page {
+    size: A3 portrait;
+    margin: 0;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #4a4a4a;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet {
+    width: var(--sheet-w);
+    height: var(--sheet-h);
+    margin: 12mm auto;
+    padding: var(--margin);
+    background: var(--color-white);
+    color: var(--color-black);
+    font-family: var(--font-body);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2mm 8mm rgba(0, 0, 0, 0.35);
+  }
+
+  @media print {
+    html, body { background: var(--color-white); }
+    .sheet { margin: 0; box-shadow: none; }
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10mm;
+  }
+
+  .wordmark {
+    width: 34mm;
+    height: auto;
+    display: block;
+  }
+
+  .meta {
+    text-align: right;
+    font-size: 6.5pt;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    line-height: 1.7;
+    padding-top: 1mm;
+  }
+
+  .title {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 144;
+    font-weight: 500;
+    font-size: 40pt;
+    line-height: 1.02;
+    letter-spacing: var(--tracking-tight);
+    margin: 11mm 0 0;
+  }
+
+  .standfirst {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 40;
+    font-weight: 400;
+    font-size: 12pt;
+    line-height: 1.45;
+    margin: 4mm 0 0;
+    max-width: 155mm;
+  }
+
+  .standfirst .decides { color: var(--color-red); }
+
+  .ruleline {
+    height: 0.6mm;
+    background: var(--color-red);
+    margin: 8mm 0 0;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 6.5pt;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    padding: 2.5mm 0 0;
+  }
+
+  /* ---------- the twelve ---------- */
+
+  .rules {
+    list-style: none;
+    margin: 6mm 0 0;
+    padding: 0;
+    column-count: 2;
+    column-gap: 12mm;
+    column-fill: balance;
+    flex: 1;
+  }
+
+  .rule {
+    break-inside: avoid;
+    padding: 6.4mm 0;
+    border-top: 0.25mm solid var(--color-border);
+  }
+
+  /* Every item keeps its top hairline, including the first. Columns break
+     wherever they break, and an exception on :first-child would clear the rule
+     at the top of column one while column two kept its own. Symmetry beats the
+     saved 0.25mm. */
+
+  .rule__head {
+    display: flex;
+    align-items: baseline;
+    gap: 3mm;
+  }
+
+  .rule__num {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 9pt;
+    letter-spacing: var(--tracking-wide);
+    color: var(--color-red);
+    flex: 0 0 9mm;
+  }
+
+  .rule__name {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 40;
+    font-weight: 500;
+    font-size: 17pt;
+    line-height: 1.12;
+    letter-spacing: var(--tracking-tight);
+    margin: 0;
+  }
+
+  .rule__cost {
+    margin: 2.4mm 0 0 13mm;
+    font-size: 10.2pt;
+    line-height: 1.5;
+    color: #2a2a2a;
+  }
+
+  .rule__cost b {
+    font-weight: 600;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    font-size: 7pt;
+    color: var(--color-muted);
+    display: block;
+    margin-bottom: 1mm;
+  }
+
+  .rule__gardener {
+    margin: 2mm 0 0 13mm;
+    font-size: 7pt;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  /* ---------- foot ---------- */
+
+  .foot {
+    border-top: 0.6mm solid var(--color-black);
+    padding-top: 4mm;
+    margin-top: 6mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 10mm;
+  }
+
+  .clause {
+    font-family: var(--font-display);
+    font-variation-settings: "opsz" 30;
+    font-size: 8.5pt;
+    line-height: 1.5;
+    max-width: 168mm;
+    margin: 0;
+  }
+
+  .clause strong { font-weight: 600; }
+
+  .stamp {
+    text-align: right;
+    font-size: 6.5pt;
+    letter-spacing: var(--tracking-widest);
+    text-transform: uppercase;
+    color: var(--color-muted);
+    line-height: 1.8;
+    white-space: nowrap;
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="masthead">
+    <img class="wordmark" src="../../public/logo-black.svg" alt="LineiQ" />
+    <div class="meta">
+      The operating layer<br />
+      Twelve rules, one page
+    </div>
+  </header>
+
+  <h1 class="title">The House&nbsp;Rules</h1>
+
+  <p class="standfirst">
+    The Beliefs inspire. <span class="decides">The House Rules decide.</span>
+    When a decision is contested, these settle it. Each one names what it costs
+    us to hold, because a principle that costs nothing is just a comfortable
+    belief.
+  </p>
+
+  <div class="ruleline"></div>
+  <div class="legend">
+    <span>What we pay to hold it</span>
+    <span>Audited quarterly by a named gardener</span>
+  </div>
+
+  <ol class="rules">
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">01</span>
+        <h2 class="rule__name">Build the Compound, Never the Tax</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We turn away the large, easy market of clients who just want this month's campaign, and forgo the ~&euro;1,500 to &euro;4,000 per month of project and retainer volume that most of the competitor set lives on.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">02</span>
+        <h2 class="rule__name">We Refuse Leads</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We lose every prospect whose mental model is &ldquo;I need more leads.&rdquo; A real percentage of inbound will bounce on this exact word.</p>
+      <p class="rule__gardener">Gardener: Krist&oacute;f</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">03</span>
+        <h2 class="rule__name">Three Seats Only</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We leave real revenue on the table during cash-tight months, which is exactly where this rule will hurt first.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">04</span>
+        <h2 class="rule__name">Earned Pay, No Refunds</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We carry 90 days of unpaid delivery risk per pilot, and we walk away clean from misses we could have tried to salvage.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">05</span>
+        <h2 class="rule__name">Run It On Ourselves First</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We are slower to market. We cannot sell a service until we have run it on ourselves, and that delays revenue.</p>
+      <p class="rule__gardener">Gardener: Krist&oacute;f</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">06</span>
+        <h2 class="rule__name">Ship No Slop</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We publish less and slower than firms that mass-generate. We say no to easy volume.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron, copy. Creative Director, visual.</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">07</span>
+        <h2 class="rule__name">One Channel, Well</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We are absent from channels where some of the audience is, and we watch competitors appear everywhere.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">08</span>
+        <h2 class="rule__name">The Wow Bar</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We rebuild work that is already good enough, spending hours others would bank.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">09</span>
+        <h2 class="rule__name">Disqualify Fast</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We disqualify roughly 60 to 70% of inbound, and walk away from prospects who could pay but do not fit.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">10</span>
+        <h2 class="rule__name">Maximum Contrast</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>Contrast is slower and riskier than imitation. We discard safe, proven-looking work, and sometimes we get it wrong reaching for distinct.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">11</span>
+        <h2 class="rule__name">Clarity Is Currency</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>Clarity is harder and slower to produce than complexity. Simplifying takes more drafts than dumping everything we know.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+    <li class="rule">
+      <div class="rule__head">
+        <span class="rule__num">12</span>
+        <h2 class="rule__name">Radical Honesty, in Plain View</h2>
+      </div>
+      <p class="rule__cost"><b>Cost of holding</b>We lose prospects who wanted to be flattered, and we expose weaknesses competitors would hide.</p>
+      <p class="rule__gardener">Gardener: &Aacute;ron</p>
+    </li>
+
+  </ol>
+
+  <footer class="foot">
+    <p class="clause">
+      <strong>The Plan-to-Break Clause.</strong> These are meant to be held under
+      pressure. That is the entire point. They change only through a documented
+      <strong>Keep, Refresh, or Retire</strong> decision with a named
+      decision-maker, never by quiet erosion. A rule eroding without that
+      decision means we have lost our spine, and that is the thing to fix.
+    </p>
+    <div class="stamp">
+      LineiQ<br />
+      House Rules v1<br />
+      2026-06-01
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

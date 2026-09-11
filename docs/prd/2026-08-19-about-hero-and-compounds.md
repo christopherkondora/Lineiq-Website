@@ -1,8 +1,8 @@
 ---
 type: prd
-status: in-progress
+status: done
 created: 2026-08-19
-updated: 2026-08-19
+updated: 2026-09-06
 ---
 
 # /about: hero rework and the compounds section
@@ -122,15 +122,18 @@ making.
 
 ### Mechanic
 
-One continuous scrub, not sequential beats:
+Two beats on one scrub. *(Revised 2026-09-06; the original single-gesture
+version is in §9.)*
 
-- Every word except `compounds` fades out.
-- `compounds` simultaneously travels to horizontal centre, travels upward, and
-  grows.
-- All three resolve together: viewport width is reached at ~30% of the word's
-  height past the top edge.
-- The pin releases there. No exit animation, because the word is already moving
-  upward, so there is no velocity discontinuity at the handoff to page scroll.
+- **Grow.** Every word except `compounds` fades out (`FADE_SHARE` 0.28) while
+  `compounds` travels to horizontal centre and grows to 98% of the viewport
+  width, its vertical position held. Ends at `GROW_SHARE` 0.68.
+- **Lift.** The word rises out of the top edge over the remaining 0.32, linear,
+  because that travel is about the same distance as the scroll driving it: the
+  word leaves at nearly page speed, so the pin release stays seamless.
+- **The creep between them.** 15% of the exit travel (`DRIFT_SHARE`) happens
+  under the last of the growth, from a standstill, so the lift reads as a change
+  of pace rather than a change of state.
 
 Horizontal centring is required: `compounds` is the last word of its sentence and
 sits right of centre, so scaling in place would push it off the right edge long
@@ -148,19 +151,23 @@ correct for free.
 
 ### Three modes
 
-Mirrors `Work.tsx`: initial state `"static"` so SSR and first paint agree, mode
-resolved after hydration, both media queries listened to.
+Mirrors `Work.tsx`: initial state `"static"` so SSR and first paint agree, the
+mode resolved after hydration.
 
 | Mode | Behaviour |
 |---|---|
-| `>=768px` | Pinned, ~150vh budget, ~35% fade / ~65% growth |
-| `<768px` | **No pin.** Normal 100vh block; scrub drives scale only, page scroll supplies the upward travel |
+| Default | Pinned, 150vh budget, 0.28 fade / 0.68 growth / 0.32 lift. Same on phone and desktop |
 | reduced motion | Static. Both sentences, no growth, no pin |
 
-Mobile drops the pin deliberately: iOS Safari resizes the viewport as its address
-bar collapses, and a pinned element measured against a changing viewport height
-jumps. No pin, no failure mode. The effect survives because it is not
-width-dependent, and ordinary scroll already provides the upward travel.
+**The phone ran an unpinned variant until 2026-09-06.** One viewport, no pin,
+page scroll supplying the upward travel, built to dodge the iOS address bar
+resizing a pinned element measured against viewport height. It cost the section
+its payoff: measured, the word reached full width at the exact frame it crossed
+the top edge, 42px of a 99px word already gone, so the size the whole thing is
+built around was never seen. The phone now runs the same pinned motion. The
+address bar is survivable because ScrollTrigger pins by transform rather than
+`position: fixed` on touch, and because the resize handler ignores height-only
+changes, which is exactly what an address bar collapse looks like.
 
 ## 4. Labels
 
@@ -232,16 +239,37 @@ cosmetic. At the current size "brands worth building." measures ~1310px against 
 - Desktop pin: `startScale` 0.2161 measured against 72px inline over a 333px
   final size, which is exact. Word centre lands on viewport centre. Letterforms
   stay sharp at every step, confirming the scale-down approach.
-- Mobile flow: word reaches exactly 390px at `left: 0` on a 390px viewport.
 - Reduced motion: display copy `display: none`, section height 900 with no pin
   spacer, inline word visible. No page errors in any mode.
+- Mobile, pinned: the resequenced motion confirmed on a real phone on
+  2026-09-06. The address bar does not disturb the pin.
 
 ## 8. Tuned in the browser
 
-- Exit crop, starting at 30%. Likely goes further, since legibility at peak is
-  not a constraint: the reader has already read the word.
-- Pin budget (~150vh) and the 35/65 split.
-- Descender padding on `.headLine`.
-- Mobile hero line breaks: "short-termism in the" at 3rem on a ~390px screen
-  wraps inside its mask. Pre-existing; the mask still works but the stagger reads
-  differently. Check on device.
+Every item settled. Kept for the record.
+
+- **Exit crop** held at 30% (`EXIT_CROP`). It did not go further: the
+  resequencing gave the word a beat at full width standing still, which is what
+  the crop was being traded against.
+- **Pin budget** stayed at 150vh (`PIN_VH`). The split moved from 35/65 to
+  0.28 fade / 0.68 growth, then gained the lift beat.
+- **Descender padding** on `.headLine`: `padding-bottom: 0.18em` cancelled by an
+  equal negative margin.
+- **Mobile hero line breaks** turned out to be a much larger bug than the phone.
+  The third line wrapped at 834, 900, 1024, 1200 and 1280 as well, because the
+  type was sized in `vw` while the measure was the viewport minus a container pad
+  that stops growing at 768. Fixed by sizing the heading against its container:
+  `min(10rem, 12cqw)`, plus a four-line break set below 600px. Full account in
+  the 2026-09-06 session note.
+
+## 9. Superseded
+
+**The single-gesture compounds motion.** The mechanic in §3 originally resolved
+growth, centring and upward travel together, so that the pin released while the
+word was already moving and there was no velocity discontinuity at the handoff.
+It worked, and the seam it was designed to avoid never appeared. It was replaced
+anyway, because measurement showed the word hit full width at the same frame it
+crossed the top edge on both platforms: the resolved state the section is built
+around existed for zero frames. The two-beat version keeps the seamless handoff
+by making the exit beat linear and roughly page-speed, and buys a moment where
+the word is simply there at full size.

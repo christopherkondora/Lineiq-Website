@@ -10,7 +10,7 @@
 .title {
   /* zeroed with the section label that used to sit above it */
   margin-top: 0;
-  max-width: 18ch;
+  max-width: 20ch;
 }
 
 .lead {
@@ -22,85 +22,245 @@
   max-width: 54ch;
 }
 
-.list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+/* ─── The spread ───────────────────────────────────────────
+   Six cells on a twelve-column grid, no two the same shape. The section is
+   about us rather than about the reader, so it earns density, not scale: the
+   type runs at roughly half the size of the version this replaced, and the
+   whole thing is meant to be scanned rather than read down.
 
-/* Two-column editorial row: the belief hangs left, its reasoning right, with a
-   hairline that draws itself as the row arrives. */
-.row {
-  position: relative;
+   Placement is explicit rather than auto-flowed. The photograph holds the right
+   edge across the first two bands, which is what stops the left column from
+   reading as a stack of rows again. */
+
+.grid {
   display: grid;
-  grid-template-columns: 4rem minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--grid-gutter);
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(28px, 3.4vw, 56px) var(--grid-gutter);
   align-items: start;
-  padding: var(--space-xl) 0;
 }
 
-.rowRule {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: var(--color-border);
-  transform-origin: left center;
+.cell {
+  min-width: 0;
 }
 
-.index {
-  font-family: var(--font-body);
-  font-size: var(--text-xs);
-  letter-spacing: var(--tracking-widest);
-  font-weight: 500;
-  color: var(--color-muted);
-  padding-top: 0.65em;
-  transition: color var(--duration-base) var(--ease-out-expo);
+.cellLead {
+  grid-column: 1 / 7;
 }
 
-.row:hover .index {
-  color: var(--color-red);
-}
-
-.beliefTitle {
+/* Spans all three left-hand bands and stretches to their combined height.
+   Spanning only two inflated them: a spanned item forces its rows to grow to
+   fit, so the lead cell sat at the top of a half-empty 300px row and the left
+   column read as two voids rather than a column. Stretched with the image
+   flexing, the photo takes whatever height the text produces instead of
+   dictating it. */
+.cellPhoto {
+  grid-column: 8 / 13;
+  grid-row: 1 / 4;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
   margin: 0;
-  font-family: var(--font-display);
-  font-size: clamp(1.35rem, 2.2vw, 2rem);
-  line-height: var(--leading-snug);
-  letter-spacing: var(--tracking-tight);
-  font-weight: 500;
-  font-variation-settings: "opsz" 75;
-  color: var(--color-black);
 }
 
-.beliefBody {
+.cellDense:nth-of-type(2) {
+  grid-column: 1 / 4;
+}
+
+.cellDense:nth-of-type(3) {
+  grid-column: 4 / 7;
+}
+
+.cellSignature {
+  grid-column: 1 / 6;
+}
+
+.cellColumn {
+  grid-column: 9 / 13;
+  grid-row: 4;
+}
+
+/* ─── Shared type ──────────────────────────────────────────
+   The cost is the Architect register talking: figures, days, absences, so it
+   takes the sans. The conviction is the Artist, so it keeps Fraunces. The
+   sizes below are defaults; each variant overrides what it needs. */
+
+.cost {
   margin: 0;
   font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  line-height: var(--leading-normal);
+  letter-spacing: -0.01em;
+  font-weight: 400;
   color: var(--color-black);
-  max-width: 46ch;
-  padding-top: 0.35em;
 }
 
+.conviction {
+  margin: var(--space-sm) 0 0;
+  font-family: var(--font-display);
+  /* Low optical size: Fraunces thickens its hairlines and opens its counters as
+     opsz drops, which is what keeps it legible this small. */
+  font-variation-settings: "opsz" 24;
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  font-weight: 400;
+  color: var(--color-black);
+}
+
+.because {
+  color: var(--color-muted);
+}
+
+/* ─── Lead ─────────────────────────────────────────────────
+   The largest cell, because "€1,500 to €4,000" is the least fakeable string in
+   the section. Still well under the size the old uniform rows ran at. */
+
+.cellLead .cost {
+  font-size: clamp(1.15rem, 1.75vw, 1.6rem);
+  line-height: var(--leading-snug);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.cellLead .conviction {
+  margin-top: var(--space-md);
+  font-size: var(--text-base);
+}
+
+/* ─── Dense ────────────────────────────────────────────────
+   The two convictions that are long sentences rather than statements. Smallest
+   treatment in the section, and the conviction sits above its cost at a smaller
+   size but heavier weight, so the hierarchy comes from weight, not scale. */
+
+.cellDense .cost {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: #2a2a2a;
+}
+
+/* Smaller than the body it heads, but heavier: hierarchy from weight rather
+   than scale, which is the one place in the section that inverts. */
+.cellDense .convictionOver {
+  font-family: var(--font-body);
+  font-variation-settings: normal;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--tracking-wide);
+  line-height: var(--leading-snug);
+}
+
+/* ─── Signature ────────────────────────────────────────────
+   The section's one Kranky word, red, on the Partners idiom. "Calm" is the only
+   conviction short enough to be a single word, and the styleguide is explicit
+   that Kranky is for English words and never for paragraphs. One per section is
+   what keeps it a signature rather than a text style. */
+
+.signature {
+  margin: 0;
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 40;
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+  font-weight: 400;
+  color: var(--color-black);
+}
+
+.signatureWord {
+  font-family: var(--font-signature);
+  font-weight: 400;
+  font-size: 1.9em;
+  line-height: 0.85;
+  color: var(--color-red);
+  margin-right: 0.08em;
+}
+
+.cellSignature .cost {
+  margin-top: var(--space-md);
+  font-size: var(--text-sm);
+  color: #2a2a2a;
+  max-width: 34ch;
+}
+
+/* ─── Column ───────────────────────────────────────────────
+   Reads conviction then cost, the reverse of every other cell. It is the only
+   cost measured in time rather than money, so it is the one place breaking the
+   inversion is earned. */
+
+.convictionOver {
+  margin: 0 0 var(--space-sm);
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 40;
+  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  font-weight: 500;
+  color: var(--color-black);
+}
+
+.cellColumn .cost {
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  color: #2a2a2a;
+}
+
+/* ─── The photograph ───────────────────────────────────────
+   A cell rather than a banner. It holds the right edge of the first two bands,
+   which is what breaks the left column out of reading as stacked rows. */
+
+/* The cap is load-bearing, not cosmetic. Auto grid rows size to max-content,
+   and an uncapped image contributes its full intrinsic height at this column
+   width (675px at 4:5), which inflated all three left-hand rows and opened
+   200px voids between the text cells. Capped, the photo no longer dictates the
+   row heights; the text does, and the image crops to fit. */
+.wallImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 440px;
+  object-fit: cover;
+}
+
+.wallCaption {
+  margin-top: var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-muted);
+}
+
+/* ─── Narrow ───────────────────────────────────────────────
+   Below 900 the twelve-column placement collapses to one column in source
+   order, with the photograph moved last: on a phone the spread's composition is
+   gone, so the image stops being structure and becomes a footnote to the five
+   costs. */
+
 @media (max-width: 900px) {
-  .row {
-    grid-template-columns: 2.5rem minmax(0, 1fr);
-    gap: var(--space-md);
-    padding: var(--space-lg) 0;
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(36px, 8vw, 56px);
   }
 
-  /* The reasoning drops under the belief and lines up with it, not with the
-     number gutter. */
-  .beliefBody {
-    grid-column: 2;
-    margin-top: var(--space-sm);
-    max-width: 100%;
+  .cellLead,
+  .cellDense:nth-of-type(2),
+  .cellDense:nth-of-type(3),
+  .cellSignature,
+  .cellColumn,
+  .cellPhoto {
+    grid-column: 1;
+    grid-row: auto;
   }
 
-  .index {
-    padding-top: 0.4em;
+  .cellPhoto {
+    order: 1;
+    display: block;
+  }
+
+  .wallImage {
+    flex: none;
+    height: auto;
+    max-height: 420px;
+    min-height: 0;
   }
 
   .lead {
