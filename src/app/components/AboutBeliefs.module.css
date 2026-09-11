@@ -2,268 +2,176 @@
   background: var(--color-white);
 }
 
+/* ─── The seam with AboutCompounds ─────────────────────────
+   The pinned stage above releases a full viewport before its section ends, and
+   the word has already lifted out by then, so the reader scrolls through ~900px
+   of empty black to reach this section. The white is pulled up over most of it.
+
+   Same idiom as the homepage, where .rise pulls the Manifesto panel over the
+   end state of the pinned Partners sequence. The pull is bounded well short of
+   the pin release, so nothing ever slides over a pinned element.
+
+   The padding it lands on is deliberately larger than the --space-3xl the
+   .section class gives everything else: the first row has to open with real
+   white above it, or it reads as arriving already on its way out. Raised
+   specificity because .section sets the shorthand. */
+
+section.beliefs {
+  position: relative;
+  z-index: 1;
+  margin-top: calc(-1 * clamp(220px, 45vh, 480px));
+  padding-top: clamp(220px, 34vh, 420px);
+}
+
+/* ─── Layout ───────────────────────────────────────────────
+   Two columns. The left holds the question and stays put; the right holds the
+   answers and moves. That is the whole argument for the split: the title is
+   "what believing it costs us", and it should be on screen next to the bills.
+
+   The twelve-column spread this replaces placed six cells explicitly, no two
+   the same shape. Every difference was motivated and the result still read as
+   a section performing its own importance. Uniform rows, and the differences
+   come from the sentences. */
+
+.layout {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: var(--space-xl) clamp(32px, 5vw, 96px);
+  align-items: start;
+}
+
 .head {
-  max-width: 760px;
-  margin-bottom: var(--space-2xl);
+  position: sticky;
+  top: var(--space-xl);
 }
 
 .title {
   /* zeroed with the section label that used to sit above it */
   margin-top: 0;
-  max-width: 20ch;
+  max-width: 18ch;
 }
 
 .lead {
   margin-top: var(--space-lg);
   font-family: var(--font-body);
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  color: var(--color-black);
-  max-width: 54ch;
-}
-
-/* ─── The spread ───────────────────────────────────────────
-   Six cells on a twelve-column grid, no two the same shape. The section is
-   about us rather than about the reader, so it earns density, not scale: the
-   type runs at roughly half the size of the version this replaced, and the
-   whole thing is meant to be scanned rather than read down.
-
-   Placement is explicit rather than auto-flowed. The photograph holds the right
-   edge across the first two bands, which is what stops the left column from
-   reading as a stack of rows again. */
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: clamp(28px, 3.4vw, 56px) var(--grid-gutter);
-  align-items: start;
-}
-
-.cell {
-  min-width: 0;
-}
-
-.cellLead {
-  grid-column: 1 / 7;
-}
-
-/* Spans all three left-hand bands and stretches to their combined height.
-   Spanning only two inflated them: a spanned item forces its rows to grow to
-   fit, so the lead cell sat at the top of a half-empty 300px row and the left
-   column read as two voids rather than a column. Stretched with the image
-   flexing, the photo takes whatever height the text produces instead of
-   dictating it. */
-.cellPhoto {
-  grid-column: 8 / 13;
-  grid-row: 1 / 4;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-}
-
-.cellDense:nth-of-type(2) {
-  grid-column: 1 / 4;
-}
-
-.cellDense:nth-of-type(3) {
-  grid-column: 4 / 7;
-}
-
-.cellSignature {
-  grid-column: 1 / 6;
-}
-
-.cellColumn {
-  grid-column: 9 / 13;
-  grid-row: 4;
-}
-
-/* ─── Shared type ──────────────────────────────────────────
-   The cost is the Architect register talking: figures, days, absences, so it
-   takes the sans. The conviction is the Artist, so it keeps Fraunces. The
-   sizes below are defaults; each variant overrides what it needs. */
-
-.cost {
-  margin: 0;
-  font-family: var(--font-body);
   font-size: var(--text-base);
-  line-height: var(--leading-normal);
-  letter-spacing: -0.01em;
-  font-weight: 400;
-  color: var(--color-black);
+  line-height: var(--leading-relaxed);
+  color: #2a2a2a;
+  max-width: 44ch;
+}
+
+/* ─── The rows ─────────────────────────────────────────────
+   Hairlines, and nothing else. No numerals, no hover, no progress rail: the
+   section is a sequence, not a list, and every piece of list furniture the
+   earlier versions carried was announcing the wrong thing.
+
+   The height is set once from JS and then never changes. See the comment on
+   measure() in AboutBeliefs.tsx: the reference implementation reflows the page
+   on every row-open, and the pin in AboutCompounds directly above makes that
+   too expensive here. */
+
+.rows {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.row {
+  border-top: 1px solid var(--color-border);
+  padding: clamp(20px, 2.2vw, 32px) 0;
 }
 
 .conviction {
-  margin: var(--space-sm) 0 0;
-  font-family: var(--font-display);
-  /* Low optical size: Fraunces thickens its hairlines and opens its counters as
-     opsz drops, which is what keeps it legible this small. */
-  font-variation-settings: "opsz" 24;
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
-  font-weight: 400;
-  color: var(--color-black);
-}
-
-.because {
-  color: var(--color-muted);
-}
-
-/* ─── Lead ─────────────────────────────────────────────────
-   The largest cell, because "€1,500 to €4,000" is the least fakeable string in
-   the section. Still well under the size the old uniform rows ran at. */
-
-.cellLead .cost {
-  font-size: clamp(1.15rem, 1.75vw, 1.6rem);
-  line-height: var(--leading-snug);
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
-
-.cellLead .conviction {
-  margin-top: var(--space-md);
-  font-size: var(--text-base);
-}
-
-/* ─── Dense ────────────────────────────────────────────────
-   The two convictions that are long sentences rather than statements. Smallest
-   treatment in the section, and the conviction sits above its cost at a smaller
-   size but heavier weight, so the hierarchy comes from weight, not scale. */
-
-.cellDense .cost {
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-  color: #2a2a2a;
-}
-
-/* Smaller than the body it heads, but heavier: hierarchy from weight rather
-   than scale, which is the one place in the section that inverts. */
-.cellDense .convictionOver {
-  font-family: var(--font-body);
-  font-variation-settings: normal;
-  font-size: var(--text-xs);
-  font-weight: 700;
-  letter-spacing: var(--tracking-wide);
-  line-height: var(--leading-snug);
-}
-
-/* ─── Signature ────────────────────────────────────────────
-   The section's one Kranky word, red, on the Partners idiom. "Calm" is the only
-   conviction short enough to be a single word, and the styleguide is explicit
-   that Kranky is for English words and never for paragraphs. One per section is
-   what keeps it a signature rather than a text style. */
-
-.signature {
   margin: 0;
   font-family: var(--font-display);
   font-variation-settings: "opsz" 40;
-  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
-  line-height: 1.05;
-  letter-spacing: var(--tracking-tight);
-  font-weight: 400;
-  color: var(--color-black);
-}
-
-.signatureWord {
-  font-family: var(--font-signature);
-  font-weight: 400;
-  font-size: 1.9em;
-  line-height: 0.85;
-  color: var(--color-red);
-  margin-right: 0.08em;
-}
-
-.cellSignature .cost {
-  margin-top: var(--space-md);
-  font-size: var(--text-sm);
-  color: #2a2a2a;
-  max-width: 34ch;
-}
-
-/* ─── Column ───────────────────────────────────────────────
-   Reads conviction then cost, the reverse of every other cell. It is the only
-   cost measured in time rather than money, so it is the one place breaking the
-   inversion is earned. */
-
-.convictionOver {
-  margin: 0 0 var(--space-sm);
-  font-family: var(--font-display);
-  font-variation-settings: "opsz" 40;
-  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  font-size: clamp(1.35rem, 2.5vw, 2.25rem);
   line-height: var(--leading-snug);
   letter-spacing: var(--tracking-tight);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--color-black);
+  /* GSAP writes an inline colour on the enhanced path. This is the value the
+     no-JS and reduced-motion cases keep. */
 }
 
-.cellColumn .cost {
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-  color: #2a2a2a;
+/* The register split, carried over from the version this replaces and the one
+   part of its CSS worth keeping: the conviction is the Artist talking, so it
+   takes Fraunces. The cost is the Architect, all figures and days, so it takes
+   the sans. */
+
+.costOuter {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* ─── The photograph ───────────────────────────────────────
-   A cell rather than a banner. It holds the right edge of the first two bands,
-   which is what breaks the left column out of reading as stacked rows. */
-
-/* The cap is load-bearing, not cosmetic. Auto grid rows size to max-content,
-   and an uncapped image contributes its full intrinsic height at this column
-   width (675px at 4:5), which inflated all three left-hand rows and opened
-   200px voids between the text cells. Capped, the photo no longer dictates the
-   row heights; the text does, and the image crops to fit. */
-.wallImage {
-  display: block;
-  width: 100%;
-  height: auto;
-  max-height: 440px;
-  object-fit: cover;
-}
-
-.wallCaption {
-  margin-top: var(--space-md);
+.cost {
+  overflow: hidden;
+  min-height: 0;
+  margin: 0;
+  /* Inside the clipped child, so it is part of scrollHeight and therefore part
+     of the reserved slack. A margin here would be measured out. */
+  padding-top: var(--space-md);
   font-family: var(--font-body);
-  font-size: var(--text-xs);
-  line-height: var(--leading-normal);
-  letter-spacing: var(--tracking-wide);
-  color: var(--color-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  letter-spacing: -0.01em;
+  font-weight: 400;
+  color: #2a2a2a;
+  max-width: 46ch;
+}
+
+/* ─── The enhanced state ───────────────────────────────────
+   Everything above is the fallback: rows open, convictions black, height auto.
+   That is what a reader with no JS or with prefers-reduced-motion gets, and it
+   is the complete section, just static and tall.
+
+   The class below is added from JS only after the reduced-motion check passes.
+   Closing the rows is the enhancement, so it cannot live in the markup. */
+
+.enhanced .costOuter {
+  grid-template-rows: 0fr;
+}
+
+.enhanced .costOuter.isOpen {
+  grid-template-rows: 1fr;
+}
+
+.enhanced .cost {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.enhanced .costOuter.isOpen .cost {
+  opacity: 1;
+}
+
+/* Held for one frame while the height is measured, so the reading is not taken
+   mid-transition. */
+.measuring,
+.measuring * {
+  transition: none !important;
 }
 
 /* ─── Narrow ───────────────────────────────────────────────
-   Below 900 the twelve-column placement collapses to one column in source
-   order, with the photograph moved last: on a phone the spread's composition is
-   gone, so the image stops being structure and becomes a footnote to the five
-   costs. */
+   One column, and the header stops being sticky: on a phone a sticky block
+   costs a third of the viewport to keep a title on screen that the reader has
+   just read anyway. The mechanic is unchanged. */
 
 @media (max-width: 900px) {
-  .grid {
+  .layout {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(36px, 8vw, 56px);
+    gap: var(--space-xl);
   }
 
-  .cellLead,
-  .cellDense:nth-of-type(2),
-  .cellDense:nth-of-type(3),
-  .cellSignature,
-  .cellColumn,
-  .cellPhoto {
-    grid-column: 1;
-    grid-row: auto;
+  .head {
+    position: static;
   }
 
-  .cellPhoto {
-    order: 1;
-    display: block;
-  }
-
-  .wallImage {
-    flex: none;
-    height: auto;
-    max-height: 420px;
-    min-height: 0;
-  }
-
+  .title,
   .lead {
+    max-width: 34ch;
+  }
+
+  .cost {
     font-size: var(--text-base);
   }
 }

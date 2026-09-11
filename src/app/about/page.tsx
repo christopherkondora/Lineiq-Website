@@ -13,7 +13,7 @@ import { ageSentence, founderAges } from "../data/founders";
 export const metadata: Metadata = {
   title: "About — LineiQ",
   description:
-    "A brand and business architecture studio built in Hungary. Our mission, the seven beliefs we run on, what we refuse, and the two founders behind it.",
+    "A brand and business architecture studio built in Hungary. Our mission, the five beliefs we run on and what they cost us, what we refuse, and the two founders behind it.",
 };
 
 // The founders' ages are derived from their birth dates, so the page has to be
