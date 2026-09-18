@@ -43,7 +43,7 @@ export default function AboutOrigin() {
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       gsap.set(words, { opacity: 1 });
-      if (line) gsap.set(line, { strokeDashoffset: 0 });
+      if (line) gsap.set(line, { strokeDashoffset: 1 });
       return;
     }
 
@@ -95,6 +95,11 @@ export default function AboutOrigin() {
       // pathLength="1" on the path is what lets the dash live in CSS, where it
       // starts hidden. Measuring with getTotalLength() would mean painting the
       // finished line until hydration got round to hiding it.
+      //
+      // The dash is 2 path-lengths long, so hidden is offset 2 and fully drawn
+      // is offset 1, not 1 and 0. The margin that buys is the whole fix for the
+      // tail that used to show through the hidden state; the reasoning is in
+      // AboutOrigin.module.css on .linePath.
       // LINE_START: where in the timeline the pen sets off. Not 0, and the
       // reason is geometry rather than taste. The trigger opens with the
       // section's top at 78% of the viewport, which puts the line's entry
@@ -106,7 +111,7 @@ export default function AboutOrigin() {
       //
       // autoRound: false is not optional here. CSSPlugin rounds pixel values to
       // whole numbers by default, and with pathLength normalised to 1 the whole
-      // draw lives between 1 and 0 — so the rounded version has exactly two
+      // draw lives between 2 and 1 — so the rounded version has exactly two
       // frames, and the line snaps into existence halfway down the section
       // instead of drawing.
       if (line) {
@@ -114,7 +119,7 @@ export default function AboutOrigin() {
         tl.to(
           line,
           {
-            strokeDashoffset: 0,
+            strokeDashoffset: 1,
             ease: "none",
             duration: 1 - LINE_START,
             autoRound: false,

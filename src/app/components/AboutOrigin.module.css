@@ -88,14 +88,26 @@
 /* pathLength="1" normalises the path, so the dash can be written here without
    measuring it. Hidden is the default state on purpose: the line is decoration,
    and a no-JS visitor losing it costs less than every visitor seeing it fully
-   drawn for the moment before hydration. */
+   drawn for the moment before hydration.
+
+   The dash is 2, not 1, and that is a bug fix rather than a preference. At 1 the
+   pattern is one path-length on and one off, so the hidden state's gap covers
+   exactly 0..1: the path, with no margin either side. The dash values are scaled
+   by the path's *user-space* length, but non-scaling-stroke on a
+   preserveAspectRatio="none" box means the dashing actually runs on the
+   stretched device-space path, which is longer than that. The surplus fell past
+   the end of the gap and into the next dash, so the tail of the line — the climb
+   to the top right — was painted while the line was supposed to be invisible,
+   and sat there until the pen caught up with it. At 2 the gap is twice the path
+   and the overflow has nowhere to land. The draw is unchanged; it just lives in
+   the offset travelling 2 -> 1 instead of 1 -> 0. */
 .linePath {
   fill: none;
   stroke: var(--color-red);
   stroke-width: 2;
   stroke-linecap: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
+  stroke-dasharray: 2;
+  stroke-dashoffset: 2;
 }
 
 @media (max-width: 900px) {

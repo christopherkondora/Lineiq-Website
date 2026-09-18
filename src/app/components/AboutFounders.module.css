@@ -1,29 +1,70 @@
+/* White, not --color-surface. The page runs on white, black and red only; the
+   #f4f4f4 that used to sit here was a fourth tone doing nothing but softening
+   the section. The token itself stays defined and still drives the services
+   page, the preloader and the style guide — those are separate surfaces and
+   have not been reviewed. */
 .founders {
-  background: var(--color-surface);
+  background: var(--color-white);
   padding: var(--space-3xl) 0;
 }
 
+/* No max-width any more. The lede that used to sit under the heading is gone
+   (AboutRefusals makes the same admission harder, one section later), and at
+   .text-statement size the old 720px cap broke the phrase as
+   "Two founders, one / voice." — splitting exactly the words the band has to
+   own. The gap below is tuned for a heading standing alone. */
 .head {
-  max-width: 720px;
-  margin-bottom: var(--space-2xl);
+  margin-bottom: var(--space-3xl);
 }
 
 .title {
-  /* zeroed with the section label that used to sit above it */
   margin-top: 0;
 }
 
-.lead {
-  margin-top: var(--space-lg);
-  font-family: var(--font-body);
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  color: var(--color-black);
-  max-width: 52ch;
+/* ── The red band on "one voice" ─────────────────────── */
+
+/* Two stacked copies: .baseWord holds the flow, the baseline and the box width;
+   .band lies over it and is wiped in by clip-path. The resting state below is a
+   plain black heading, which is the right thing to see with no JS. */
+.swap {
+  position: relative;
+  display: inline-block;
+  vertical-align: baseline;
 }
 
-/* Two founders, hung left and right, the second pulled up so the pair reads as
-   one offset composition rather than two stacked blocks. */
+.baseWord {
+  color: var(--color-black);
+}
+
+.band {
+  position: absolute;
+  left: -0.08em;
+  top: 50%;
+  transform: translateY(-50%);
+  box-sizing: border-box;
+  /* the bleed covers descenders, which would otherwise hang out below the red */
+  min-width: calc(100% + 0.16em);
+  width: max-content;
+  padding: 0.06em 0.08em;
+  background: var(--color-red);
+  clip-path: inset(0% 100% 0% 0%);
+}
+
+.bandText {
+  color: var(--color-white);
+}
+
+.bandLetter {
+  display: inline-block;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* ── The two founders ────────────────────────────────── */
+
+/* Portrait and text column, bottom-aligned: the rows hang off the foot of the
+   frame so the name at the top and the rows at the bottom pull against each
+   other across the picture. */
 .founder {
   display: flex;
   align-items: flex-end;
@@ -34,27 +75,34 @@
   padding-left: 8vw;
 }
 
+/* Positive separation, where this used to be margin-top: -6vh. That pull-up
+   tightened two blocks whose edges were clean; now the name overhangs the top of
+   every frame, so Áron's would ride up into Kristóf's column. The blocks need
+   air, not less of it. */
 .right {
   flex-direction: row-reverse;
   padding-right: 8vw;
-  margin-top: -6vh;
+  margin-top: var(--space-3xl);
 }
 
+/* Must not create a stacking context — no transform, no will-change, no
+   positioned z-index. The name and the rows blend against the backdrop of the
+   nearest ancestor stacking context, and if that boundary lands here they would
+   composite against an empty box and the blend would quietly do nothing. */
 .inner {
   position: relative;
   flex: 0 0 auto;
-  width: min(340px, 52vw);
+  width: min(520px, 40vw);
 }
 
+/* 520px caps it: 3/4 of much more and a single portrait is taller than the
+   viewport, so you could never see a founder's name, face and rows at once —
+   which is the entire point of hanging type on both edges. */
 .photo {
   position: relative;
-  z-index: 1;
   width: 100%;
   aspect-ratio: 3 / 4;
-  background: linear-gradient(150deg, #e6e6e6, #d2d2d2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--color-black);
   overflow: hidden;
   will-change: transform, opacity;
 }
@@ -66,87 +114,112 @@
   filter: grayscale(1);
 }
 
-.initials {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  font-weight: 500;
-  font-variation-settings: "opsz" 144;
-  color: rgba(0, 0, 0, 0.12);
-  letter-spacing: var(--tracking-tight);
-}
+/* ── Name: straddling the top edge ───────────────────── */
 
-/* The name box straddles the bottom edge of the frame. The wrapper owns the
-   overlap so the name inside stays free to animate. */
+/* Half above the frame, half on it — the Work mobile caption proportion. The
+   blend sits on the wrapper rather than on .name because .name carries GSAP's
+   transforms, and a transform would make it its own stacking context and cut it
+   off from the photo it is supposed to invert against.
+
+   difference is provisional. It returns the inverse of whatever is behind, so
+   over a mid-grey region — an even studio backdrop, a grey jacket — white
+   inverts to mid-grey and the name dissolves into it. Judged unmeasurable until
+   the commissioned portraits land, at which point the fallback is two clipped
+   copies, one black and one white, split at the frame edge. */
 .nameWrap {
   position: absolute;
-  bottom: 0;
+  top: 0;
   z-index: 2;
-  transform: translateY(50%);
+  transform: translateY(-50%);
   overflow: hidden;
   pointer-events: none;
+  mix-blend-mode: difference;
 }
 
+/* Offset inward, toward the page's spine, rather than flush to the outer edge
+   where it used to sit. Percentages so the inset scales with the frame instead
+   of drifting between widths. */
 .left .nameWrap {
-  left: -0.1em;
+  left: 8%;
 }
 
 .right .nameWrap {
-  right: -0.1em;
+  right: 8%;
   text-align: right;
 }
 
 .name {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.85rem, 4.5vw, 3.25rem);
+  /* The name is the loudest thing in the section after the heading. At the 4.5rem
+     cap "Kondora Kristóf" sets around 435px against a 520px frame, so with the 8%
+     inset it still lands inside the picture — which is what keeps it reading as
+     type on a portrait rather than type next to one. Raising the cap further
+     pushes it past the right edge and into the text column. */
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
   font-weight: 500;
   font-variation-settings: "opsz" 90;
   line-height: 1.05;
   letter-spacing: var(--tracking-tight);
-  color: var(--color-black);
+  color: var(--color-white);
   white-space: nowrap;
   will-change: transform, opacity;
 }
 
-/* Role and line sit beside the portrait, clear of the name's overhang. */
-.text {
+/* ── The four rows: a column beside the portrait ─────── */
+
+/* Ranged toward the picture on each side, so the pair reads inward rather than
+   splaying to the page edges. */
+.textCol {
   flex: 1 1 auto;
   max-width: 34ch;
   padding-bottom: var(--space-2xl);
 }
 
-.right .text {
+.right .textCol {
   text-align: right;
   margin-left: auto;
 }
 
-.role {
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
-  line-height: var(--leading-snug);
-  font-weight: 500;
-  font-variation-settings: "opsz" 60;
-  color: var(--color-black);
+.lines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.line {
-  margin-top: var(--space-md);
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--color-black);
+/* The mask each row rises out of. */
+.lineRow {
+  overflow: hidden;
 }
+
+/* Plain black on white now that the rows are clear of the picture. Wrapping is
+   allowed rather than forced off: a too-long row becoming five visual lines is a
+   milder failure than one overflowing its column, and there is no straddle left
+   for it to break. */
+.lineRowInner {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-black);
+  will-change: transform;
+}
+
+/* ── Responsive ──────────────────────────────────────── */
 
 @media (max-width: 900px) {
-  /* Stacked and centred: the offset pairing needs width to read, and below this
-     it just looks like two misaligned blocks. */
+  /* The mirror goes: the offset pairing needs width to read, and below this it
+     is just two misaligned blocks. Both founders align left, and the name and
+     rows offset inward from the left for both. */
+  /* Stacked: portrait, then its rows underneath. There is no width for a column
+     beside the picture at this size. */
   .founder,
   .right {
     flex-direction: column;
     align-items: flex-start;
     padding-left: var(--container-pad-mobile);
     padding-right: var(--container-pad-mobile);
-    margin-top: 0;
     gap: var(--space-lg);
   }
 
@@ -154,28 +227,30 @@
     margin-top: var(--space-2xl);
   }
 
+  /* Bigger than the old 72vw: the images carry the section here. */
   .inner {
-    width: min(300px, 72vw);
+    width: min(340px, 78vw);
+  }
+
+  .right .nameWrap {
+    left: 8%;
+    right: auto;
+    text-align: left;
   }
 
   .name {
-    font-size: clamp(1.6rem, 8vw, 2.5rem);
+    font-size: clamp(1.8rem, 9vw, 2.75rem);
   }
 
-  /* The name overhangs the frame by half its height, so the text below needs
-     clearance or it collides with the descenders. */
-  .text {
+  .textCol,
+  .right .textCol {
     max-width: 100%;
-    padding-top: var(--space-lg);
-    padding-bottom: 0;
-  }
-
-  .right .text {
-    text-align: left;
     margin-left: 0;
+    padding-bottom: 0;
+    text-align: left;
   }
 
-  .lead {
+  .lineRowInner {
     font-size: var(--text-base);
   }
 }

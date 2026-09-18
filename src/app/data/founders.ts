@@ -10,15 +10,36 @@ export interface Founder {
   name: string;
   /** ISO birth date. */
   born: string;
-  /** What they own in the studio (World.md §4, Characters in the World). */
-  role: string;
-  /** One sentence on how they think, not what happened to them. */
-  line: string;
+  /** Four short rows, hung over the bottom edge of the portrait. Exactly four:
+      the block straddles the frame so two rows fall on the image and two on the
+      page, and a fifth would push the balance off. Keep each row under ~28
+      characters — they render through mix-blend-mode: difference, where a long
+      wrapped line degrades much faster than a short set one. */
+  lines: string[];
   /** Side of the offset composition. */
   align: "left" | "right";
-  /** Once a real portrait exists, its /public path goes here. */
-  photo?: string;
+  /** Portrait path under /public.
+
+      Both founders currently point at the same stand-in photograph, which is why
+      the section shows one face twice. It is a placeholder for judging the
+      composition against a real portrait — not a picture of either of us — and
+      it must not survive to production. The commissioned shots replace it one
+      path at a time. */
+  photo: string;
 }
+
+// Retired on 2026-09-13 when the role/line pair was replaced by the four-row
+// block. Kept because they are the only written characterisation of the two of
+// us that exists, and the replacement rows are still placeholders:
+//
+//   Kristof — role: "Execution, operations, and everything we ship in code."
+//             line: "Builds the systems the studio runs on, then runs the studio
+//                    on them first. If a process cannot survive being used on us,
+//                    it does not get sold."
+//   Aron    — role: "Strategy, story, and the people we build with."
+//             line: "Starts every engagement from the customer's own words, never
+//                    from ours. The positioning is finished when the client
+//                    recognizes themselves in it."
 
 export const FOUNDERS: Founder[] = [
   {
@@ -26,18 +47,28 @@ export const FOUNDERS: Founder[] = [
     initials: "KK",
     name: "Kondora Kristóf",
     born: "2006-12-06",
-    role: "Execution, operations, and everything we ship in code.",
-    line: "Builds the systems the studio runs on, then runs the studio on them first. If a process cannot survive being used on us, it does not get sold.",
+    lines: [
+      "Placeholder copy.",
+      "Four rows, written by",
+      "Kristof, replace these",
+      "before this ships.",
+    ],
     align: "left",
+    photo: "/founders/placeholder-portrait.png",
   },
   {
     id: "suto-aron",
     initials: "SÁ",
     name: "Sütő Áron",
     born: "2006-12-07",
-    role: "Strategy, story, and the people we build with.",
-    line: "Starts every engagement from the customer's own words, never from ours. The positioning is finished when the client recognizes themselves in it.",
+    lines: [
+      "Placeholder copy.",
+      "Four rows, written by",
+      "Aron, replace these",
+      "before this ships.",
+    ],
     align: "right",
+    photo: "/founders/placeholder-portrait.png",
   },
 ];
 
