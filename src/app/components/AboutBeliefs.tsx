@@ -41,7 +41,7 @@ interface Belief {
 const BELIEFS: Belief[] = [
   {
     conviction: "Compounding wins.",
-    cost: "We turn down the €1,500 to €4,000 a month of retainer volume that most of our competitor set lives on.",
+    cost: "We turn down €1,500 to €4,000 a month in campaign work, the kind most studios live on. It stops paying the day it ships.",
     rule: "P1 Build the Compound, Never the Tax",
   },
   {
