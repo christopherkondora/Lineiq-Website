@@ -5,29 +5,40 @@ import styles from "./AboutFounders.module.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FOUNDERS } from "../data/founders";
+import { FRAMEWORKS, METHOD_SHAPE } from "../data/method";
 
 const BAND_WORDS = "one voice.";
 
-// Scroll-synced founder introduction. The portrait animates in first, then the
-// name rises to meet it, then the four rows.
+// The section enacts its own heading. "Two founders, one voice." is not a
+// caption here, it is the geometry: two columns run side by side, each one a
+// distinct person with their own four rows, and then the columns end and the
+// method runs full-width underneath them. Two people converging into one
+// system. The red band lands on "one voice" and the thing directly below it is
+// the one voice.
 //
-// The name straddles the top edge of its frame and inverts through
-// mix-blend-mode: difference, so it stays legible over the photo and over the
-// white page without knowing what is underneath. That is the Work mobile caption
-// idiom (Work.module.css .captionBrand), lifted deliberately.
+// Rebuilt on 2026-09-25 from an offset composition that stacked the two
+// founders in mirrored blocks across two-plus viewports. Three faults, in order
+// of what they cost: the largest surface on the second half of the page was a
+// photograph nobody had taken, so the section could not be finished without a
+// shoot; the strongest proof the studio owns, the method built before either of
+// us had a client, was set as the smallest type on the page inside the
+// Limitation aside; and the mirrored blocks sprawled. Two columns plus a
+// full-width method is shorter than the old composition even after absorbing
+// the frameworks.
 //
-// The four rows sit beside the portrait rather than over it. They were briefly
-// hung across the bottom edge on the same blend, which worked, but small type
-// over an unknown photograph is the fragile end of that trick and the column
-// reads cleaner. They are plain black on white now — no blend, nothing to tune
-// when the real portraits land.
+// The portrait slot is composed and empty. It holds the initials on a black
+// mark whose frame, blend and motion are exactly what a photograph will need,
+// so the commissioned shots drop in without touching the layout here. The old
+// /founders/placeholder-portrait.png was a stock photograph of a man who is
+// neither of us, shown twice, and it was live on the public domain. It is
+// deleted rather than swapped, so it cannot return by accident.
 //
-// The blend has a paint-order catch worth knowing before changing anything here:
+// The blend has a paint-order catch worth knowing before changing anything:
 // mix-blend-mode composites against the backdrop of the nearest ancestor
-// stacking context. The blend therefore lives on the name's wrapper, not on the
-// text inside it, and .inner must stay free of anything that creates a stacking
-// context (transform, will-change, z-index with position) or the name would
-// blend against an empty backdrop and silently do nothing.
+// stacking context. The blend therefore lives on the wrapper of the name, not
+// on the text inside it, and .figure must stay free of anything that creates a
+// stacking context (transform, will-change, z-index with position) or the name
+// would blend against an empty backdrop and silently do nothing.
 export default function AboutFounders() {
   const rootRef = useRef<HTMLElement>(null);
 
@@ -69,7 +80,7 @@ export default function AboutFounders() {
       // the swap word set to the same string: the band wipes left to right, then
       // the words re-surface in white on top of it, letter by letter. Two copies
       // rather than one inverting copy, because there is no way to flip type at a
-      // moving edge within a single element — and mix-blend-mode is no help here,
+      // moving edge within a single element, and mix-blend-mode is no help here:
       // white over #da0303 returns cyan, not white.
       if (band) {
         const tl = gsap.timeline({
@@ -95,53 +106,71 @@ export default function AboutFounders() {
         );
       }
 
-      root.querySelectorAll<HTMLElement>("[data-founder]").forEach((block) => {
-        const photo = block.querySelector("[data-photo]");
-        const name = block.querySelector("[data-name]");
-        if (!photo || !name) return;
+      // Both columns are triggered off the pair, not off themselves, so the two
+      // founders resolve together. Staggering them would read as a ranking.
+      const pair = root.querySelector<HTMLElement>("[data-pair]");
+      if (pair) {
+        const marks = pair.querySelectorAll<HTMLElement>("[data-mark]");
+        const names = pair.querySelectorAll<HTMLElement>("[data-name]");
 
         const tl = gsap.timeline({
           scrollTrigger: {
-            trigger: block,
+            trigger: pair,
             start: "top 80%",
-            end: "center 50%",
+            end: "center 55%",
             scrub: 0.6,
           },
         });
 
-        // 1) the portrait drifts up and resolves over the first ~60%
+        // 1) the marks resolve, 2) only once they have landed do the names rise
+        // through them. The same two-beat order the portraits had.
         tl.fromTo(
-          photo,
+          marks,
           { yPercent: 14, scale: 0.9, autoAlpha: 0 },
           { yPercent: 0, scale: 1, autoAlpha: 1, ease: "none", duration: 0.6 }
         );
-        // 2) only once it has landed does the name rise into place
         tl.fromTo(
-          name,
+          names,
           { yPercent: 70, autoAlpha: 0 },
           { yPercent: 0, autoAlpha: 1, ease: "none", duration: 0.4 },
           ">"
         );
 
-        // The four rows are not scrubbed, for the same reason the role and line
-        // were not: text that scrubs backwards while you read it is unpleasant,
-        // and that holds harder over four rows than it did over two.
-        const rows = block.querySelectorAll<HTMLElement>("[data-line-row]");
-        if (rows.length) {
-          gsap.fromTo(
-            rows,
-            { yPercent: 110 },
-            {
-              yPercent: 0,
-              duration: 0.8,
-              stagger: 0.08,
-              ease: "power3.out",
-              clearProps: "transform",
-              scrollTrigger: { trigger: block, start: "top 55%" },
-            }
-          );
-        }
-      });
+        // The rows are not scrubbed. Text that scrubs backwards while you read
+        // it is unpleasant, and that holds harder over four rows than over two.
+        gsap.fromTo(
+          pair.querySelectorAll<HTMLElement>("[data-line-row]"),
+          { yPercent: 110 },
+          {
+            yPercent: 0,
+            duration: 0.8,
+            stagger: 0.06,
+            ease: "power3.out",
+            clearProps: "transform",
+            scrollTrigger: { trigger: pair, start: "top 55%" },
+          }
+        );
+      }
+
+      // The method arrives as one set, on its own trigger, after the pair has
+      // settled. A per-row scrub here would turn the convergence into a second
+      // piece of choreography competing with the first.
+      const method = root.querySelector<HTMLElement>("[data-method]");
+      if (method) {
+        gsap.fromTo(
+          method.querySelectorAll<HTMLElement>("[data-framework]"),
+          { y: 28, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.07,
+            ease: "power3.out",
+            clearProps: "opacity,transform",
+            scrollTrigger: { trigger: method, start: "top 70%" },
+          }
+        );
+      }
     }, root);
 
     return () => ctx.revert();
@@ -156,12 +185,17 @@ export default function AboutFounders() {
             <br />
             <span className={styles.swap}>
               {/* The accessible copy. It ends up under the band, which is why the
-                  band's own letters are hidden from the reader. */}
+                  letters of the band itself are hidden from the reader. */}
               <span className={styles.baseWord}>{BAND_WORDS}</span>
               <span className={styles.band} data-band aria-hidden="true">
                 <span className={styles.bandText}>
                   {BAND_WORDS.split("").map((ch, i) => (
                     <span key={i} className={styles.bandLetter} data-band-letter>
+                      {/* Non-breaking, not a plain space. Each letter is its own
+                          inline-block so it can be staggered, and a lone normal
+                          space inside an inline-block collapses to nothing — the
+                          band rendered "onevoice." while the accessible copy
+                          underneath it still said "one voice." */}
                       {ch === " " ? " " : ch}
                     </span>
                   ))}
@@ -170,34 +204,25 @@ export default function AboutFounders() {
             </span>
           </h2>
         </header>
-      </div>
 
-      <div className={styles.list}>
-        {FOUNDERS.map((f) => (
-          <div
-            key={f.id}
-            className={`${styles.founder} ${f.align === "left" ? styles.left : styles.right}`}
-            data-founder
-          >
-            <div className={styles.inner}>
-              <div className={styles.photo} data-photo>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={f.photo}
-                  alt=""
-                  className={styles.photoImage}
-                  loading="lazy"
-                />
+        <div className={styles.pair} data-pair>
+          {FOUNDERS.map((f) => (
+            <article key={f.id} className={styles.founder}>
+              <div className={styles.figure}>
+                {/* The portrait slot, on a 4:5 frame because that is what the
+                    commissioned shots will be. The mark is not a gap waiting to
+                    be filled, it is the same rectangle, occupied. */}
+                <div className={styles.mark} data-mark aria-hidden="true">
+                  <span className={styles.markInitials}>{f.initials}</span>
+                </div>
+
+                <div className={styles.nameWrap}>
+                  <h3 className={styles.name} data-name>
+                    {f.name}
+                  </h3>
+                </div>
               </div>
 
-              <div className={styles.nameWrap}>
-                <h3 className={styles.name} data-name>
-                  {f.name}
-                </h3>
-              </div>
-            </div>
-
-            <div className={styles.textCol}>
               <ul className={styles.lines}>
                 {f.lines.map((row, i) => (
                   <li key={i} className={styles.lineRow}>
@@ -207,9 +232,30 @@ export default function AboutFounders() {
                   </li>
                 ))}
               </ul>
-            </div>
-          </div>
-        ))}
+            </article>
+          ))}
+        </div>
+
+        <div className={styles.method} data-method>
+          <p className={`text-label ${styles.methodLabel}`} data-reveal>
+            What the two of us built before either of us had a client
+          </p>
+
+          <ol className={styles.frameworks}>
+            {FRAMEWORKS.map((fw) => (
+              <li key={fw.name} className={styles.framework} data-framework>
+                <h4 className={styles.frameworkName}>{fw.name}</h4>
+                <p className={styles.frameworkLine}>{fw.line}</p>
+              </li>
+            ))}
+          </ol>
+
+          <p className={styles.methodShape} data-reveal>
+            Five of {METHOD_SHAPE.frameworks}, across {METHOD_SHAPE.layers}{" "}
+            layers. The rest are not secrets, they are just not first
+            impressions.
+          </p>
+        </div>
       </div>
     </section>
   );

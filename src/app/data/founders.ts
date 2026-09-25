@@ -1,31 +1,29 @@
-// The two founders. The age is never a hardcoded number: we derive it from the
+// The two founders. No photograph: the section was rebuilt on 2026-09-25 so it
+// stops depending on a shoot nobody has booked. The portrait slot is composed
+// and waiting, holding the initials until the real shots arrive — the frame,
+// the blend and the motion are all built against that frame, so dropping a
+// photograph in later changes one line of markup and no layout.
+//
+// The age is never a hardcoded number: we derive it from the
 // birth dates, because "we are both 19" turns into a lie within a year and the
 // whole point of that section is the honesty (World.md §3, the Limitation held
 // with pride). The two dates sit one day apart, so between December 6 and 7 the
 // ages differ. The copy handles that instead of averaging it away.
 export interface Founder {
-  /** Filename-safe id; the photo slot will key off this. */
+  /** Filename-safe id; the portrait will key off this when it exists. */
   id: string;
+  /** Stands in the portrait slot until the commissioned shots land. Not a
+      placeholder in the lorem-ipsum sense: the mark is designed, and the
+      photograph replaces it inside the same frame with no layout change. */
   initials: string;
   name: string;
   /** ISO birth date. */
   born: string;
-  /** Four short rows, hung over the bottom edge of the portrait. Exactly four:
-      the block straddles the frame so two rows fall on the image and two on the
-      page, and a fifth would push the balance off. Keep each row under ~28
-      characters — they render through mix-blend-mode: difference, where a long
-      wrapped line degrades much faster than a short set one. */
+  /** Four short rows under the name. Exactly four: the pair of columns balances
+      on an equal row count, and a fifth on one side tips it. Keep each row under
+      ~28 characters — the name above them rises through mix-blend-mode:
+      difference, and a long wrapped row breaks that column's rhythm. */
   lines: string[];
-  /** Side of the offset composition. */
-  align: "left" | "right";
-  /** Portrait path under /public.
-
-      Both founders currently point at the same stand-in photograph, which is why
-      the section shows one face twice. It is a placeholder for judging the
-      composition against a real portrait — not a picture of either of us — and
-      it must not survive to production. The commissioned shots replace it one
-      path at a time. */
-  photo: string;
 }
 
 // Retired on 2026-09-13 when the role/line pair was replaced by the four-row
@@ -53,8 +51,6 @@ export const FOUNDERS: Founder[] = [
       "Kristof, replace these",
       "before this ships.",
     ],
-    align: "left",
-    photo: "/founders/placeholder-portrait.png",
   },
   {
     id: "suto-aron",
@@ -67,8 +63,6 @@ export const FOUNDERS: Founder[] = [
       "Aron, replace these",
       "before this ships.",
     ],
-    align: "right",
-    photo: "/founders/placeholder-portrait.png",
   },
 ];
 
