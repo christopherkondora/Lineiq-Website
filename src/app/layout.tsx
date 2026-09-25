@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import Cursor from "./components/Cursor";
 import Navbar from "./components/Navbar";
+import { SITE_INDEXABLE, SITE_URL } from "./data/site";
 
 // A betöltési gesztus NEM innen indul. Korábban itt ült egy layout-szintű
 // script, ami minden útvonalon feltette a html[data-preloader] attribútumot,
@@ -36,9 +37,13 @@ const kranky = Kranky({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "LineiQ — Brand. Code. Signal.",
   description:
     "Premium brand-building agency and software house. Western-European quality, Hungarian market knowledge.",
+  // Inherited by every route, so no page can opt itself back in by accident.
+  // Lifts with SITE_INDEXABLE on launch day. See [[data/site]].
+  robots: SITE_INDEXABLE ? undefined : { index: false, follow: false },
 };
 
 export default function RootLayout({
