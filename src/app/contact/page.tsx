@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import Footer from "../components/Footer";
-import IntakeFlow from "./IntakeFlow";
+import ContactScreen from "./ContactScreen";
 
 export const metadata: Metadata = {
   title: "Contact — LineiQ",
   description:
-    "A curated intake flow: four short questions, and we arrive at the first call already knowing your company.",
+    "One screen, one question. Tell us what you are building and we will tell you straight whether we are the studio for it.",
 };
 
-export default function KapcsolatPage() {
+export default function ContactPage() {
   return (
     <main>
-      <IntakeFlow />
+      <ContactScreen />
       <Footer />
     </main>
   );

@@ -1,147 +1,161 @@
-/* Egyetlen viewportnyi intake képernyő — alatta csak a footer. A fejléc
-   (cím + Kranky) az oldal tetején ül a form fölött, a lépéses form a
-   maradék térben függőlegesen középre kerül. */
+/* /contact — one screen, two columns, one red line.
+   The reasoning is in [[docs/website/2026-09-25-contact-line-path]]; the
+   component carries the motion notes. Nothing here scrolls except the footer
+   beneath it. */
 
 .screen {
+  position: relative;
   min-height: 100svh;
   display: flex;
-  justify-content: center;
+  align-items: center;
   background: var(--color-white);
-  padding: clamp(110px, 14vh, 160px) 0 var(--space-lg);
+  padding: clamp(110px, 14vh, 160px) 0 clamp(56px, 8vh, 96px);
+  overflow: hidden;
+}
+
+/* ── The line ──────────────────────────────────────────────
+   Absolutely sized to the section, with the viewBox set to the section's own
+   pixel box at measure time, so one SVG unit is one CSS pixel and the stroke
+   needs no non-scaling trick. */
+.line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* The hidden start state is CSS, not JS, so it is right from first paint
+   rather than from hydration. The number is simply larger than any path this
+   page can produce; the real dash pattern is written from the measurement.
+
+   Normalising with pathLength="1" and hiding at offset 1, the way the /about
+   origin line does, does not work here: the normalisation reaches
+   getTotalLength() but not the dash, so the line rendered complete at every
+   offset. See the note in contactLine.ts. */
+.linePath {
+  fill: none;
+  stroke: var(--color-red);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 20000;
+  stroke-dashoffset: 20000;
 }
 
 .inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  position: relative;
+  z-index: 1;
   width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(48px, 8vw, 140px);
+  align-items: center;
 }
 
-/* A stage a legszélesebb gyermekére (a címre) húzódik össze, így a bal éle
-   a cím bal éle — ehhez igazodik a vissza-nyíl. */
-.stage {
+/* ── Left column: the statement ────────────────────────── */
+.saying {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  max-width: 100%;
-}
-
-/* ── Fejléc ────────────────────────────────────────────── */
-.head {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: clamp(28px, 4.5vh, 48px);
+  align-items: flex-start;
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 6.5vw, 5.5rem);
-  line-height: 0.98;
+  font-size: clamp(2.5rem, 5.2vw, 4.5rem);
+  line-height: 1.02;
   letter-spacing: var(--tracking-tight);
   font-weight: 600;
   font-variation-settings: "opsz" 144;
 }
 
-/* ── Lépéses flow ──────────────────────────────────────── */
-.flowArea {
+.lede {
+  margin-top: clamp(16px, 2.4vh, 28px);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  max-width: 34ch;
+}
+
+/* Where the line crosses the left edge. It has no content and no height; the
+   margin below it is the clearance between the line and the statement, and it
+   is the only thing keeping the two apart at any width. */
+.lineAnchor {
+  display: block;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  height: 0;
+  margin-bottom: clamp(44px, 7vh, 76px);
+}
+
+.direct {
+  margin-top: clamp(30px, 5vh, 52px);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--color-black);
+  border-bottom: 1.5px solid var(--color-black);
+  padding-bottom: 2px;
+  transition: color 300ms var(--ease-out-quad),
+    border-color 300ms var(--ease-out-quad);
+}
+
+.direct:hover {
+  color: var(--color-red);
+  border-color: var(--color-red);
+}
+
+/* ── Right column: the form ────────────────────────────── */
+.formCol {
+  position: relative;
 }
 
 .form {
+  display: grid;
+  gap: clamp(20px, 3vh, 30px);
+}
+
+.field {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-lg);
-  width: 100%;
+  gap: 6px;
 }
 
-/* Lépésjelző — a cascade vonalidiómát idéző piros tickek, szám nélkül. */
-.ticks {
-  display: flex;
-  align-items: flex-end;
-  gap: 7px;
-}
-
-.tick {
-  display: block;
-  width: 2.5px;
-  height: 13px;
-  background: var(--color-border);
-  transition: background 300ms var(--ease-out-quad),
-    height 300ms var(--ease-out-expo);
-}
-
-.tickActive {
-  background: var(--color-red);
-  height: 21px;
-}
-
-.questionRow {
-  position: relative;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.question {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
+.label {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
   font-weight: 500;
-  font-variation-settings: "opsz" 100;
-  max-width: 24ch;
-}
-
-/* Vissza-nyíl a kérdés mellett balra, a nagy cím bal széléhez igazítva —
-   a questionRow a stage teljes szélességét felveszi, ezért a left: 0 a cím
-   bal élét jelenti. */
-.backArrow {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  display: inline-flex;
-  color: var(--color-black);
+  color: var(--color-muted);
   transition: color 300ms var(--ease-out-quad);
 }
 
-.backArrow:hover {
-  color: var(--color-red);
-}
-
-/* A custom Fraunces nyíl fekvő (85:32) — szélességben méretezzük. */
-.backArrow svg {
-  width: clamp(24px, 2.4vw, 32px);
-  height: auto;
-}
-
-/* Aláhúzott szabadszöveges mező — Wix Madefor, rövid vonallal. */
-.inputWrap {
-  position: relative;
-  width: 100%;
-  max-width: 360px;
+/* The question's label is a sentence, not a field name, so it gets sentence
+   type. It is the one question on the page and it should read like one. */
+.questionLabel {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  letter-spacing: var(--tracking-tight);
+  text-transform: none;
+  font-weight: 500;
+  font-variation-settings: "opsz" 100;
+  color: var(--color-black);
+  max-width: 26ch;
+  margin-bottom: 4px;
 }
 
 .input {
   width: 100%;
-  max-width: 360px;
   font-family: var(--font-body);
-  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
   font-weight: 500;
   color: var(--color-black);
-  text-align: center;
   background: transparent;
   border: none;
   border-bottom: 2px solid var(--color-black);
   border-radius: 0;
-  padding: 0.25em 0;
+  padding: 0.3em 0;
   outline: none;
   caret-color: var(--color-red);
   transition: border-color 300ms var(--ease-out-quad);
@@ -151,170 +165,9 @@
   border-color: var(--color-red);
 }
 
-.input::placeholder {
-  color: var(--color-muted);
-}
-
-/* A mező a betűméretéből 31px magas — koppintható minimum alatt, és beviteli
-   mezőnél ez a legrosszabb helyen szűk. Pszeudoelemes kiterjesztés itt nem
-   játszik (inputra nincs ::after, a befoglaló pedig div, nem label, tehát a rá
-   eső koppintás nem fókuszálná a mezőt), a magasság viszont ingyen van: az
-   input egyetlen sorát a böngésző függőlegesen középre teszi, így csak az
-   aláhúzás kerül pár képponttal lejjebb. Egérnél a 31px pontosan célozható,
-   ezért a megkomponált asztali nézet marad, ahogy volt. */
-@media (pointer: coarse) {
-  .input {
-    min-height: 44px;
-  }
-}
-
-/* Szolgáltatás-választó — Wix Madefor címkék elegáns, éles sarkú
-   checkboxokkal. Kiválasztáskor a doboz feketére telik és a pipa
-   vonalként rajzolódik be. */
-.options {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
-  gap: 16px 32px;
-}
-
-.option {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  font-weight: 500;
-  color: var(--color-black);
-  white-space: nowrap;
-}
-
-.checkbox {
-  width: 18px;
-  height: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1.5px solid var(--color-black);
-  color: var(--color-white);
-  transition: background 300ms var(--ease-out-quad),
-    border-color 300ms var(--ease-out-quad);
-}
-
-.checkbox svg {
-  width: 11px;
-  height: auto;
-}
-
-/* A pipa vonalrajzként érkezik — dashoffset fut nullára. */
-.checkmark {
-  stroke-dasharray: 14;
-  stroke-dashoffset: 14;
-  transition: stroke-dashoffset 400ms var(--ease-out-expo);
-}
-
-.option:hover .checkbox {
-  border-color: var(--color-red);
-}
-
-.optionActive .checkbox,
-.optionActive:hover .checkbox {
-  background: var(--color-black);
-  border-color: var(--color-black);
-}
-
-.optionActive .checkmark {
-  stroke-dashoffset: 0;
-}
-
-/* ── Budget csúszka ── Vékony fekete vonal + piros kör thumb. A címkék a
-   megállók alatt ülnek, az aktív pirosra vált a thumb-bal szinkronban. */
-.sliderWrap {
-  position: relative;
-  width: 100%;
-  max-width: 440px;
-  margin-top: var(--space-sm);
-  padding-bottom: 40px;
-}
-
-.slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 18px;
-  background: transparent;
-  cursor: pointer;
-}
-
-.slider::-webkit-slider-runnable-track {
-  height: 2px;
-  background: var(--color-black);
-}
-
-/* A natív thumb láthatatlan, de megtartja a méretét — ez adja a fogható
-   területet, a látható kört a .sliderThumb rajzolja. */
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  margin-top: -7px;
-  opacity: 0;
-}
-
-.slider::-moz-range-track {
-  height: 2px;
-  background: var(--color-black);
-}
-
-.slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border: none;
-  opacity: 0;
-}
-
-/* A látható thumb — a sáv középvonalán ül, és transitionnel úszik a
-   megállók között. */
-.sliderThumb {
-  position: absolute;
-  top: 9px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--color-red);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition: left 400ms var(--ease-out-expo);
-}
-
-.sliderLabel {
-  position: absolute;
-  top: 26px;
-  transform: translateX(-50%);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: var(--tracking-wide);
-  text-transform: uppercase;
-  white-space: nowrap;
-  color: var(--color-muted);
-  transition: color 300ms var(--ease-out-quad);
-}
-
-.sliderLabel:hover {
-  color: var(--color-black);
-}
-
-.sliderLabelActive,
-.sliderLabelActive:hover {
-  color: var(--color-red);
-}
-
-.fields {
-  display: grid;
-  gap: var(--space-md);
-  width: 100%;
-  max-width: 360px;
-  justify-items: center;
+.textarea {
+  resize: none;
+  line-height: 1.5;
 }
 
 .error {
@@ -325,15 +178,13 @@
 }
 
 .actions {
+  margin-top: clamp(6px, 1.5vh, 16px);
   display: flex;
-  align-items: center;
-  gap: var(--space-lg);
 }
 
-/* A megszokott highlight-swap gomb — fekete kihúzás, fehér hover szöveg. */
-.nextBtn {
+.sendBtn {
   --cta-font: var(--font-display);
-  --cta-size: clamp(1.5rem, 2.8vw, 2.25rem);
+  --cta-size: clamp(1.5rem, 2.6vw, 2.125rem);
   --cta-weight: 500;
   --cta-tracking: var(--tracking-tight);
   --cta-case: none;
@@ -342,18 +193,31 @@
   color: var(--color-black);
   display: inline-flex;
   align-items: center;
+  transition: color 400ms var(--ease-out-quad);
 }
 
-.nextBtn:disabled {
+/* Colour only, and only once the line has reached it: the control was always
+   live, this says the form is. */
+.sendLive {
+  color: var(--color-red);
+}
+
+.sendBtn:disabled {
   opacity: 0.5;
   pointer-events: none;
 }
 
-/* ── Megerősítő képernyő ───────────────────────────────── */
+/* ── Confirmation ──────────────────────────────────────── */
+.doneBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .doneTitle {
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 6.5vw, 5.5rem);
-  line-height: 0.98;
+  font-size: clamp(2.5rem, 5.2vw, 4.5rem);
+  line-height: 1.02;
   letter-spacing: var(--tracking-tight);
   font-weight: 600;
   font-variation-settings: "opsz" 144;
@@ -361,20 +225,18 @@
 
 .doneSignature {
   font-family: var(--font-signature);
-  font-size: clamp(1.6rem, 3vw, 2.75rem);
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
   line-height: 1;
   color: var(--color-red);
   transform: rotate(-4deg);
   margin-top: clamp(0.2rem, 0.6vw, 0.5rem);
-  margin-left: clamp(3rem, 9vw, 8rem);
+  margin-left: clamp(2rem, 6vw, 5rem);
 }
 
 .doneGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-xl);
+  gap: var(--space-lg);
   margin-top: var(--space-xl);
-  max-width: 760px;
 }
 
 .doneText {
@@ -383,50 +245,50 @@
   font-size: var(--text-base);
   line-height: 1.55;
   max-width: 36ch;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-/* ── Touch / small screens ─────────────────────────────── */
-@media (max-width: 768px) {
+/* ── Phones ────────────────────────────────────────────────
+   The columns stack, and the spine moves into the page's own left margin. The
+   form is indented to make that margin exist: on a phone the red rule down the
+   side of the fields IS the composition, there being no second column for the
+   line to travel across. */
+@media (max-width: 900px) {
   .screen {
-    padding: 100px 0 var(--space-lg);
+    padding: clamp(96px, 13vh, 120px) 0 var(--space-xl);
   }
 
-  /* Kis képernyőn a cím széle a konténerhez simul — a kérdés kap oldalsó
-     teret, hogy a nyíl ne lógjon rá. */
-  .question {
-    padding: 0 36px;
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(36px, 6vh, 56px);
+    align-items: start;
   }
 
-  .options {
-    grid-template-columns: repeat(2, auto);
+  /* The indent is on the whole composition, not just the form: the line runs
+     the full height of the page here, and everything has to clear it. */
+  .inner {
+    padding-left: 36px;
   }
 
-  /* A szélső címkék fele kilóg a sávon túlra — kisebb betű, szűkebb sáv,
-     hogy keskeny képernyőn is beférjenek. */
-  .sliderWrap {
-    max-width: 78%;
+  .lede {
+    max-width: 38ch;
   }
 
-  .sliderLabel {
-    font-size: 11px;
+  /* Gone, and its absence is what tells the component it is in the stacked
+     layout. See the note in ContactScreen. */
+  .lineAnchor {
+    display: none;
+  }
+}
+
+/* The field's own type gives it about 34px. That is under the tap minimum, and
+   an input is the worst place to be under it. The height is free: the browser
+   centres the single line, so only the underline moves down a few pixels. */
+@media (pointer: coarse) {
+  .input {
+    min-height: 44px;
   }
 
-  /* Nagyobb fogható terület a (láthatatlan) natív thumb-on, hogy ujjal is
-     könnyen húzható legyen — a látható 16px-es kör változatlan marad. */
-  .slider::-webkit-slider-thumb {
-    width: 28px;
-    height: 28px;
-    margin-top: -13px;
-  }
-  .slider::-moz-range-thumb {
-    width: 28px;
-    height: 28px;
-  }
-
-  .doneGrid {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
+  .textarea {
+    min-height: 88px;
   }
 }
