@@ -1,0 +1,239 @@
+/* The Limitation and the record that answers it. Dark, because this is the
+   page's confession moment and the two white sections around it (Founders
+   above, the shelf below) leave it standing alone. */
+
+.record {
+  position: relative;
+  /* Load-bearing twice over: it clips the full-bleed roster below, and it is
+     what makes the 100vw breakout safe on a scrollbar-bearing browser. */
+  overflow: hidden;
+}
+
+/* ─── The admission ────────────────────────────────────── */
+
+.head {
+  max-width: 900px;
+  margin-bottom: var(--space-2xl);
+}
+
+.label {
+  margin: 0 0 var(--space-lg);
+  color: var(--color-muted);
+}
+
+.title {
+  margin: 0;
+  color: var(--color-white);
+  max-width: 18ch;
+}
+
+.lead {
+  margin-top: var(--space-lg);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 56ch;
+}
+
+/* ─── The roster ───────────────────────────────────────── */
+/* Two lanes of names, full-bleed, travelling in opposite directions and only
+   while the page is scrolling. This is the whole answer to the heading now: the
+   prose ledger that used to sit underneath was cut on 2026-09-26.
+
+   Full-bleed on purpose. The names run out past both edges of the container,
+   which is the difference between a list that happens to be moving and a list
+   with no visible end. Escaping the container this way needs .record's overflow,
+   above, or the 100vw becomes a horizontal scrollbar. */
+
+/* No bottom margin. .close carries the gap under this, and setting it in both
+   places is what made the space below the roster twice the space above it. */
+.roster {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.9vw, 16px);
+}
+
+.lane {
+  overflow: hidden;
+  /* Softens both ends so a name is never bisected by a hard edge. The stops are
+     asymmetric to nothing: 7% in from each side is about one glyph at display
+     size, enough to read as fading rather than as cropping. */
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 7%,
+    #000 93%,
+    transparent
+  );
+}
+
+/* The transform is written per frame from the component, off the scroll. There
+   is no keyframe here on purpose: a CSS animation has a clock, and this does not
+   move on a clock. */
+.track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Promoted only while a lane is actually travelling. will-change held open
+   permanently keeps two full-width layers in memory for motion that, here, only
+   happens while the reader is scrolling. The flag is set by the tick. */
+.roster[data-moving="true"] .track {
+  will-change: transform;
+}
+
+.copy {
+  display: flex;
+  flex-wrap: nowrap;
+  flex: none;
+  align-items: center;
+}
+
+/* Wix Madefor Display, not Fraunces. The serif is the page's voice for sentences
+   it wants a reader to slow down for, and this is a list to be taken in at a
+   glance, most of it at speed.
+
+   Solid, and therefore smaller than the outlined version this replaces. Outlined
+   type is mostly background, so it could take 4.5rem without touching the
+   heading. Filled sans at 700 is all foreground, and at that size it would win
+   the section off the admission it is supposed to be answering. 3.4rem, held at
+   an alpha the heading clears, and full white only under the cursor. */
+.client {
+  display: flex;
+  align-items: center;
+  flex: none;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-size: clamp(1.5rem, 3.6vw, 3.4rem);
+  font-weight: 700;
+  /* The lane is its own overflow box and a line shorter than the glyphs slices
+     the í in SzfinxPapír, the same fault that shaved both founders' names before
+     2026-09-25. */
+  line-height: 1.3;
+  /* Not --tracking-tight. -0.03em is drawn for Fraunces at display size; on a
+     grotesque at 700 it closes the counters up. */
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.46);
+  transition: color 0.35s var(--ease-out-quad);
+}
+
+/* Cheap to aim at now. The lanes only move while the page does, so a name a
+   reader has stopped on is already standing still. */
+.client:hover {
+  color: var(--color-white);
+}
+
+/* The separator. A filled dot now the names are filled: an open ring was drawn
+   to sit beside outlined letterforms, and next to solid type it reads as a
+   different kind of mark rather than as punctuation. Dimmer than the names it
+   divides, because a separator that competes with them is doing the opposite of
+   its job. The margin here is the only spacing between names, which keeps one
+   number in charge of the rhythm. */
+.client::after {
+  content: "";
+  flex: none;
+  width: clamp(5px, 0.42vw, 7px);
+  aspect-ratio: 1;
+  margin: 0 clamp(16px, 2vw, 40px);
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 50%;
+}
+
+/* ─── The close ────────────────────────────────────────── */
+/* Indented to the old ledger's right-hand column so it reads as a footnote to
+   the record rather than as a new claim. */
+
+.close {
+  margin-top: var(--space-2xl);
+  margin-left: calc(41.666% + var(--space-lg));
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 62ch;
+}
+
+@media (max-width: 768px) {
+  .lead {
+    font-size: var(--text-base);
+  }
+
+  .close {
+    margin-left: 0;
+    margin-top: var(--space-xl);
+  }
+}
+
+/* Hover is a pointer idea. On a touch screen the brighten would either never
+   fire or stick on whatever was last tapped, so the names sit at a single
+   legible weight and nothing is waiting to be pointed at. */
+@media (hover: none) {
+  .client {
+    color: rgba(255, 255, 255, 0.62);
+  }
+}
+
+/* Reduced motion gets the roster the marquee was always standing in for: the ten
+   names once, wrapped, still.
+
+   The full-bleed has to come off with the motion. A 100vw lane only works while
+   the names are travelling through it, because then a name clipped at the edge
+   is on its way somewhere; parked, the same clip is just a name with its last
+   letters cut off. So the roster returns to the container's measure and the
+   names wrap inside it.
+
+   The three loop copies are structural and have nothing to say once nothing is
+   moving. flex: none has to be released with them, or the copy that remains
+   refuses to wrap and puts all five names back on one unbreakable line. */
+@media (prefers-reduced-motion: reduce) {
+  .roster {
+    width: auto;
+    margin-left: 0;
+  }
+
+  .lane {
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .track {
+    width: auto;
+    flex-wrap: wrap;
+  }
+
+  .copy {
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .copy[data-copy="duplicate"] {
+    display: none;
+  }
+
+  /* And the second lane with them. It is the same ten names rotated, which is a
+     device for the counter-motion; parked, it is just the roster printed twice
+     in a shuffled order. */
+  .lane:not(:first-child) {
+    display: none;
+  }
+
+  /* A dot with nothing after it is a dangling mark. */
+  .client:last-child::after {
+    display: none;
+  }
+}

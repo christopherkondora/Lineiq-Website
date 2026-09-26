@@ -1,4 +1,4 @@
-// What the two of them built before either had a client, rendered as the thing
+// What the two of them built before the studio had a client, rendered as the thing
 // a reader can check rather than a number they have to take on faith.
 //
 // The count is deliberately not the headline. "22 frameworks" is the same class

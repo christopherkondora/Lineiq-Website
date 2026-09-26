@@ -4,7 +4,7 @@ import AboutOrigin from "../components/AboutOrigin";
 import AboutCompounds from "../components/AboutCompounds";
 import AboutBeliefs from "../components/AboutBeliefs";
 import AboutFounders from "../components/AboutFounders";
-import AboutRefusals from "../components/AboutRefusals";
+import AboutRecord from "../components/AboutRecord";
 import BookshelfSection from "../components/BookshelfSection";
 import AboutClose from "../components/AboutClose";
 import Footer from "../components/Footer";
@@ -35,7 +35,12 @@ export default function AboutPage() {
       <AboutCompounds />
       <AboutBeliefs />
       <AboutFounders />
-      <AboutRefusals ageSentence={ageSentence(ages)} />
+      {/* AboutRefusals stood here until 2026-09-25. Its three refusals were cut
+          (two restated costed beliefs, the third had no cost to file) and its
+          Limitation, which wrongly claimed neither founder had ever had a
+          client, was promoted to its own viewport with the record that answers
+          it. Vault: identity/World.md §3, corrected the same day. */}
+      <AboutRecord ageSentence={ageSentence(ages)} />
       {/* AboutMentors used to sit here: five names the studio runs on, rendered
           as initials in rectangles. It was cut on 2026-09-07. The roster was
           never confirmed, and structurally it was the borrowed-authority

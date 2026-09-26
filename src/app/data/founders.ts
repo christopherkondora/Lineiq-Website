@@ -19,26 +19,26 @@ export interface Founder {
   name: string;
   /** ISO birth date. */
   born: string;
-  /** Four short rows under the name. Exactly four: the pair of columns balances
-      on an equal row count, and a fifth on one side tips it. Keep each row under
-      ~28 characters — the name above them rises through mix-blend-mode:
-      difference, and a long wrapped row breaks that column's rhythm. */
+  /** The rows under the name. Facts, not characterisation: the previous set
+      were literal placeholders, and the set before those described the two of
+      us in adjectives a reader skims. Both founders carry four, and the count
+      is held on purpose because an uneven pair reads as a lead and a second.
+      Keep each row under ~40 characters. It may wrap, and the row masks and
+      rises as a block either way. What it must not do is say nothing.
+
+      Sources, so this never has to be reconstructed from memory again:
+      Kristof's client work and the Viltor relationship are in the vault at
+      docs/lineiq_fundamentum.md:40, Klient at :81. The ownership split behind
+      Aron's rows is identity/Culture.md:109, and three of the four Deep
+      Research pillars carry owner: "Aron" in their frontmatter. */
   lines: string[];
 }
 
-// Retired on 2026-09-13 when the role/line pair was replaced by the four-row
-// block. Kept because they are the only written characterisation of the two of
-// us that exists, and the replacement rows are still placeholders:
+// The rows were placeholders from 2026-09-13 until 2026-09-25, when Kristof
+// pointed out that the page was running on words that say nothing, and that its
+// one factual claim about the founders was false. The replacements are facts he
+// gave in session, cross-checked against the vault.
 //
-//   Kristof — role: "Execution, operations, and everything we ship in code."
-//             line: "Builds the systems the studio runs on, then runs the studio
-//                    on them first. If a process cannot survive being used on us,
-//                    it does not get sold."
-//   Aron    — role: "Strategy, story, and the people we build with."
-//             line: "Starts every engagement from the customer's own words, never
-//                    from ours. The positioning is finished when the client
-//                    recognizes themselves in it."
-
 export const FOUNDERS: Founder[] = [
   {
     id: "kondora-kristof",
@@ -46,10 +46,10 @@ export const FOUNDERS: Founder[] = [
     name: "Kondora Kristóf",
     born: "2006-12-06",
     lines: [
-      "Placeholder copy.",
-      "Four rows, written by",
-      "Kristof, replace these",
-      "before this ships.",
+      "Two years of client work.",
+      "Marketing and SEO at Viltor.hu.",
+      "Reads the numbers first.",
+      "Built Klient. Designed North.",
     ],
   },
   {
@@ -58,10 +58,10 @@ export const FOUNDERS: Founder[] = [
     name: "Sütő Áron",
     born: "2006-12-07",
     lines: [
-      "Placeholder copy.",
-      "Four rows, written by",
-      "Aron, replace these",
-      "before this ships.",
+      "Most of our 22 frameworks.",
+      "Market and ICP research.",
+      "Positioning, voice and sales.",
+      "Learning development in parallel.",
     ],
   },
 ];

@@ -20,8 +20,8 @@ const BAND_WORDS = "one voice.";
 // founders in mirrored blocks across two-plus viewports. Three faults, in order
 // of what they cost: the largest surface on the second half of the page was a
 // photograph nobody had taken, so the section could not be finished without a
-// shoot; the strongest proof the studio owns, the method built before either of
-// us had a client, was set as the smallest type on the page inside the
+// shoot; the strongest proof the studio owns, the method built before the studio had
+// a client, was set as the smallest type on the page inside the
 // Limitation aside; and the mirrored blocks sprawled. Two columns plus a
 // full-width method is shorter than the old composition even after absorbing
 // the frameworks.
@@ -238,7 +238,7 @@ export default function AboutFounders() {
 
         <div className={styles.method} data-method>
           <p className={`text-label ${styles.methodLabel}`} data-reveal>
-            What the two of us built before either of us had a client
+            The method both of us run on
           </p>
 
           <ol className={styles.frameworks}>
