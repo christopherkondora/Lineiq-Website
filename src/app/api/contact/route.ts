@@ -1,31 +1,46 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import {
+  BUDGET_BANDS,
+  EMAIL_RE,
+  HONEYPOT_FIELD,
+  MIN_ELAPSED_MS,
+  NEEDS,
+  NOTE_MAX,
+  STAGES,
+  isBandId,
+  isBudgetMode,
+  isNeedId,
+  isStageId,
+  labelOf,
+  type BudgetMode,
+} from "../../contact/intake";
 
-// The contact form's submission, forwarded to the studio by email through
+// The contact flow's submission, forwarded to the studio by email through
 // Resend. from/to come from the environment so they can be repointed after a
 // domain verification without a code change.
 //
-// The payload changed on 2026-09-25 with the page: `services` and `budget` are
-// gone, and `message` — the answer to the page's one question — is required in
-// their place. The reasoning is in [[docs/website/2026-09-25-contact-line-path]]:
-// the pricing model is two-step and conditional, so a budget band picked by a
-// stranger before the diagnosis is a number we cannot act on.
+// The payload changed on 2026-09-26 with the page
+// ([[docs/website/2026-09-26-contact-qualify-flow]]): `name` is gone, because
+// the flow does not ask for one and the reply template has to work without it;
+// `message` became the optional `note`; and the three qualification answers
+// arrive as enums that are validated here against the same list the form
+// renders from. A band id the server does not recognise is a 400, not a pass
+// through into the email body.
 
-interface IntakePayload {
-  name: string;
-  email: string;
-  company: string;
-  message: string;
-}
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-/** A ceiling on what gets pasted into an email body. Generous enough that a
- *  long, considered answer arrives whole. */
-const MESSAGE_MAX = 5000;
+const FALLBACK_TO = "hello@lineiqgroup.com";
 
 function asString(value: unknown): string {
   return typeof value === "string" ? value.trim() : "";
+}
+
+/** Nothing sent, and a 200 anyway. A bot that learns which submissions were
+ *  rejected learns how to pass; a human who somehow trips one of these sees
+ *  the normal confirmation and their mail is lost, which is the cost, and it
+ *  is smaller than a visible failure on the studio's only conversion
+ *  surface. */
+function silentlyDiscard() {
+  return NextResponse.json({ ok: true });
 }
 
 export async function POST(req: Request) {
@@ -36,14 +51,34 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  const body = (raw ?? {}) as Partial<IntakePayload>;
-  const name = asString(body.name);
-  const email = asString(body.email);
-  const company = asString(body.company);
-  const message = asString(body.message).slice(0, MESSAGE_MAX);
+  const body = (raw ?? {}) as Record<string, unknown>;
 
-  if (!name) {
-    return NextResponse.json({ error: "Name is required." }, { status: 400 });
+  // ── Spam, before anything else ─────────────────────────────
+  // The route had no protection of any kind before this. It is a public POST
+  // that sends mail, and it will be found.
+  if (asString(body[HONEYPOT_FIELD])) return silentlyDiscard();
+
+  const elapsed = body.elapsedMs;
+  if (typeof elapsed !== "number" || !Number.isFinite(elapsed)) {
+    return silentlyDiscard();
+  }
+  if (elapsed < MIN_ELAPSED_MS) return silentlyDiscard();
+
+  // ── The answers ────────────────────────────────────────────
+  const company = asString(body.company);
+  const email = asString(body.email);
+  const note = asString(body.note).slice(0, NOTE_MAX);
+  const stage = body.stage;
+  const need = body.need;
+  const budget = (body.budget ?? {}) as Record<string, unknown>;
+  const mode = budget.mode;
+  const bandId = budget.band;
+
+  if (!company) {
+    return NextResponse.json(
+      { error: "Company name is required." },
+      { status: 400 }
+    );
   }
   if (!EMAIL_RE.test(email)) {
     return NextResponse.json(
@@ -51,14 +86,17 @@ export async function POST(req: Request) {
       { status: 400 }
     );
   }
-  if (!company) {
+  if (!isStageId(stage) || !isNeedId(need)) {
     return NextResponse.json(
-      { error: "Company name is required." },
+      { error: "Answer every step and we will have something to work with." },
       { status: 400 }
     );
   }
-  if (!message) {
-    return NextResponse.json({ error: "An answer is required." }, { status: 400 });
+  if (!isBudgetMode(mode) || !isBandId(mode as BudgetMode, bandId)) {
+    return NextResponse.json(
+      { error: "Pick a budget and we will have something to work with." },
+      { status: 400 }
+    );
   }
 
   if (!process.env.RESEND_API_KEY) {
@@ -68,19 +106,30 @@ export async function POST(req: Request) {
     );
   }
 
+  // Triage happens in a phone inbox, so the automatic no flags itself in the
+  // subject line. That is the difference between deciding in a second and
+  // opening the mail. Nothing about the visitor's side changes: the reply is
+  // still written by a person.
+  const autoNo = stage === "not-selling";
+
   const resend = new Resend(process.env.RESEND_API_KEY);
   const { error } = await resend.emails.send({
     from: process.env.CONTACT_FROM ?? "LineiQ Intake <onboarding@resend.dev>",
-    to: [process.env.CONTACT_TO ?? "hello@lineiq.hu"],
+    // The fallback is the address the page itself prints, and it is a real
+    // mailbox. It used to be hello@lineiq.hu, a domain the studio does not
+    // read, so an unset CONTACT_TO mailed into nothing and said nothing.
+    to: [process.env.CONTACT_TO ?? FALLBACK_TO],
     replyTo: email,
-    subject: `New enquiry — ${company}`,
+    subject: `New enquiry${autoNo ? " (auto-no)" : ""} — ${company}`,
     text: [
       `Company: ${company}`,
-      `Name: ${name}`,
       `Email: ${email}`,
+      `Stage: ${labelOf(STAGES, stage)}`,
+      `Need: ${labelOf(NEEDS, need)}`,
+      `Budget: ${labelOf(BUDGET_BANDS[mode], String(bandId))} (${mode})`,
       "",
-      "What are you trying to build, and what is in the way?",
-      message,
+      "Anything we should know?",
+      note || "(not answered)",
     ].join("\n"),
   });
 

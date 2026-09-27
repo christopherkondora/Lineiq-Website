@@ -1,29 +1,68 @@
-/* /contact — one screen, two columns, one red line.
-   The reasoning is in [[docs/website/2026-09-25-contact-line-path]]; the
+/* /contact — five steps, a winding red line, and a camera that rides it.
+   The reasoning is in [[docs/website/2026-09-26-contact-qualify-flow]]; the
    component carries the motion notes. Nothing here scrolls except the footer
    beneath it. */
 
-.screen {
+.stage {
   position: relative;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
   background: var(--color-white);
-  padding: clamp(110px, 14vh, 160px) 0 clamp(56px, 8vh, 96px);
+  min-height: 100svh;
+  padding-bottom: clamp(56px, 9vh, 120px);
+
+  /* The lateral swing budget, and the single source of it. Zero here, where
+     the flow stacks flush and the line is a straight margin rule; the wide
+     layout below ramps it from 0 at 1024px to full at 1280px. 0.26 is the
+     largest of the five indent ratios, so the widest the camera ever pans
+     sideways is 0.26 x 520 = 135px.
+
+     The mode switch is a media query and not a continuous clamp, because the
+     component has to agree with it: matchMedia and @media evaluate the same
+     width, while 100vw and a media query differ by the scrollbar and would
+     disagree about which layout is on screen for fifteen pixels either side
+     of the boundary. */
+  --stagger-base: 0px;
+  --swing-max: calc(var(--stagger-base) * 0.26);
+  /* How far the line keeps off the content it runs beside. */
+  --line-gap: 14px;
+}
+
+@media (min-width: 1024px) {
+  .stage {
+    --stagger-base: clamp(0px, (100vw - 1024px) * 2.031, 520px);
+    --line-gap: 30px;
+  }
+}
+
+/* Set by the component, and only where the camera actually mounts: desktop,
+   motion allowed, JS alive. Everything below this line is the base state —
+   a page that scrolls, with all five steps reachable — and the camera is
+   added to it, never the other way round. */
+.stage[data-camera="on"] {
+  height: 100svh;
+  min-height: 100svh;
   overflow: hidden;
 }
 
+/* The two things the camera actually moves, and the only two on the page that
+   hold a compositing hint. The reveal does not: it runs once and then the
+   elements are still for the rest of the page's life. */
+.stage[data-camera="on"] .flow,
+.stage[data-camera="on"] .line {
+  will-change: transform;
+}
+
 /* ── The line ──────────────────────────────────────────────
-   Absolutely sized to the section, with the viewBox set to the section's own
-   pixel box at measure time, so one SVG unit is one CSS pixel and the stroke
-   needs no non-scaling trick. */
+   Absolutely sized to the stage, with the viewBox set to the stage's own pixel
+   box at measure time, so one SVG unit is one CSS pixel and the stroke needs no
+   non-scaling trick. It is translated by the camera in the same write as the
+   flow, off the same value, so the nodes cannot come off the steps. */
 .line {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  top: 0;
+  left: 0;
   pointer-events: none;
   z-index: 0;
+  overflow: visible;
 }
 
 /* The hidden start state is CSS, not JS, so it is right from first paint
@@ -44,54 +83,55 @@
   stroke-dashoffset: 20000;
 }
 
+/* ── Columns ───────────────────────────────────────────────
+   The first column is sized so its right edge lands exactly where the line
+   rests: the statement gets what is left of it after the swing and a clearance.
+   Nothing repeats the anchor as a number — the camera reads the line's own
+   measured rest position and works from that. */
 .inner {
   position: relative;
   z-index: 1;
-  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-pad);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(48px, 8vw, 140px);
-  align-items: center;
+  grid-template-columns: calc(38% + var(--line-gap)) minmax(0, 1fr);
 }
 
-/* ── Left column: the statement ────────────────────────── */
-.saying {
+/* ── Left column: the statement ────────────────────────────
+   The camera never touches this. The motion needs one thing that is not
+   moving or the swing reads as drift, and the direct address stays reachable
+   throughout for the visitor who would rather write than click. */
+.statement {
+  align-self: center;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  /* Clears the leftmost the line can ever swing, plus a margin. */
+  max-width: calc(100% - var(--swing-max) - 72px);
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5.2vw, 4.5rem);
-  line-height: 1.02;
+  font-size: clamp(1.6rem, 2.6vw, 2.9rem);
+  line-height: 1.04;
   letter-spacing: var(--tracking-tight);
   font-weight: 600;
   font-variation-settings: "opsz" 144;
 }
 
 .lede {
-  margin-top: clamp(16px, 2.4vh, 28px);
+  margin-top: clamp(14px, 2.2vh, 24px);
   font-family: var(--font-body);
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   line-height: 1.5;
-  max-width: 34ch;
-}
-
-/* Where the line crosses the left edge. It has no content and no height; the
-   margin below it is the clearance between the line and the statement, and it
-   is the only thing keeping the two apart at any width. */
-.lineAnchor {
-  display: block;
-  width: 100%;
-  height: 0;
-  margin-bottom: clamp(44px, 7vh, 76px);
+  max-width: 30ch;
 }
 
 .direct {
-  margin-top: clamp(30px, 5vh, 52px);
+  margin-top: clamp(24px, 4vh, 44px);
   font-family: var(--font-body);
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 500;
   color: var(--color-black);
   border-bottom: 1.5px solid var(--color-black);
@@ -105,20 +145,89 @@
   border-color: var(--color-red);
 }
 
-/* ── Right column: the form ────────────────────────────── */
-.formCol {
+/* ── Right column: the flow ────────────────────────────────
+   The padding puts the first node at roughly 46% of the viewport height, which
+   is where the camera's anchor is, so the camera's transform is near zero at
+   first paint and the no-JS layout is the same composition. */
+.flow {
   position: relative;
+  padding-top: clamp(180px, 41svh, 520px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2.4vh, 28px);
 }
 
-.form {
+/* ── A step ────────────────────────────────────────────────
+   The indent is the stagger: four unequal values so each gap the line swings
+   across is a different width. An alternating pattern of equal amplitude reads
+   as a mechanical wave and the eye predicts it after the second gap.
+
+   It is padding on a block in DOM order. Nothing about the stagger can reorder
+   anything, which is what keeps tab order, DOM order and visual order the same
+   three things. */
+.step {
+  margin-left: calc(var(--stagger-base) * var(--indent, 0));
+  max-width: min(620px, calc(100% - var(--swing-max)));
+}
+
+/* The dim lives on an inner element, not on .step itself, and the wrapper is
+   the whole reason it exists: the arrival tween writes an inline opacity of 1
+   on every [data-reveal] element, which would overwrite a dim set here and
+   light the four inactive steps the moment the page finished arriving.
+   Nested opacities multiply, so the two states stay independent. */
+.body {
+  opacity: 0.32;
+  transition: opacity var(--duration-base) var(--ease-out-quad);
+}
+
+/* Three levels, not two. Answered steps sit between dim and bright so the
+   visitor can read back what they said without the step competing with the
+   one they are in: the flow is its own summary, which is the one thing the
+   reference site got right and the reason no tick row is needed. */
+.step[data-answered="true"] .body {
+  opacity: 0.6;
+}
+
+.step[data-attn="true"] .body {
+  opacity: 1;
+}
+
+.stepQ {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  /* Not --tracking-tight. That token is drawn for display sizes; at twenty
+     pixels it closes Fraunces' already narrow word space and the question
+     reads as one word. */
+  letter-spacing: -0.01em;
+  word-spacing: 0.1em;
+  font-weight: 500;
+  font-variation-settings: "opsz" 100;
+  color: var(--color-black);
+  margin-bottom: clamp(8px, 1.2vh, 14px);
+}
+
+.optional {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-muted);
+  margin-left: 0.6em;
+  vertical-align: 0.15em;
+}
+
+/* ── Typed fields ──────────────────────────────────────── */
+.fields {
   display: grid;
-  gap: clamp(20px, 3vh, 30px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(16px, 2vw, 28px);
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .label {
@@ -128,27 +237,12 @@
   text-transform: uppercase;
   font-weight: 500;
   color: var(--color-muted);
-  transition: color 300ms var(--ease-out-quad);
-}
-
-/* The question's label is a sentence, not a field name, so it gets sentence
-   type. It is the one question on the page and it should read like one. */
-.questionLabel {
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
-  letter-spacing: var(--tracking-tight);
-  text-transform: none;
-  font-weight: 500;
-  font-variation-settings: "opsz" 100;
-  color: var(--color-black);
-  max-width: 26ch;
-  margin-bottom: 4px;
 }
 
 .input {
   width: 100%;
   font-family: var(--font-body);
-  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  font-size: clamp(0.95rem, 1.1vw, 1.1rem);
   font-weight: 500;
   color: var(--color-black);
   background: transparent;
@@ -165,39 +259,131 @@
   border-color: var(--color-red);
 }
 
-.textarea {
-  resize: none;
-  line-height: 1.5;
-}
-
-.error {
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-red);
-}
-
-.actions {
-  margin-top: clamp(6px, 1.5vh, 16px);
+/* ── Buttons that are answers ──────────────────────────────
+   Not cards, and not a grid of price tiers with a feature list under each one:
+   that reads as packages, which is among the things the persona rejects on
+   sight. One line of type in a box, and the selected one takes the line's own
+   red. */
+.options {
   display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.option {
+  font-family: var(--font-body);
+  font-size: clamp(0.8rem, 0.9vw, 0.92rem);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-black);
+  background: transparent;
+  border: 1.5px solid var(--color-black);
+  border-radius: var(--radius-none);
+  padding: 0.6em 1em;
+  text-align: left;
+  transition: background-color var(--duration-base) var(--ease-out-quad),
+    color var(--duration-base) var(--ease-out-quad),
+    border-color var(--duration-base) var(--ease-out-quad);
+}
+
+.option:hover {
+  color: var(--color-red);
+  border-color: var(--color-red);
+}
+
+.option[aria-pressed="true"] {
+  background: var(--color-red);
+  border-color: var(--color-red);
+  color: var(--color-white);
+}
+
+/* ── Budget ────────────────────────────────────────────────
+   Four bands each side of the switch, and a fixed four-column grid with a
+   fixed cell height: throwing the switch changes four labels and moves
+   nothing. */
+.bands {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.band {
+  display: flex;
+  align-items: center;
+  min-height: 3em;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 2px;
+  margin-bottom: 10px;
+  background: transparent;
+  transition: border-color var(--duration-base) var(--ease-out-quad);
+}
+
+.switch:hover {
+  border-color: var(--color-black);
+}
+
+.switchSide {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--color-muted);
+  padding: 0.5em 1.1em;
+  border-radius: var(--radius-pill);
+  transition: background-color var(--duration-base) var(--ease-out-quad),
+    color var(--duration-base) var(--ease-out-quad);
+}
+
+.switchOn {
+  background: var(--color-black);
+  color: var(--color-white);
+}
+
+/* ── The honeypot ──────────────────────────────────────────
+   Off-screen rather than display:none, so a bot reading the computed style
+   still finds a field it believes is fillable. */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+/* ── Send ──────────────────────────────────────────────────
+   Present from first paint and inert until the flow is answered. It does not
+   appear, slide in or unhide; it changes colour when the line reaches it, and
+   that is the only state change it needs. */
+.sendRow {
+  margin-top: clamp(4px, 1vh, 14px);
+  display: flex;
+  align-items: baseline;
+  gap: clamp(16px, 2vw, 32px);
+  flex-wrap: wrap;
 }
 
 .sendBtn {
   --cta-font: var(--font-display);
-  --cta-size: clamp(1.5rem, 2.6vw, 2.125rem);
+  --cta-size: clamp(1.4rem, 2.2vw, 1.9rem);
   --cta-weight: 500;
   --cta-tracking: var(--tracking-tight);
   --cta-case: none;
   --cta-optical: "opsz" 100;
   --cta-pad: 0.18em 0.3em;
-  color: var(--color-black);
+  color: var(--color-muted);
   display: inline-flex;
   align-items: center;
-  transition: color 400ms var(--ease-out-quad);
+  transition: color var(--duration-base) var(--ease-out-quad);
 }
 
-/* Colour only, and only once the line has reached it: the control was always
-   live, this says the form is. */
 .sendLive {
   color: var(--color-red);
 }
@@ -207,8 +393,16 @@
   pointer-events: none;
 }
 
+.error {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-red);
+}
+
 /* ── Confirmation ──────────────────────────────────────── */
 .doneBlock {
+  padding-top: clamp(180px, 41svh, 520px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -216,7 +410,7 @@
 
 .doneTitle {
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5.2vw, 4.5rem);
+  font-size: clamp(2.2rem, 4.4vw, 3.75rem);
   line-height: 1.02;
   letter-spacing: var(--tracking-tight);
   font-weight: 600;
@@ -247,48 +441,107 @@
   max-width: 36ch;
 }
 
-/* ── Phones ────────────────────────────────────────────────
-   The columns stack, and the spine moves into the page's own left margin. The
-   form is indented to make that margin exist: on a phone the red rule down the
-   side of the fields IS the composition, there being no second column for the
-   line to travel across. */
-@media (max-width: 900px) {
-  .screen {
-    padding: clamp(96px, 13vh, 120px) 0 var(--space-xl);
+/* ── The reveal ────────────────────────────────────────────
+   Local, not the global .reveal: that one holds elements 60px down, and this
+   page's motion spec is 30. No clearProps on the tween that resolves it, for
+   the same reason as before — clearing the inline transform re-exposes this
+   one and the elements settle below where they were laid out, which on a page
+   whose line is drawn from layout coordinates is fatal rather than cosmetic. */
+.rv {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* ── Stacked, under 1024px ─────────────────────────────────
+   No camera. The five steps stack and the page scrolls. The line runs the full
+   height of the page down the left margin, past the statement and into the
+   flow, with the same nodes and the same retreat behaviour.
+
+   The claim that this page is one viewport was always a desktop claim. Five
+   steps do not go into 844px and no attempt is made here to put them there. */
+@media (max-width: 1023px) {
+  .stage {
+    padding-top: clamp(96px, 13vh, 130px);
   }
 
   .inner {
     grid-template-columns: minmax(0, 1fr);
-    gap: clamp(36px, 6vh, 56px);
-    align-items: start;
+    gap: clamp(36px, 6vh, 60px);
+    /* The indent is on the whole composition, not just the flow: the line runs
+       the full height of the page here, and everything has to clear it. */
+    padding-left: calc(var(--container-pad) + 36px);
   }
 
-  /* The indent is on the whole composition, not just the form: the line runs
-     the full height of the page here, and everything has to clear it. */
-  .inner {
-    padding-left: 36px;
-  }
-
-  .lede {
+  .statement {
+    align-self: start;
     max-width: 38ch;
   }
 
-  /* Gone, and its absence is what tells the component it is in the stacked
-     layout. See the note in ContactScreen. */
-  .lineAnchor {
-    display: none;
+  .title {
+    font-size: clamp(2.2rem, 7vw, 3rem);
+  }
+
+  .lede {
+    font-size: var(--text-lg);
+    max-width: 34ch;
+  }
+
+  .flow,
+  .doneBlock {
+    padding-top: 0;
+  }
+
+  .step {
+    max-width: none;
+  }
+
+  .stepQ {
+    font-size: clamp(1.15rem, 4.2vw, 1.4rem);
+  }
+
+  .bands {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* The field's own type gives it about 34px. That is under the tap minimum, and
-   an input is the worst place to be under it. The height is free: the browser
-   centres the single line, so only the underline moves down a few pixels. */
+@media (max-width: 768px) {
+  .inner {
+    padding-left: calc(var(--container-pad-mobile) + 30px);
+    padding-right: var(--container-pad-mobile);
+  }
+
+  .fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .option {
+    font-size: var(--text-sm);
+  }
+}
+
+/* An option's own type gives it about 34px, and an answer you tap is the worst
+   place to be under the tap minimum. */
 @media (pointer: coarse) {
   .input {
     min-height: 44px;
   }
 
-  .textarea {
-    min-height: 88px;
+  .option {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .switchSide {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rv {
+    opacity: 1;
+    transform: none;
   }
 }
