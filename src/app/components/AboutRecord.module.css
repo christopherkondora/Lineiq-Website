@@ -108,16 +108,26 @@
 
    Solid, and therefore smaller than the outlined version this replaces. Outlined
    type is mostly background, so it could take 4.5rem without touching the
-   heading. Filled sans at 700 is all foreground, and at that size it would win
-   the section off the admission it is supposed to be answering. 3.4rem, held at
-   an alpha the heading clears, and full white only under the cursor. */
+   heading. Filled sans at 700 is all foreground, and at 4.5rem it would win the
+   section off the admission it is supposed to be answering.
+
+   The size itself is AboutFounders' --name-size, the founders' own names. The
+   two sat 16% apart, which is close enough to read as a wobble rather than a
+   rank, and pairing them says the thing the section means: the roster is set at
+   the size the people who made it are set at. The alpha is what keeps it under
+   the heading now, not the size.
+
+   One weight, no hover. The names used to sit at 0.46 and brighten to full
+   white under the cursor, which made the roster a thing to be played with in a
+   section whose job is to be read. 0.62 is the alpha the touch branch already
+   used for that reason, and it is now the only one. */
 .client {
   display: flex;
   align-items: center;
   flex: none;
   white-space: nowrap;
   font-family: var(--font-body);
-  font-size: clamp(1.5rem, 3.6vw, 3.4rem);
+  font-size: clamp(1.98rem, 4.18vw, 3.85rem);
   font-weight: 700;
   /* The lane is its own overflow box and a line shorter than the glyphs slices
      the í in SzfinxPapír, the same fault that shaved both founders' names before
@@ -126,30 +136,37 @@
   /* Not --tracking-tight. -0.03em is drawn for Fraunces at display size; on a
      grotesque at 700 it closes the counters up. */
   letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.46);
-  transition: color 0.35s var(--ease-out-quad);
+  color: rgba(255, 255, 255, 0.62);
 }
 
-/* Cheap to aim at now. The lanes only move while the page does, so a name a
-   reader has stopped on is already standing still. */
-.client:hover {
-  color: var(--color-white);
-}
+/* The separator: an upright rule, in the names' own colour. currentColor rather
+   than a literal, so the mark cannot drift from the type it divides the way the
+   old dot's fixed 0.28 did.
 
-/* The separator. A filled dot now the names are filled: an open ring was drawn
-   to sit beside outlined letterforms, and next to solid type it reads as a
-   different kind of mark rather than as punctuation. Dimmer than the names it
-   divides, because a separator that competes with them is doing the opposite of
-   its job. The margin here is the only spacing between names, which keeps one
-   number in charge of the rhythm. */
+   Short, and deliberately so. At 0.7em it ran to the cap height of the names
+   and read as a border between two columns. The dot it replaces was about 6px
+   against 60px names, a mark rather than a rule, and that is the register to
+   stay in: 0.2em is roughly twice the dot's height and a third of its width,
+   which is as close to the dot's presence as an upright line gets.
+
+   A tick and not a dot, because the brand has no round shapes in it. The page
+   sets --radius-none on everything it draws, the portrait slots are hard
+   rectangles and the red band in AboutFounders is a square-cornered box; a
+   circle here was the one curve in the whole composition.
+
+   Height in em, not px, so it tracks the names through their whole clamp
+   instead of holding one length while the type around it grows.
+
+   The margin is clamp(16px, 2vw, 40px), the number that was in charge of this
+   rhythm when the separator was a dot. A 2px upright contributes nothing to
+   the gap, so the margin is the gap again. */
 .client::after {
   content: "";
   flex: none;
-  width: clamp(5px, 0.42vw, 7px);
-  aspect-ratio: 1;
+  width: 2px;
+  height: 0.2em;
   margin: 0 clamp(16px, 2vw, 40px);
-  background: rgba(255, 255, 255, 0.28);
-  border-radius: 50%;
+  background: currentColor;
 }
 
 /* ─── The close ────────────────────────────────────────── */
@@ -160,29 +177,19 @@
   margin-top: var(--space-2xl);
   margin-left: calc(41.666% + var(--space-lg));
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  /* Same size as .lead. The two paragraphs are the section's only prose and a
+     step between them added a size the page did not need; the close stays
+     subordinate on its indent and its lower alpha instead. */
+  font-size: var(--text-lg);
   line-height: var(--leading-relaxed);
   color: rgba(255, 255, 255, 0.6);
   max-width: 62ch;
 }
 
 @media (max-width: 768px) {
-  .lead {
-    font-size: var(--text-base);
-  }
-
   .close {
     margin-left: 0;
     margin-top: var(--space-xl);
-  }
-}
-
-/* Hover is a pointer idea. On a touch screen the brighten would either never
-   fire or stick on whatever was last tapped, so the names sit at a single
-   legible weight and nothing is waiting to be pointed at. */
-@media (hover: none) {
-  .client {
-    color: rgba(255, 255, 255, 0.62);
   }
 }
 

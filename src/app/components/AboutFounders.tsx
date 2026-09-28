@@ -276,10 +276,19 @@ export default function AboutFounders() {
             ))}
           </ol>
 
+          {/* Two clauses, two lines, broken where the sentence breaks rather
+              than wherever the measure runs out. The <p> is only the flex row
+              that pushes the note to the far edge. */}
           <p className={styles.methodShape} data-reveal>
-            Five of {METHOD_SHAPE.frameworks}, across {METHOD_SHAPE.layers}{" "}
-            layers. The rest are not secrets, they are just not first
-            impressions.
+            <span className={styles.methodShapeText}>
+              <span className={styles.methodShapeLine}>
+                Five of {METHOD_SHAPE.frameworks}, across {METHOD_SHAPE.layers}{" "}
+                layers. The rest are not secrets,
+              </span>
+              <span className={styles.methodShapeLine}>
+                they are just not first impressions.
+              </span>
+            </span>
           </p>
         </div>
       </div>

@@ -14,7 +14,9 @@ interface BookData {
   coverTextColor: string;
   height: number;
   thickness: number;
-  quote: string;
+  /* What the book is to us, not what the book says. The panel used to lead
+     with a pulled quote and file this underneath it as a reaction; the quote
+     was the book's voice doing the talking on a page about ours. */
   commentary: string;
   commentaryAuthor: string;
   coverImage?: string;
@@ -24,6 +26,13 @@ interface BookData {
   coverBgSize?: string;
   coverBgPos?: string;
 }
+
+// Where the background author name settles. Half of the 1 it used to reach:
+// the name is a watermark behind the panel, and at full strength a 20rem word
+// was the second thing the eye found in a section whose subject is the book in
+// front of it. Paired with the near-white grey in the stylesheet, not a
+// replacement for it.
+const BG_AUTHOR_OPACITY = 0.5;
 
 const COVER_W = 380;
 const BOOK_GAPS = [0, 50, 70, 45, 60];
@@ -38,11 +47,9 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 560,
     thickness: 140,
-    quote:
-      "Pain plus reflection equals progress. The most important thing is that you develop your own principles and ideally write them down.",
     commentary:
-      "LineiQ is built on principles, not assumptions. Every internal decision, from clients to pricing, is part of a system. Dalio brought us the idea that principles must be written down and applied consistently.",
-    commentaryAuthor: "Kondora Kristóf",
+      "LineiQ runs on principles, not assumptions. Who we take on, what we charge, what we refuse: all of it is written down before it is needed, so no decision gets made twice and none of them gets made in a bad week.",
+    commentaryAuthor: "Kristóf Kondora",
     coverImage: "/books/elvek-front.webp",
     spineImage: "/books/elvek-side.webp",
   },
@@ -55,10 +62,8 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 490,
     thickness: 100,
-    quote:
-      "You do not rise to the level of your goals. You fall to the level of your systems.",
     commentary:
-      "This sentence is the core of LineiQ's systems thinking. It's not the goal that matters but the daily routine, the process, the automatisms. That's what we build for our clients too: systems, not one-off campaigns.",
+      "The reason we sell systems and not campaigns. A goal is a thing you announce; a system is a thing that still runs on the week nobody is watching. We build the second kind, for ourselves and for the people who hire us.",
     commentaryAuthor: "Sütő Áron",
     coverImage: "/books/atomic-front.webp",
     spineImage: "/books/atomic-side.webp",
@@ -72,11 +77,9 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 420,
     thickness: 82,
-    quote:
-      "Competition is for losers. Every moment in business happens only once. The next Bill Gates will not build an operating system.",
     commentary:
-      "LineiQ isn't 'just another agency'. Awwwards-grade quality on the Hungarian market — that's zero to one. Thiel taught us that the goal isn't to win the competition but to create a new category.",
-    commentaryAuthor: "Kondora Kristóf",
+      "Where our refusal to be another agency comes from. The work is not to win the category, it is to be the only one in it: international-grade craft on the Hungarian market, which is a thing that either exists or does not.",
+    commentaryAuthor: "Kristóf Kondora",
     coverImage: "/books/zero-front.webp",
     spineImage: "/books/zero-side.webp",
   },
@@ -89,10 +92,8 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 580,
     thickness: 125,
-    quote:
-      "Hard things are hard because there are no easy answers or recipes. They are hard because your emotions are at odds with your logic.",
     commentary:
-      "While building a company there are no good answers, only less bad decisions. Horowitz's honesty about the moments of failure gave us the courage not to avoid the hard conversations.",
+      "Our licence to have the hard conversation instead of the comfortable one. Building a company offers no good answers, only less bad decisions, and a studio that flinches from saying so ends up selling the comfortable one.",
     commentaryAuthor: "Sütő Áron",
     coverImage: "/books/hard-front.webp",
     spineImage: "/books/hard-side.webp",
@@ -106,11 +107,9 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 510,
     thickness: 95,
-    quote:
-      "The ability to perform deep work is becoming increasingly rare at exactly the same time it is becoming increasingly valuable in our economy.",
     commentary:
-      "At LineiQ there's no Slack flood or meeting marathon. Deep work isn't a luxury but a baseline requirement. Every creative and development sprint is a direct descendant of this idea.",
-    commentaryAuthor: "Kondora Kristóf",
+      "Why we hold three seats and no more. There is no Slack flood here and no meeting marathon, because the work we sell cannot be done in the gaps between them. Calm is not a perk of the process, it is the process.",
+    commentaryAuthor: "Kristóf Kondora",
     coverImage: "/books/deep-front.webp",
     spineImage: "/books/deep-side.webp",
   },
@@ -131,13 +130,7 @@ export default function BookshelfSection() {
   const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   const detailBgAuthorRef = useRef<HTMLSpanElement>(null);
-  const detailLineSvgRef = useRef<SVGSVGElement>(null);
-  const detailLineRef = useRef<SVGPathElement>(null);
   const detailTitleRef = useRef<HTMLHeadingElement>(null);
-  const quoteOpenRef = useRef<HTMLSpanElement>(null);
-  const detailQuoteRef = useRef<HTMLQuoteElement>(null);
-  const quoteCloseRef = useRef<HTMLSpanElement>(null);
-  const detailDividerRef = useRef<HTMLDivElement>(null);
   const detailCommentaryRef = useRef<HTMLParagraphElement>(null);
   const detailAuthorRef = useRef<HTMLSpanElement>(null);
 
@@ -255,69 +248,39 @@ export default function BookshelfSection() {
     textTlRef.current = tl;
 
     const bgAuthor = detailBgAuthorRef.current;
-    const lineSvg = detailLineSvgRef.current;
-    const line = detailLineRef.current;
     const title = detailTitleRef.current;
-    const qOpen = quoteOpenRef.current;
-    const quote = detailQuoteRef.current;
-    const qClose = quoteCloseRef.current;
-    const divider = detailDividerRef.current;
     const commentary = detailCommentaryRef.current;
     const author = detailAuthorRef.current;
 
     // --- initial states ---
     if (bgAuthor) gsap.set(bgAuthor, { opacity: 0, y: 30 });
-    if (lineSvg) gsap.set(lineSvg, { opacity: 0 });
-    if (line) {
-      const len = line.getTotalLength();
-      line.style.strokeDasharray = `${len}`;
-      line.style.strokeDashoffset = `${len}`;
-    }
     if (title) gsap.set(title, { y: 40, opacity: 0 });
-    if (qOpen) gsap.set(qOpen, { y: 20, opacity: 0, scale: 0.7 });
-    if (quote) gsap.set(quote, { y: 20, opacity: 0 });
-    if (qClose) gsap.set(qClose, { y: -10, opacity: 0, scale: 0.7 });
-    if (divider) gsap.set(divider, { scaleX: 0, transformOrigin: "left center" });
     if (commentary) gsap.set(commentary, { y: 18, opacity: 0 });
     if (author) gsap.set(author, { opacity: 0, y: 10 });
 
-    // --- red narrative line (fullscreen, behind everything) ---
-    if (lineSvg)
-      tl.to(lineSvg, { opacity: 1, duration: 0.4, ease: "power2.out" }, 0);
-    if (line)
-      tl.to(line, { strokeDashoffset: 0, duration: 2.0, ease: "power3.out" }, 0);
-
     // --- background author name ---
     if (bgAuthor)
-      tl.to(bgAuthor, { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }, 0.1);
+      tl.to(
+        bgAuthor,
+        { opacity: BG_AUTHOR_OPACITY, y: 0, duration: 1.2, ease: "power3.out" },
+        0.1
+      );
 
     // --- title ---
     if (title)
       tl.to(title, { y: 0, opacity: 1, duration: 1.0, ease: "power4.out" }, 0.25);
 
-    // --- opening quote mark ---
-    if (qOpen)
-      tl.to(qOpen, { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" }, 0.55);
-
-    // --- quote text ---
-    if (quote)
-      tl.to(quote, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }, 0.65);
-
-    // --- closing quote mark ---
-    if (qClose)
-      tl.to(qClose, { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 0.75);
-
-    // --- divider ---
-    if (divider)
-      tl.to(divider, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 0.85);
-
     // --- commentary ---
+    // Pulled in from 0.95. The quote block and its divider used to occupy the
+    // half second between the title and this, and leaving the cue where it was
+    // would hold the panel half-empty for exactly as long as the thing that is
+    // no longer there took to arrive.
     if (commentary)
-      tl.to(commentary, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.95);
+      tl.to(commentary, { y: 0, opacity: 1, duration: 0.7, ease: "power3.out" }, 0.55);
 
     // --- commentary author ---
     if (author)
-      tl.to(author, { y: 0, opacity: 1, duration: 0.45, ease: "power2.out" }, 1.2);
+      tl.to(author, { y: 0, opacity: 1, duration: 0.45, ease: "power2.out" }, 0.8);
 
   }, []);
 
@@ -508,9 +471,7 @@ export default function BookshelfSection() {
     }
 
     const bgAuthor = detailBgAuthorRef.current;
-    const lineSvg = detailLineSvgRef.current;
     if (bgAuthor) tl.to(bgAuthor, { opacity: 0, duration: 0.3, ease: "power3.in" }, 0);
-    if (lineSvg) tl.to(lineSvg, { opacity: 0, duration: 0.3, ease: "power3.in" }, 0);
 
     // A szétszórt (láthatatlan) könyvek mozgatás nélkül kerülnek vissza a
     // helyükre, és ott úsznak elő — mozgó ÉS áttetsző 3D rétegek együtt
@@ -633,22 +594,6 @@ export default function BookshelfSection() {
           The literature that shapes us.
         </span>
       </div>
-
-      <svg
-        ref={detailLineSvgRef}
-        className={styles.sectionLine}
-        viewBox="0 0 1440 60"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path
-          ref={detailLineRef}
-          d="M 0 30 Q 360 8, 720 30 T 1440 30"
-          stroke="var(--color-red)"
-          strokeWidth="1"
-          fill="none"
-        />
-      </svg>
 
       {displayData && (
         <span ref={detailBgAuthorRef} className={styles.sectionBgAuthor}>
@@ -847,22 +792,6 @@ export default function BookshelfSection() {
                 {displayData.title}
               </h3>
 
-              <div className={styles.quoteBlock}>
-                <span ref={quoteOpenRef} className={styles.quoteMarkFloat}>
-                  &ldquo;
-                </span>
-                <blockquote ref={detailQuoteRef} className={styles.detailQuote}>
-                  {displayData.quote}
-                </blockquote>
-                <span
-                  ref={quoteCloseRef}
-                  className={`${styles.quoteMarkFloat} ${styles.quoteMarkClose}`}
-                >
-                  &rdquo;
-                </span>
-              </div>
-
-              <div ref={detailDividerRef} className={styles.detailDivider} />
               <p ref={detailCommentaryRef} className={styles.detailCommentary}>
                 {displayData.commentary}
               </p>

@@ -43,7 +43,10 @@ export const FOUNDERS: Founder[] = [
   {
     id: "kondora-kristof",
     initials: "KK",
-    name: "Kondora Kristóf",
+    // Given name first. The site is English-only today (no locale routing, no
+    // next-intl), so this is the English rendering. The Hungarian order,
+    // "Kondora Kristóf", is what a Hungarian page will want when there is one.
+    name: "Kristóf Kondora",
     born: "2006-12-06",
     lines: [
       "Two years of client work.",

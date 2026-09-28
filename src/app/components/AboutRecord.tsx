@@ -42,6 +42,10 @@ import { CLIENTS, CLIENT_NAMES_CLEARED } from "../data/record";
 //   than in Fraunces: this is a list of names to be read at a glance, and the
 //   display serif is the page's voice for sentences it wants you to slow down
 //   for.
+//   No hover. The names used to brighten to full white under the cursor, which
+//   turned a roster into something to point at. They now sit at one weight, and
+//   the separator between them is a short rule in the same colour rather than a
+//   dimmer dot.
 //
 // Both lanes carry all ten names, and the second one starts halfway down the
 // list. The first pass split them, five and five, taking every other name, and a

@@ -320,7 +320,9 @@ svg {
 
 .text-label {
   font-family: var(--font-body);
-  font-size: var(--text-xs);
+  /* --text-sm, not --text-xs. The two were the page's only small sizes and sat
+     two pixels apart, which is a difference nobody reads as a decision. */
+  font-size: var(--text-sm);
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
   font-weight: 500;

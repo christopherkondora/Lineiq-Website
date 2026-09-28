@@ -21,7 +21,7 @@
   text-align: var(--cta-align, center);
   padding: var(--cta-pad, 7px 11px);
   font-family: var(--cta-font, var(--font-body));
-  font-size: var(--cta-size, var(--text-xs));
+  font-size: var(--cta-size, var(--text-sm));
   font-weight: var(--cta-weight, 700);
   letter-spacing: var(--cta-tracking, var(--tracking-wide));
   text-transform: var(--cta-case, uppercase);

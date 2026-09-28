@@ -1,3 +1,11 @@
+/* opsz is pinned on every Fraunces element in here, the way it is everywhere
+   else on the site. This component never did, so all five fell through to
+   font-optical-sizing: auto, which sets opsz to the element's pixel size: the
+   signature ran at opsz 18 and the panel title at 48, both far down the axis
+   into Fraunces' sturdy text cuts, next to a page setting the same face at 90
+   to 144. Values follow the size->opsz curve documented in globals.css
+   (~40px -> 75, ~54px -> 100). */
+
 .section {
   position: relative;
   height: 100vh;
@@ -16,8 +24,12 @@
   right: 0;
   text-align: center;
   font-family: var(--font-display);
-  font-size: clamp(4rem, 11vw, 14rem);
+  /* The `text-hero` clamp, shared with .sectionBgAuthor. Three giant words,
+     all within 10% of each other, were three sizes doing one job. */
+  /* The `text-hero` clamp, shared with .sectionBgAuthor's own base. */
+  font-size: clamp(3rem, 11vw, 10rem);
   font-weight: 700;
+  font-variation-settings: "opsz" 144;
   color: #1a1a1a;
   line-height: 0.9;
   letter-spacing: var(--tracking-tight);
@@ -195,6 +207,7 @@
 
 .coverTitle {
   font-family: var(--font-display);
+  font-variation-settings: "opsz" 55;
   font-size: 28px;
   font-weight: 600;
   line-height: 1.2;
@@ -243,6 +256,7 @@
 
 .spineTitle {
   font-family: var(--font-display);
+  font-variation-settings: "opsz" 32;
   font-size: 16px;
   font-weight: 600;
   line-height: 1;
@@ -351,6 +365,11 @@
 
 /* ── Detail Panel ───────────────────────────────────── */
 
+/* The column stays on the right, where the opened book leaves it room, and its
+   contents sit on the section's vertical centre. The 22vh top padding that
+   used to place them was measured against a panel that also carried a quote,
+   two quote marks and a rule; with those gone the same offset left the title
+   high and a screen of white underneath it. */
 .detail {
   position: absolute;
   right: 6%;
@@ -361,22 +380,7 @@
   z-index: 2;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 22vh;
-}
-
-/* ── Section-level background: red line ──────────────── */
-
-.sectionLine {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 60px;
-  transform: translateY(-50%);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 1;
+  justify-content: center;
 }
 
 /* ── Section-level background: author name ──────────── */
@@ -386,10 +390,16 @@
   top: 35%;
   right: 5%;
   font-family: var(--font-body);
-  font-size: clamp(7rem, 12vw, 15rem);
+  /* Twice the `text-hero` clamp it used to sit at. At near-white it can take
+     the whole section without competing with anything in front of it, which is
+     what earns it the room. */
+  font-size: clamp(6rem, 22vw, 20rem);
   font-weight: 800;
   text-transform: uppercase;
-  color: #ebe5da;
+  /* Near-white grey. #ebe5da was a warm cream heavy enough to compete with the
+     shelf in front of it; this sits a few steps off the white background and
+     reads as a watermark. */
+  color: #f2f2f2;
   line-height: 0.82;
   letter-spacing: var(--tracking-tight);
   pointer-events: none;
@@ -405,78 +415,44 @@
   position: relative;
   z-index: 1;
   font-family: var(--font-display);
-  font-size: clamp(2.2rem, 4vw, var(--text-5xl));
+  /* The `text-section` clamp. Both already topped out at --text-5xl, so the
+     opsz comes from there too. */
+  font-size: clamp(2rem, 5vw, var(--text-5xl));
   font-weight: 600;
+  font-variation-settings: "opsz" 90;
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
   margin-bottom: var(--space-md);
 }
 
-/* ── Quote block with floating marks ────────────────── */
-
-.quoteBlock {
-  position: relative;
-  z-index: 1;
-  margin-bottom: var(--space-lg);
-}
-
-.quoteMarkFloat {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(3.5rem, 5vw, 5.5rem);
-  font-weight: 700;
-  line-height: 0.6;
-  color: var(--color-red);
-  opacity: 0.8;
-  will-change: transform;
-  user-select: none;
-  pointer-events: none;
-}
-
-.quoteMarkClose {
-  text-align: right;
-  margin-top: var(--space-xs);
-}
-
-.detailQuote {
-  position: relative;
-  font-family: var(--font-display);
-  font-size: clamp(1.05rem, 1.3vw, var(--text-xl));
-  font-style: italic;
-  line-height: var(--leading-relaxed);
-  color: #3a3a3a;
-  padding: var(--space-xs) 0;
-}
-
-.detailDivider {
-  position: relative;
-  z-index: 1;
-  width: 40px;
-  height: 2px;
-  background: var(--color-red);
-  margin-top: var(--space-md);
-  margin-bottom: var(--space-sm);
-}
+/* What the book is to us. The panel is the title and this, nothing else. It
+   used to open on a pulled quote set between two red quote marks, with a short
+   red rule dividing that from the commentary: three devices carrying the
+   book's own voice on a page about ours, and the thing we actually had to say
+   filed underneath them as a reaction to it. */
 
 .detailCommentary {
   position: relative;
   z-index: 1;
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  font-size: var(--text-lg);
   line-height: var(--leading-relaxed);
   color: #4a4a4a;
   margin-bottom: var(--space-md);
 }
 
+/* Upright and black. The italic red was the last of the section's decorative
+   moves, and with the quote gone it was a signature dressed as a pull quote.
+   #1a1a1a is the section's own black, the colour .detailTitle inherits, so the
+   name sits at the panel's darkest note rather than past it. */
 .detailCommentaryAuthor {
   position: relative;
   z-index: 1;
   font-family: var(--font-display);
-  font-size: var(--text-xl);
-  font-style: italic;
+  font-size: var(--text-lg);
   font-weight: 400;
-  color: var(--color-red);
-  margin-left: var(--space-lg);
+  font-variation-settings: "opsz" 36;
+  color: #1a1a1a;
 }
 
 /* ── Responsive ─────────────────────────────────────── */
@@ -486,8 +462,9 @@
     min-height: 500px;
   }
 
+  /* No font-size here any more: the shared `text-hero` clamp already lands
+     at ~48px on a phone, which is what this override was reaching for. */
   .bgTitle {
-    font-size: clamp(2.5rem, 10vw, 5rem);
     top: 5%;
   }
 
@@ -512,7 +489,6 @@
   }
 
   .sectionBgAuthor {
-    font-size: clamp(4rem, 14vw, 8rem);
     top: 40%;
   }
 

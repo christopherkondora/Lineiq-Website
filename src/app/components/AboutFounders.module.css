@@ -136,7 +136,9 @@
 
 .markInitials {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  /* The `menuLink` clamp from Navbar. The two were 9% apart, both of them the
+     largest type in their own block, and neither is a size the page names. */
+  font-size: clamp(2.5rem, 8vw, var(--text-8xl));
   font-weight: 500;
   font-variation-settings: "opsz" 110;
   letter-spacing: var(--tracking-tight);
@@ -203,8 +205,15 @@
 
 .method {
   margin-top: clamp(var(--space-2xl), 10vw, var(--space-3xl));
+  /* The ledger's split, declared once. The closing line has to land in the
+     same right-hand column the framework lines sit in, so both read off this
+     rather than each carrying its own copy of the ratio. */
+  --method-cols: minmax(0, 5fr) minmax(0, 7fr);
+  --method-gap: var(--space-lg);
 }
 
+/* No font-size: `text-label` is --text-sm now, which is the size this label
+   was reaching for when it carried its own. */
 .methodLabel {
   margin: 0 0 var(--space-xl);
   color: var(--color-muted);
@@ -219,8 +228,8 @@
 
 .framework {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-  gap: var(--space-lg);
+  grid-template-columns: var(--method-cols);
+  gap: var(--method-gap);
   padding: var(--space-lg) 0;
   border-bottom: 1px solid var(--color-border);
   will-change: transform, opacity;
@@ -229,7 +238,9 @@
 .frameworkName {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2vw, var(--text-2xl));
+  /* Shared with AboutOrigin's .para. They rendered 4% apart, which is not a
+     step anybody reads as intentional. */
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
   font-weight: 500;
   font-variation-settings: "opsz" 80;
   line-height: var(--leading-snug);
@@ -246,13 +257,30 @@
   max-width: 52ch;
 }
 
+/* Flush to the far edge, where the rules end. Not the ledger's right column:
+   the note closes the whole block rather than annotating the lines column, so
+   it ends on the same vertical the five hairlines end on. Set ragged-left for
+   that reason too, since a left-aligned block would stop short of the edge on
+   its last line and the alignment would read as an accident. */
 .methodShape {
+  display: flex;
+  justify-content: flex-end;
   margin: var(--space-lg) 0 0;
+}
+
+/* No max-width: the two spans below set the measure by breaking where the
+   sentence breaks, and a cap would put a second, competing wrap inside the
+   first clause. */
+.methodShapeText {
   font-family: var(--font-body);
-  font-size: var(--text-sm);
+  font-size: var(--text-lg);
   line-height: var(--leading-normal);
   color: var(--color-muted);
-  max-width: 52ch;
+  text-align: right;
+}
+
+.methodShapeLine {
+  display: block;
 }
 
 /* ─── Narrow ───────────────────────────────────────────── */
@@ -275,12 +303,18 @@
     --name-size: clamp(1.98rem, 8.8vw, 3.3rem);
   }
 
-  .lineRowInner {
-    font-size: var(--text-base);
-  }
-
   .framework {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-sm);
+  }
+
+  /* One column, so there is no right side to move to. The note goes back to
+     running under the rows at the left edge. */
+  .methodShape {
+    display: block;
+  }
+
+  .methodShapeText {
+    text-align: left;
   }
 }

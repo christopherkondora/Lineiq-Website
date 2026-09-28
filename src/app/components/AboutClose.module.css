@@ -22,7 +22,9 @@
    változókból olvas, ezért itt hangoljuk a tipográfiát és a színt. */
 .ctaLink {
   --cta-font: var(--font-display);
-  --cta-size: clamp(1.6rem, 3vw, 2.4rem);
+  /* Shared with AboutBeliefs' .conviction. 6% apart before this, on the same
+     page, in the same display serif. */
+  --cta-size: clamp(1.35rem, 2.5vw, 2.25rem);
   --cta-weight: 500;
   --cta-tracking: var(--tracking-tight);
   --cta-case: none;

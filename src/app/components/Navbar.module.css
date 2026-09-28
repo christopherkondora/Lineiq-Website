@@ -132,7 +132,9 @@
 }
 
 .menuArrow {
-  font-size: var(--text-3xl);
+  /* The page's 36px step, shared with AboutBeliefs' .conviction and the
+     AboutClose CTA. --text-3xl was a single-use size 20% off its neighbour. */
+  font-size: clamp(1.35rem, 2.5vw, 2.25rem);
   opacity: 0.4;
   transition: opacity var(--duration-fast) ease,
     transform var(--duration-base) var(--ease-out-expo);
