@@ -109,7 +109,8 @@ export default function AboutFounders() {
       // Both columns are triggered off the pair, not off themselves, so the two
       // founders resolve together. Staggering them would read as a ranking.
       const pair = root.querySelector<HTMLElement>("[data-pair]");
-      if (pair) {
+      const head = root.querySelector<HTMLElement>("[data-head]");
+      if (pair && head) {
         const marks = pair.querySelectorAll<HTMLElement>("[data-mark]");
         const names = pair.querySelectorAll<HTMLElement>("[data-name]");
 
@@ -134,6 +135,32 @@ export default function AboutFounders() {
           { yPercent: 70, autoAlpha: 0 },
           { yPercent: 0, autoAlpha: 1, ease: "none", duration: 0.4 },
           ">"
+        );
+
+        // The heading gets out of the way. Once both portraits are on screen
+        // they are the subject, and a sentence set at display scale above them
+        // is competing for the same attention. It fades rather than scrolls
+        // off, because the space it leaves is load-bearing: the two columns
+        // have to open under white, not under a heading sliding away.
+        //
+        // Scrubbed and therefore reversible, and tied to the pair rather than
+        // to the heading's own position, so what takes it away is the arrival
+        // of the thing that replaces it. It starts after the red band has
+        // finished its wipe (that ends at `top 45%` of the band), so the
+        // heading is never fading in and resolving at the same time.
+        gsap.fromTo(
+          head,
+          { opacity: 1 },
+          {
+            opacity: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: pair,
+              start: "top 68%",
+              end: "top 28%",
+              scrub: true,
+            },
+          }
         );
 
         // The rows are not scrubbed. Text that scrubs backwards while you read
@@ -179,10 +206,9 @@ export default function AboutFounders() {
   return (
     <section ref={rootRef} className={styles.founders} id="founders">
       <div className="container">
-        <header className={styles.head}>
+        <header className={styles.head} data-head>
           <h2 className={`text-statement ${styles.title}`} data-reveal>
-            Two founders,
-            <br />
+            Two founders,{" "}
             <span className={styles.swap}>
               {/* The accessible copy. It ends up under the band, which is why the
                   letters of the band itself are hidden from the reader. */}

@@ -14,7 +14,11 @@
 .default,
 .hover {
   grid-area: 1 / 1;
-  text-align: center;
+  /* Centred by default, which is right for a chip in a corner. A CTA sitting
+     in a column of copy wants `left`: the slot is as wide as the wider of the
+     two labels, so a centred short label is pushed right by half the
+     difference and does not line up with the text above it. */
+  text-align: var(--cta-align, center);
   padding: var(--cta-pad, 7px 11px);
   font-family: var(--cta-font, var(--font-body));
   font-size: var(--cta-size, var(--text-xs));

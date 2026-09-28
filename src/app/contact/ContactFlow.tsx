@@ -58,6 +58,7 @@ import {
 const HEADING = "Let's talk for real.";
 const LEDE =
   "Three clients a year. Five questions, and you will know where you stand.";
+const ASIDE = "Or just hit us up.";
 const DIRECT_EMAIL = "hello@lineiqgroup.com";
 
 // The panels, by name. The indices are read by the camera, the counter and the
@@ -149,6 +150,7 @@ interface Pt {
  */
 function Panel({
   index,
+  kind,
   active,
   locked,
   panelRef,
@@ -156,6 +158,7 @@ function Panel({
   children,
 }: {
   index: number;
+  kind: "statement" | "question" | "review";
   active: boolean;
   locked: boolean;
   panelRef: (el: HTMLDivElement | null) => void;
@@ -167,6 +170,7 @@ function Panel({
       ref={panelRef}
       className={styles.panel}
       data-panel={index}
+      data-kind={kind}
       data-active={active}
       inert={locked}
     >
@@ -181,19 +185,14 @@ function Panel({
   );
 }
 
-/** A question's heading. The number is part of the composition rather than a
- *  progress widget; the readout at the foot of the screen is the widget. */
+/** A question's heading, and nothing above it. The screen carries one question
+ *  at display scale and the count belongs to the readout at the foot of the
+ *  page, which is the one thing on this page that does not travel. */
 function Ask({ index }: { index: number }) {
-  const n = COUNTED.indexOf(index) + 1;
   return (
-    <>
-      <p className={styles.ordinal} aria-hidden="true">
-        {String(n).padStart(2, "0")}
-      </p>
-      <h2 className={styles.ask} id={`q-${index}`}>
-        {QUESTIONS[index]}
-      </h2>
-    </>
+    <h2 className={styles.ask} id={`q-${index}`}>
+      {QUESTIONS[index]}
+    </h2>
   );
 }
 
@@ -709,6 +708,7 @@ export default function ContactFlow() {
             else to go. */}
         <Panel
           index={P_STATEMENT}
+          kind="statement"
           active={at === P_STATEMENT}
           locked={travelOn && at !== P_STATEMENT}
           panelRef={panelRefSetters[P_STATEMENT]}
@@ -725,6 +725,9 @@ export default function ContactFlow() {
               <CtaSwap defaultLabel="Begin" hoverLabel="Let's go!" />
             </button>
           </div>
+          <p className={`${styles.rv} ${styles.aside}`} data-reveal>
+            {ASIDE}
+          </p>
           <a
             className={`${styles.rv} ${styles.direct}`}
             data-reveal
@@ -740,6 +743,7 @@ export default function ContactFlow() {
             to work without one. */}
         <Panel
           index={P_WHO}
+          kind="question"
           active={at === P_WHO}
           locked={travelOn && at !== P_WHO}
           panelRef={panelRefSetters[P_WHO]}
@@ -799,6 +803,7 @@ export default function ContactFlow() {
             does not say so: the no is said by email, by a person. */}
         <Panel
           index={P_STAGE}
+          kind="question"
           active={at === P_STAGE}
           locked={travelOn && at !== P_STAGE}
           panelRef={panelRefSetters[P_STAGE]}
@@ -827,6 +832,7 @@ export default function ContactFlow() {
         {/* ── 03 Need ─────────────────────────────────────── */}
         <Panel
           index={P_NEED}
+          kind="question"
           active={at === P_NEED}
           locked={travelOn && at !== P_NEED}
           panelRef={panelRefSetters[P_NEED]}
@@ -859,6 +865,7 @@ export default function ContactFlow() {
             unanswered question has to stay unanswered. */}
         <Panel
           index={P_BUDGET}
+          kind="question"
           active={at === P_BUDGET}
           locked={travelOn && at !== P_BUDGET}
           panelRef={panelRefSetters[P_BUDGET]}
@@ -913,6 +920,7 @@ export default function ContactFlow() {
             typing is the enemy of a flow like this. */}
         <Panel
           index={P_NOTE}
+          kind="question"
           active={at === P_NOTE}
           locked={travelOn && at !== P_NOTE}
           panelRef={panelRefSetters[P_NOTE]}
@@ -942,14 +950,12 @@ export default function ContactFlow() {
             came from, which is also the only way to change an answer. */}
         <Panel
           index={P_REVIEW}
+          kind="review"
           active={at === P_REVIEW}
           locked={travelOn && at !== P_REVIEW}
           panelRef={panelRefSetters[P_REVIEW]}
           holderRef={holderRefSetters[P_REVIEW]}
         >
-          <p className={styles.ordinal} aria-hidden="true">
-            Review
-          </p>
           <h2 className={styles.ask}>This is what we have.</h2>
           <ul className={styles.review}>
             {[

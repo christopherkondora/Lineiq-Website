@@ -9,18 +9,58 @@
 
 /* ─── Heading ──────────────────────────────────────────── */
 
+/* Centred, and the sentence runs on one line. It used to be left-aligned with
+   a hard break after "Two founders," which put the red band under the two
+   words it belongs beside. On one line the band lands at the end of the
+   sentence, which is where the eye finishes reading it, and the two columns
+   below open symmetrically underneath a centred heading rather than hanging
+   off a left edge. */
 .head {
+  /* Air on both sides of it. The section's own padding already sits above
+     this; the heading gets its own on top of that so it stands alone in the
+     white rather than sitting on the lid of the two columns. */
+  padding-block: var(--space-2xl);
   margin-bottom: var(--space-3xl);
+  text-align: center;
+  /* So the type below can be sized against the column it has to fit in,
+     rather than against the viewport minus a padding it has to guess. */
+  container-type: inline-size;
 }
 
 .title {
   margin-top: 0;
 }
 
+/* One line on a phone too.
+   `.text-statement` bottoms out at 2.5rem, and at that size the sentence needs
+   355px while a 390px phone offers 335, so it wrapped after "founders," and
+   the band went back to its own line. Below 430px the type is sized off the
+   column instead: the sentence measures 8.8px of width per px of type at any
+   size, so the widest type that still fits on one line is the column divided
+   by that. 9 rather than 8.8 leaves a couple of percent of slack so it never
+   sits exactly on the wrap boundary. min() keeps it from growing past the
+   scale near the top of the range.
+
+   cqw and not vw: the column is the viewport minus a padding that changes
+   with the breakpoint, and the heading should not have to know what it is.
+
+   The constant is tied to this sentence. Change the words and re-measure, or
+   the heading overflows the column instead of wrapping inside it. */
+@media (max-width: 430px) {
+  .title {
+    font-size: min(2.5rem, calc(100cqw / 9));
+  }
+}
+
 .swap {
   position: relative;
   display: inline-block;
   vertical-align: baseline;
+  /* Gives back what the band takes. The red box bleeds 0.08em to the left of
+     the word so the red has room around it, which was free when the words sat
+     at the start of their own line. On one line it eats into the space after
+     "founders," and the comma ends up against the box. */
+  margin-left: 0.08em;
 }
 
 .baseWord {
@@ -66,6 +106,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xl);
+  /* One line under a 420px frame. Measured: the longer of the two names is
+     5.9px of width per px of type, so the frame carries it up to about 71px
+     before it would have to wrap. 3.85rem leaves that margin alone. */
+  --name-size: clamp(1.98rem, 4.18vw, 3.85rem);
 }
 
 /* Must not create a stacking context: the name below blends against this
@@ -103,28 +147,22 @@
   opacity: 0.14;
 }
 
+/* Under the frame, in the flow, on the page's own white. It used to straddle
+   the frame's edge and invert against whatever was behind it; that read as a
+   device, and a name does not need one. `overflow: hidden` stays because it is
+   the mask the name rises through. */
 .nameWrap {
-  position: absolute;
-  top: 0;
-  left: 8%;
-  z-index: 2;
-  transform: translateY(-50%);
+  margin-top: var(--space-md);
   overflow: hidden;
   pointer-events: none;
-  /* Straddles the top edge of the frame and inverts against whatever is behind
-     it, so it stays legible over the black mark and over the white page without
-     knowing which it is sitting on. Work.module.css .captionBrand, same idiom. */
-  mix-blend-mode: difference;
 }
 
 .name {
   margin: 0;
   font-family: var(--font-display);
-  /* Smaller than the old single-column composition: two columns halve the
-     available width, and the names must not wrap. */
-  font-size: clamp(1.6rem, 3vw, 2.75rem);
+  font-size: var(--name-size);
   font-weight: 500;
-  font-variation-settings: "opsz" 90;
+  font-variation-settings: "opsz" 110;
   /* Not 1.05. The mask that hides the name before it rises is this element's
      own line box, and at 1.05 the box is shorter than the glyphs: every
      Hungarian accent gets sliced off the top, so the section renders "Kondora
@@ -132,7 +170,7 @@
      carry them. 1.3 puts the leading back and the accents inside the mask. */
   line-height: 1.3;
   letter-spacing: var(--tracking-tight);
-  color: var(--color-white);
+  color: var(--color-black);
   white-space: nowrap;
   will-change: transform, opacity;
 }
@@ -220,6 +258,10 @@
 /* ─── Narrow ───────────────────────────────────────────── */
 
 @media (max-width: 900px) {
+  .head {
+    padding-block: var(--space-lg);
+  }
+
   .pair {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-3xl);
@@ -229,8 +271,8 @@
     max-width: min(340px, 78vw);
   }
 
-  .name {
-    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  .founder {
+    --name-size: clamp(1.98rem, 8.8vw, 3.3rem);
   }
 
   .lineRowInner {

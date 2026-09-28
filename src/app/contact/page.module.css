@@ -81,6 +81,28 @@
   transition: opacity var(--duration-slow) var(--ease-out-quad);
 }
 
+/* ── The question's height ─────────────────────────────────
+   The camera cancels each panel's lateral offset so the question always
+   arrives at the same reading position sideways. Vertically it did not: every
+   holder was centred in its own cell, so the heading rose and fell with the
+   number of answers hanging under it. Measured at 1512x950 the five questions
+   landed at 285, 315, 319, 346 and 378, and a heading that moves 93px between
+   screens reads as the page settling rather than as a camera arriving.
+
+   The fix is a floor, not a fixed offset. Give every question's holder the
+   height of the tallest of them and `margin-block: auto` centres all five
+   identically, because they are all the same height now. 29rem is that
+   tallest: the budget's four bands at the top of the type scale, measured at
+   2560px wide where the display sizes stop growing. A viewport too short to
+   hold it gives the auto margins nothing to distribute, the content pins to
+   the top and the panel scrolls, which is what it did before.
+
+   The statement and the review keep their own centring. Neither is a question
+   and there is nothing for them to line up with. */
+.panel[data-kind="question"] .holder {
+  min-height: min(29rem, 100%);
+}
+
 /* The panels either side of the one being answered are present, dim and
    receding. Three reasons it is not display:none: the camera measures them,
    the travel has to have something to travel past, and a question you can
@@ -110,8 +132,18 @@
   max-width: 32ch;
 }
 
+/* The way out for the visitor who would rather write a sentence than answer
+   five questions. Saying so out loud costs nothing and a studio that turns
+   most of its inbound down can afford to sound like a person. */
+.aside {
+  margin-top: clamp(30px, 5.4vh, 60px);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-muted);
+}
+
 .direct {
-  margin-top: clamp(28px, 5vh, 56px);
+  margin-top: clamp(8px, 1.2vh, 14px);
   font-family: var(--font-body);
   font-size: var(--text-base);
   font-weight: 500;
@@ -131,14 +163,6 @@
    The whole screen is one question, so the question is set at display scale.
    Nothing else on the panel competes with it, which is the entire reason this
    build exists. */
-.ordinal {
-  font-family: var(--font-display);
-  font-size: var(--text-base);
-  font-weight: 500;
-  color: var(--color-red);
-  margin-bottom: clamp(10px, 1.8vh, 20px);
-}
-
 .ask {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4.6vw, 3.6rem);
@@ -223,7 +247,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid var(--color-border);
 }
 
 .option {
@@ -240,12 +263,10 @@
   color: var(--color-black);
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--color-border);
   border-radius: var(--radius-none);
   padding: clamp(0.5em, 1.6vh, 0.72em) 0;
   text-align: left;
   transition: color var(--duration-base) var(--ease-out-quad),
-    border-color var(--duration-base) var(--ease-out-quad),
     transform var(--duration-base) var(--ease-out-quad);
 }
 
@@ -264,13 +285,11 @@
 
 .option:hover {
   color: var(--color-red);
-  border-color: var(--color-red);
   transform: translateX(10px);
 }
 
 .option[aria-pressed="true"] {
   color: var(--color-red);
-  border-color: var(--color-red);
   transform: translateX(10px);
 }
 
@@ -426,26 +445,25 @@
   border-color: var(--color-red);
 }
 
-/* The two display-scale calls to action: the one that starts the flow and the
-   one that ends it. */
+/* The call that starts the flow and the call that ends it, both the navbar
+   CTA's treatment down to the label swap: the visitor has already met this
+   button in the top right of every other page, and both of these are the same
+   offer. One button at the start and the same button at the end is also the
+   only way the last screen reads as the end of the thing the first screen
+   began.
+
+   Two things they do that the navbar's does not. The label is left-aligned,
+   because the slot is as wide as "Let's go!" and a centred "Begin" would sit
+   half that difference to the right of the copy above it. And the negative
+   margin pulls the swap's own 11px of padding back off the column edge, so
+   the word lines up with the heading while the black highlight keeps its
+   room. */
 .begin,
 .send {
-  --cta-font: var(--font-display);
-  --cta-size: clamp(1.5rem, 2.4vw, 2.1rem);
-  --cta-weight: 500;
-  --cta-tracking: var(--tracking-tight);
-  --cta-case: none;
-  --cta-optical: "opsz" 100;
-  --cta-pad: 0.18em 0.3em;
+  --cta-align: left;
   display: inline-flex;
   align-items: center;
-  /* Cancels the swap's own padding so the word sits on the column's left edge
-     with everything else. The highlight box still needs the room. Off
-     --cta-size and not an em: the padding is set on the label inside, where an
-     em is the display size, and out here an em is body copy. */
-  margin-left: calc(var(--cta-size) * -0.3);
-  color: var(--color-red);
-  transition: color var(--duration-base) var(--ease-out-quad);
+  margin-left: -11px;
 }
 
 .send:disabled {

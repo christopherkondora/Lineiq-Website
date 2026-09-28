@@ -61,7 +61,7 @@ export const FOUNDERS: Founder[] = [
       "Most of our 22 frameworks.",
       "Market and ICP research.",
       "Positioning, voice and sales.",
-      "Learning development in parallel.",
+      "Taking care of our money.",
     ],
   },
 ];
