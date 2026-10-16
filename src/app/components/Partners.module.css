@@ -193,18 +193,19 @@
      alá bepréselt hasábok elvették a levegőt, és a szekció nyugodt helyett
      tömöttnek hatott.
 
-     The wrapper is 730vh (was 400, then 520, then 660). Every raise paid for
-     timeline, not for slower motion: the split into two screens added two beats,
-     the focus pass on the sentence block (Partners.tsx beat 5b) added three more,
-     and the last raise bought each of those three sentences a ≈74vh dwell instead
-     of ≈42vh — the first one in particular was scrolling past before it could be
-     read. Scroll density is unchanged throughout at ≈37vh per timeline unit.
+     The wrapper is 640vh (was 400, 520, 660, then 730). The raises paid for
+     timeline: the split into two screens added two beats, the focus pass on the
+     sentence block (Partners.tsx beat 5b) three more. At 730vh each sentence
+     dwelt ≈74vh and the small text spent four screens on a white stage; the
+     2026-10-15 phone audit read that as empty screens (Lineiq-Website#10). The
+     sentences now fill the stage at a display grade and dwell ≈44vh each.
+     Scroll density is unchanged throughout at ≈37vh per timeline unit.
 
-     Of the 630vh of scroll, the 4.7-unit hold tail is ≈173vh: ≈73vh of dwell on
+     Of the 540vh of scroll, the 3.9-unit hold tail is ≈144vh: ≈44vh of dwell on
      the last sentence, then the Manifesto's 100vh cover window. Shorten this and
      the black panel starts sliding over a sentence that is still being read. */
   .partners {
-    min-height: 730vh;
+    min-height: 640vh;
   }
 
   /* A fejléc és a hasábok UGYANABBAN a rácscellában állnak, mindkettő a viewport
@@ -257,18 +258,11 @@
     position: static;
     margin: 0;
     grid-template-columns: 1fr;
-    gap: clamp(30px, 5.5vh, 52px);
-    max-width: 350px;
-  }
-  /* Sized up from clamp(0.95rem, 3.8vw, 1.1rem) — 15px was a caption grade, set
-     back when these sentences were ornament. They now hold a screen of their own
-     and the focus pass asks the reader to actually read them, so they get a
-     reading grade: ≈17px on a 390px phone. */
-  .col p {
-    font-size: clamp(1.05rem, 4.3vw, 1.2rem);
+    gap: clamp(22px, 3.6vh, 36px);
+    max-width: 380px;
   }
   .col p + p {
-    margin-top: clamp(30px, 5.5vh, 52px);
+    margin-top: clamp(22px, 3.6vh, 36px);
   }
 }
 
@@ -283,11 +277,15 @@
    mobile the job it was doing — telling the eye where the weight is — belongs to
    the focus pass in Partners.tsx now. */
 @media (max-width: 900px) {
-  /* Looser than desktop's 1.4. It was originally set for the tall highlight
-     glyphs; it stays because these are now the main read of their own screen and
-     15px+ body copy on an empty white stage wants the air. */
+  /* A display grade, not a reading grade: ≈24px on a 390px phone. At ≈17px the
+     three sentences sat as a small block in the middle of an empty white stage,
+     its top and bottom thirds blank (Lineiq-Website#10). At this size the block
+     fills the stage, and the focus pass reads as one lit line among grey ones.
+     The vh term keeps the block inside short screens (360 × 640). */
   .col p {
-    line-height: 1.55;
+    font-size: clamp(1.15rem, min(6.2vw, 3.6vh), 1.6rem);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
     text-wrap: pretty;
   }
 }

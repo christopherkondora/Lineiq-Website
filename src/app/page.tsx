@@ -7,6 +7,8 @@ import Manifesto from "./components/Manifesto";
 import WhatWeDo from "./components/WhatWeDo";
 import SequenceSection from "./components/SequenceSection";
 import Footer from "./components/Footer";
+import SplashLink from "./components/SplashLink";
+import CtaSwap from "./components/CtaSwap";
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -40,8 +42,19 @@ export default function Home() {
       <SequenceSection />
       {/* Mobilon a SequenceSection overlay footere elrejtve; helyette ez a
           normál, statikus footer folyik a szekvencia alá. Desktopon az overlay
-          marad, ezt a wrapper rejti. */}
+          marad, ezt a wrapper rejti.
+
+          The phone also gets the sequence's closing ask ("Ready? Let's
+          begin."), which it lost with the sequence. Ask and footer share one
+          screen: on their own, the footer centred in a full screen of black
+          left a half-empty band after the Manifesto (Lineiq-Website#10). */}
       <div className={styles.mobileFooter}>
+        <div className={`section--dark ${styles.mobileClose}`}>
+          <p className={styles.mobileCloseHeadline}>Ready?</p>
+          <SplashLink href="/contact" className={styles.mobileCloseCta}>
+            <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's go!" />
+          </SplashLink>
+        </div>
         <Footer />
       </div>
     </main>
