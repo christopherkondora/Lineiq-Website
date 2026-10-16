@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplashLink from "../../components/SplashLink";
 import CtaSwap from "../../components/CtaSwap";
 import Footer from "../../components/Footer";
-import { services, plainIntro } from "../../data/services";
+import { services, plainIntro, processNote } from "../../data/services";
 import styles from "./page.module.css";
 
 // A Kranky aláírás dőlése kategóriánként váltakozik, hogy ne ugyanabban a
@@ -110,6 +110,7 @@ export default function CategoryArticle({ index }: { index: number }) {
           <aside className={styles.rail}>
             <p className={styles.railLabel}>What it includes</p>
             <p className={styles.railIntro}>{plainIntro(service.intro)}</p>
+            <p className={styles.railProcess}>{processNote}</p>
           </aside>
 
           <ol className={styles.chapterList}>

@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { serviceRedirectRules } from "./src/app/data/serviceRedirects";
 
 const nextConfig: NextConfig = {
   // Csak a dev szerverre vonatkozik. A Next 16 alapból BLOKKOLJA a /_next/*
@@ -41,6 +42,7 @@ const nextConfig: NextConfig = {
         destination: "/mit-nyujtunk/szoftveres-megoldasok",
         permanent: true,
       },
+      ...serviceRedirectRules(),
     ];
   },
 };

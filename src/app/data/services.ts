@@ -1,6 +1,9 @@
-// Single source of truth for the service taxonomy. Drives the homepage index
-// (Process) and each /services/[slug] category page.
-// Content mirrors vault/projects/lineiqgroup.com/szolgaltatas_taxonomia.md.
+// Single source of truth for the service catalogue. Drives the homepage index
+// (WhatWeDo), each /services/[slug] category page and the redirects from
+// retired slugs (serviceRedirects.ts).
+// Content mirrors strategy/service_delivery.md in the Kontrast Vault: the five
+// listed categories, in its order. Content Management is unlisted for Q4 2026
+// (Service Delivery §2.2) and never appears here.
 //
 // Intro strings carry *highlight* markers: the category page renders the marked
 // words as oversized Fraunces inline (the Intro/Manifesto mixed-typography
@@ -20,26 +23,31 @@ export interface ServiceCategory {
   subServices: SubService[];
 }
 
+// Every category runs through the Dream Outcome Process (Service Delivery §1),
+// so every category page says so.
+export const processNote =
+  "Every engagement runs through the Dream Outcome Process. Research, your customer and your positioning come first; the work is built on them.";
+
 export const services: ServiceCategory[] = [
   {
-    slug: "brand-building",
-    title: "Brand building",
+    slug: "brand-architecture",
+    title: "Brand Architecture",
     essence: "soul.",
     intro:
-      "The *foundations* of a brand, from strategy to the visual system, in one hand, so it becomes *recognizable* and inevitable.",
-    teaser: ["Positioning and strategy", "Brand narrative", "Logo and identity"],
+      "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for the people who lead them, so it becomes *recognizable*.",
+    teaser: ["Positioning and strategy", "Brand world", "Logo and identity"],
     subServices: [
+      {
+        title: "Audience, market and competitor research",
+        desc: "Who you're talking to, what they want to hear, and who else is talking to them.",
+      },
       {
         title: "Positioning and strategy",
         desc: "Where you stand in the market, and the one-sentence reason to choose you.",
       },
       {
-        title: "Audience and market research",
-        desc: "Who you're talking to, what they want to hear, and where to reach them.",
-      },
-      {
-        title: "Brand narrative and tone of voice",
-        desc: "The story and the voice the brand speaks with everywhere.",
+        title: "Brand world and tone of voice",
+        desc: "The story, the founder story and the voice the brand speaks with everywhere.",
       },
       {
         title: "Naming",
@@ -51,11 +59,7 @@ export const services: ServiceCategory[] = [
       },
       {
         title: "Visual language and design system",
-        desc: "Colors, typography, grid and components as one, with a brand guidelines book.",
-      },
-      {
-        title: "Packaging design",
-        desc: "The product that sells on the shelf too.",
+        desc: "Colors, typography, grid and components as one, with a brand guidelines document.",
       },
       {
         title: "Rebranding",
@@ -65,27 +69,35 @@ export const services: ServiceCategory[] = [
   },
   {
     slug: "web-development",
-    title: "Web development",
+    title: "Web Development",
     essence: "craft.",
     intro:
-      "Animated, *awwwards-grade* sites built on Next.js, lightning fast and *alive* under your hands.",
-    teaser: ["Custom website", "Web design (UI/UX)", "Awwwards animation"],
+      "Bespoke, animated sites built on Next.js and on the brand's foundations, lightning fast and *alive* under your hands.",
+    teaser: ["Bespoke website", "Web design (UI/UX)", "Motion and animation"],
     subServices: [
       {
-        title: "Custom website development",
-        desc: "Template-free, tailored to your brand.",
+        title: "Bespoke website development",
+        desc: "No templates, built for your brand.",
       },
       {
         title: "Web design (UI/UX)",
         desc: "An interface that's clear and converts.",
       },
       {
-        title: "Awwwards-grade animation",
+        title: "Motion and animation",
         desc: "GSAP, Lenis, motion that sets you apart.",
       },
       {
-        title: "Landing page and campaign site",
+        title: "Website copy",
+        desc: "Written from your positioning and your customers' own words.",
+      },
+      {
+        title: "Landing and campaign pages",
         desc: "One goal, one message, maximum conversion.",
+      },
+      {
+        title: "Multilingual sites",
+        desc: "Every language your customers read.",
       },
       {
         title: "CMS integration",
@@ -96,30 +108,30 @@ export const services: ServiceCategory[] = [
         desc: "Fast loading, Core Web Vitals, a searchable structure.",
       },
       {
-        title: "Maintenance and support",
+        title: "Maintenance plan",
         desc: "The site stays live, updated and secure.",
       },
     ],
   },
   {
     slug: "ecommerce",
-    title: "eCommerce",
+    title: "Ecommerce",
     essence: "sell.",
     intro:
-      "Online stores that don't just look good but *convert*, from the cart to the *returning* customer.",
-    teaser: ["Online store development", "Store UX design", "Shopify setup"],
+      "Webshops that don't just look good but *convert*, from the product page to the invoice and the *returning* customer.",
+    teaser: ["Webshop build", "Shop UX design", "Payment and invoicing"],
     subServices: [
       {
-        title: "Online store development",
-        desc: "A custom or platform-based store that sells.",
+        title: "Webshop build",
+        desc: "Our own webshop system with an admin you log in to, and a storefront made for your brand.",
       },
       {
-        title: "Store UX and product page design",
+        title: "Shop UX and product page design",
         desc: "The buying journey and product pages that lead to the cart.",
       },
       {
-        title: "Shopify and platform setup",
-        desc: "A fast launch on proven foundations.",
+        title: "Catalogue upload and product copy",
+        desc: "Your whole catalogue in, described in your customers' own words.",
       },
       {
         title: "Payment and shipping integration",
@@ -127,28 +139,36 @@ export const services: ServiceCategory[] = [
       },
       {
         title: "Invoicing integration",
-        desc: "Automatic hookup of Számlázz.hu, Billingo and other systems.",
+        desc: "Számlázz.hu, Billingo and international equivalents, hooked up automatically.",
       },
       {
-        title: "Conversion optimization (CRO)",
-        desc: "Data-driven refinement, continuously.",
+        title: "Analytics and conversion tracking",
+        desc: "Every sale traced back to where it came from.",
+      },
+      {
+        title: "Shop upkeep and conversion optimization",
+        desc: "After launch, a monthly funnel review and improvements shipped.",
       },
     ],
   },
   {
     slug: "software-solutions",
-    title: "Software solutions",
+    title: "Software Solutions",
     essence: "ship.",
     intro:
-      "Custom software, SaaS and internal systems from the same *DNA* we built our own *Klient* platform from.",
-    teaser: ["Web application", "App UI/UX design", "MVP development"],
+      "Web apps, *iOS and Android* apps, portals and internal tools, from the same *DNA* we built our own platform from.",
+    teaser: ["Web application", "Mobile app (iOS and Android)", "MVP development"],
     subServices: [
       {
         title: "Web application development",
-        desc: "The SaaS, internal tool or client portal you need.",
+        desc: "The SaaS, internal tool, portal or dashboard you need.",
       },
       {
-        title: "App UI/UX design",
+        title: "Mobile app development (iOS and Android)",
+        desc: "A thumb-first app, from idea to store launch.",
+      },
+      {
+        title: "Product UI/UX design",
         desc: "A product interface that's self-explanatory.",
       },
       {
@@ -160,72 +180,46 @@ export const services: ServiceCategory[] = [
         desc: "Your systems, finally talking to each other.",
       },
       {
+        title: "AI features",
+        desc: "Assistants, search and summaries inside the software, where they help.",
+      },
+      {
         title: "Maintenance and further development",
         desc: "The product doesn't stop at launch.",
       },
     ],
   },
   {
-    slug: "mobile-apps",
-    title: "Mobile apps",
-    essence: "touch.",
-    intro:
-      "Mobile apps for iOS and Android from *one codebase*, from idea to *store launch* and beyond.",
-    teaser: ["Mobile app (iOS and Android)", "Mobile UI/UX design", "Store launch"],
-    subServices: [
-      {
-        title: "Mobile app development (iOS and Android)",
-        desc: "One codebase, two platforms.",
-      },
-      {
-        title: "Mobile UI/UX design",
-        desc: "A thumb-first interface that's self-explanatory.",
-      },
-      {
-        title: "MVP development",
-        desc: "A working first version, fast in the store.",
-      },
-      {
-        title: "Store launch (App Store, Google Play)",
-        desc: "Compliance, submission and launch in both stores.",
-      },
-      {
-        title: "Push and notification strategy",
-        desc: "Notifications that bring users back, not ones they mute.",
-      },
-      {
-        title: "Maintenance and further development",
-        desc: "The app stays live, updated and current with new OS versions.",
-      },
-    ],
-  },
-  {
-    slug: "marketing",
-    title: "Marketing",
+    slug: "strategic-marketing",
+    title: "Strategic Marketing",
     essence: "grow.",
     intro:
-      "The brand lives, resonates and *grows*, across paid and organic channels, with *measurable* goals.",
-    teaser: ["Paid advertising", "Organic social media", "SEO"],
+      "Where and why the brand shows up, across paid and organic channels, with *measurable* goals so it *grows*.",
+    teaser: ["Channel strategy", "Paid advertising", "SEO"],
     subServices: [
+      {
+        title: "Campaign and channel strategy",
+        desc: "A unified plan across channels, with measurable goals.",
+      },
+      {
+        title: "Organic social strategy",
+        desc: "The one channel where your customers are, and how to show up there.",
+      },
       {
         title: "Paid advertising (Meta, Google)",
         desc: "Ads that bring revenue, not just clicks.",
       },
       {
-        title: "Organic social media",
-        desc: "Content and presence that builds a community.",
-      },
-      {
         title: "SEO and content marketing",
-        desc: "Ongoing discoverability and content that brings people in.",
+        desc: "Ongoing discoverability in search and in AI answers.",
       },
       {
         title: "Email marketing",
         desc: "The list that stays yours, and turns into buyers.",
       },
       {
-        title: "Campaign strategy",
-        desc: "A unified plan across channels, with measurable goals.",
+        title: "Tracking, reporting and strategy",
+        desc: "Measured properly, reported monthly, with a strategy session.",
       },
     ],
   },
