@@ -164,18 +164,19 @@ export default function Partners() {
             6.75
           );
 
-          // Focus hand-offs. Dwells are ≈2 timeline units ≈ 74vh of scroll at this
-          // section's density — about three quarters of a screen of thumb travel
-          // per sentence. They were ≈1.15 units, and p1 was worse than that: it
-          // only held focus from 7.0 to 7.7, a quarter screen, because its arrival
-          // ate most of the slot. p1 now gets its dwell measured from the moment
-          // it finishes arriving (7.3), which is why the first hand-off is late.
+          // Focus hand-offs. Each sentence holds focus for 1.2 timeline units
+          // ≈ 44vh of scroll, measured from the moment it is fully lit (p1 from
+          // the end of its arrival, 7.3). These were 2 units (≈74vh), which with
+          // the cover window put the block on screen for four screens: the
+          // 2026-10-15 phone audit read that as empty screens, not as calm.
+          // The sentences are now set at a display grade that fills the stage
+          // (Partners.module.css), so a shorter dwell still reads.
           const handOff = (from: HTMLElement | undefined, to: HTMLElement | undefined, at: number) => {
             if (from) tl.to(from, { opacity: DIM, ease: "none", duration: 0.5 }, at);
             if (to) tl.to(to, { opacity: 1, ease: "none", duration: 0.5 }, at);
           };
-          handOff(p1, p2, 9.4);
-          handOff(p2, p3, 11.9);
+          handOff(p1, p2, 8.5);
+          handOff(p2, p3, 10.2);
         } else {
           tl.from(
             paras,
@@ -193,14 +194,13 @@ export default function Partners() {
         // az idővonalat — a farok a teljes scroll 44%-a, a 420vh wrapper 320vh-s
         // görgetéséből ≈140vh, tehát ≈40vh tiszta hold a takarás előtt.
         //
-        // Mobile: the last hand-off finishes at 12.4, and the 4.7 hold closes the
-        // timeline at 17.1. The tail is 27.5% of the scroll, which out of the
-        // 730vh wrapper's 630vh of scroll is ≈173vh — and that tail is doing two
-        // jobs now that nothing resolves after it. The first ≈73vh is p3's dwell,
-        // matching the ≈74vh the other two get; the remaining ≈100vh is the
-        // Manifesto's cover window. Get this wrong in the short direction and the
-        // black panel starts sliding while p3 is still being read.
-        if (isMobile) tl.to({}, { duration: 4.7 }, 12.4);
+        // Mobile: the last hand-off finishes at 10.7, and the 3.9 hold closes the
+        // timeline at 14.6. Out of the 640vh wrapper's 540vh of scroll that tail
+        // is ≈144vh, doing two jobs now that nothing resolves after it. The first
+        // ≈44vh is p3's dwell, matching the other two; the remaining ≈100vh is
+        // the Manifesto's cover window. Get this wrong in the short direction and
+        // the black panel starts sliding while p3 is still being read.
+        if (isMobile) tl.to({}, { duration: 3.9 }, 10.7);
         else tl.to({}, { duration: 4.2 }, 5.4);
 
         return () => {
