@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import Link from "./LocaleLink";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import styles from "./Navbar.module.css";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { stripLocale } from "../i18n/routing";
 
 type MenuItem = {
   label: string;
@@ -20,8 +22,13 @@ const menuItems: MenuItem[] = [
   { label: "Contact", href: "/contact" },
 ];
 
-export default function Navbar() {
-  const pathname = usePathname();
+interface NavbarProps {
+  switcherLabel: string;
+}
+
+export default function Navbar({ switcherLabel }: NavbarProps) {
+  // Without its locale: /hu/contact is the contact page too.
+  const pathname = stripLocale(usePathname());
   const [open, setOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [onDark, setOnDark] = useState(false);
@@ -140,6 +147,8 @@ export default function Navbar() {
         className={`${styles.overlay} ${open ? styles.overlayOpen : ""}`}
         aria-hidden={!open}
         role="dialog"
+        // Native scroll inside the overlay; Lenis would swallow the wheel.
+        data-lenis-prevent
       >
         <nav className={styles.menuInner}>
           <ul ref={itemsRef} className={styles.menuList}>
@@ -156,6 +165,13 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
+          {/* The overlay's foot: .menuInner spreads its children apart, so the
+              switcher sits at the bottom, under the page links. */}
+          <LanguageSwitcher
+            label={switcherLabel}
+            onNavigate={closeMenu}
+            className={styles.switcher}
+          />
         </nav>
       </div>
     </>

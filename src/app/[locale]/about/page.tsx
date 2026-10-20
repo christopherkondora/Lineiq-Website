@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import AboutHero from "../components/AboutHero";
-import AboutOrigin from "../components/AboutOrigin";
-import AboutCompounds from "../components/AboutCompounds";
-import AboutBeliefs from "../components/AboutBeliefs";
-import AboutFounders from "../components/AboutFounders";
-import AboutRecord from "../components/AboutRecord";
-import BookshelfSection from "../components/BookshelfSection";
-import AboutClose from "../components/AboutClose";
-import Footer from "../components/Footer";
-import { ageSentence, founderAges } from "../data/founders";
+import AboutHero from "../../components/AboutHero";
+import AboutOrigin from "../../components/AboutOrigin";
+import AboutCompounds from "../../components/AboutCompounds";
+import AboutBeliefs from "../../components/AboutBeliefs";
+import AboutFounders from "../../components/AboutFounders";
+import AboutRecord from "../../components/AboutRecord";
+import BookshelfSection from "../../components/BookshelfSection";
+import AboutClose from "../../components/AboutClose";
+import Footer from "../../components/Footer";
+import { ageSentence, founderAges } from "../../data/founders";
 
 export const metadata: Metadata = {
   title: "About — LineiQ",

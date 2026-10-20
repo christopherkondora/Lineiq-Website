@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Placeholder from "../components/Placeholder";
-import Footer from "../components/Footer";
+import Placeholder from "../../components/Placeholder";
+import Footer from "../../components/Footer";
 
 export const metadata: Metadata = {
   title: "Work — LineiQ",

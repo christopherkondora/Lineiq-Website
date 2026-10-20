@@ -1,0 +1,35 @@
+/* Sits on the dark menu overlay. The current language reads full white, the
+   other two step back to muted until hovered. */
+.list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 500;
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-muted);
+  transition: color var(--duration-fast) var(--ease-out-expo);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--color-red);
+}
+
+.link[aria-current="true"] {
+  color: var(--color-white);
+}
+
+@media (max-width: 768px) {
+  .list {
+    gap: var(--space-md) var(--space-lg);
+  }
+}

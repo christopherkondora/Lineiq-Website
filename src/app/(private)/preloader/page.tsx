@@ -8,7 +8,7 @@ import Preloader, {
   type ExitStyle,
   type PreloaderTiming,
   type RevealMode,
-} from "../components/Preloader";
+} from "../../components/Preloader";
 import styles from "./preloader.module.css";
 
 // Hangolóoldal a betöltési gesztushoz. Nem másolat: az ÉLES Preloader komponens

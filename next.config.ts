@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { serviceRedirectRules } from "./src/app/data/serviceRedirects";
+import { localeRedirectRules } from "./src/app/i18n/routing";
 
 const nextConfig: NextConfig = {
   // Csak a dev szerverre vonatkozik. A Next 16 alapból BLOKKOLJA a /_next/*
@@ -43,6 +44,7 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       ...serviceRedirectRules(),
+      ...localeRedirectRules(),
     ];
   },
 };

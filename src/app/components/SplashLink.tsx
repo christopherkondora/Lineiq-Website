@@ -1,7 +1,7 @@
 "use client";
 
 import { MouseEvent, ReactNode } from "react";
-import Link from "next/link";
+import Link from "./LocaleLink";
 
 interface SplashLinkProps {
   href: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, CSSProperties } from "react";
-import Link from "next/link";
+import Link from "./LocaleLink";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";

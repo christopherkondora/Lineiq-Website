@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "./LocaleLink";
 import styles from "./Footer.module.css";
 import {
   FOOTER_CHANNELS,
