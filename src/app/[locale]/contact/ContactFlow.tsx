@@ -11,8 +11,8 @@ import {
   type ReactNode,
 } from "react";
 import { gsap } from "gsap";
-import CtaSwap from "../components/CtaSwap";
-import Footer from "../components/Footer";
+import CtaSwap from "../../components/CtaSwap";
+import Footer from "../../components/Footer";
 import styles from "./page.module.css";
 import {
   BUDGET_BANDS,

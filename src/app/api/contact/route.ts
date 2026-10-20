@@ -14,7 +14,7 @@ import {
   isStageId,
   labelOf,
   type BudgetMode,
-} from "../../contact/intake";
+} from "../../[locale]/contact/intake";
 
 // The contact flow's submission, forwarded to the studio by email through
 // Resend. from/to come from the environment so they can be repointed after a

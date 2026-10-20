@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useRef, type CSSProperties } from "react";
-import Link from "next/link";
+import Link from "../../../components/LocaleLink";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import SplashLink from "../../components/SplashLink";
-import CtaSwap from "../../components/CtaSwap";
-import Footer from "../../components/Footer";
-import { services, plainIntro, processNote } from "../../data/services";
+import SplashLink from "../../../components/SplashLink";
+import CtaSwap from "../../../components/CtaSwap";
+import Footer from "../../../components/Footer";
+import { services, plainIntro, processNote } from "../../../data/services";
 import styles from "./page.module.css";
 
 // A Kranky aláírás dőlése kategóriánként váltakozik, hogy ne ugyanabban a

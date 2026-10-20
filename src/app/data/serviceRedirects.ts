@@ -6,16 +6,21 @@
 // (Lineiq-Website#2): Brand building was renamed, Mobile apps merged into
 // Software Solutions, Marketing became Strategic Marketing.
 
+import { locales, localizePath } from "../i18n/routing";
+
 export const serviceRedirects: Record<string, string> = {
   "brand-building": "brand-architecture",
   "mobile-apps": "software-solutions",
   marketing: "strategic-marketing",
 };
 
+/** Every old slug in every language: /services/x, /hu/services/x, /de/services/x. */
 export function serviceRedirectRules() {
-  return Object.entries(serviceRedirects).map(([from, to]) => ({
-    source: `/services/${from}`,
-    destination: `/services/${to}`,
-    permanent: true,
-  }));
+  return locales.flatMap((locale) =>
+    Object.entries(serviceRedirects).map(([from, to]) => ({
+      source: localizePath(`/services/${from}`, locale),
+      destination: localizePath(`/services/${to}`, locale),
+      permanent: true,
+    }))
+  );
 }

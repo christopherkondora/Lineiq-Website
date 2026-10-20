@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { services, getService, plainIntro } from "../../data/services";
+import { services, getService, plainIntro } from "../../../data/services";
 import CategoryArticle from "./CategoryArticle";
 
 type Params = { params: Promise<{ slug: string }> };

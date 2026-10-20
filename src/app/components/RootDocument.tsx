@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { Fraunces, Wix_Madefor_Display, Kranky } from "next/font/google";
-import "./globals.css";
-import SmoothScroll from "./components/SmoothScroll";
-import Cursor from "./components/Cursor";
-import Navbar from "./components/Navbar";
-import { SITE_INDEXABLE, SITE_URL } from "./data/site";
+import "../globals.css";
+import SmoothScroll from "./SmoothScroll";
+import Cursor from "./Cursor";
+import Navbar from "./Navbar";
+import { LocaleProvider } from "../i18n/LocaleProvider";
+import { getDictionary } from "../i18n/dictionary";
+import type { Locale } from "../i18n/routing";
+import { SITE_INDEXABLE, SITE_URL } from "../data/site";
+
+// The document both root layouts render: app/[locale]/layout.tsx for the
+// visitor pages and app/(private)/layout.tsx for the working routes. Two root
+// layouts because <html lang> has to come from the [locale] segment, and the
+// private routes live outside it. One component so the two cannot drift.
 
 // A betöltési gesztus NEM innen indul. Korábban itt ült egy layout-szintű
 // script, ami minden útvonalon feltette a html[data-preloader] attribútumot,
@@ -36,7 +45,7 @@ const kranky = Kranky({
   weight: ["400"],
 });
 
-export const metadata: Metadata = {
+export const rootMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "LineiQ — Brand. Code. Signal.",
   description:
@@ -46,23 +55,29 @@ export const metadata: Metadata = {
   robots: SITE_INDEXABLE ? undefined : { index: false, follow: false },
 };
 
-export default function RootLayout({
+export default function RootDocument({
+  locale,
   children,
 }: {
-  children: React.ReactNode;
+  locale: Locale;
+  children: ReactNode;
 }) {
+  const dict = getDictionary(locale);
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${fraunces.variable} ${wix.variable} ${kranky.variable}`}
       // a főoldal gate-scriptje paint előtt data-intro attribútumot tehet fel
       suppressHydrationWarning
     >
       <body>
-        <SmoothScroll />
-        <Cursor />
-        <Navbar />
-        {children}
+        <LocaleProvider locale={locale}>
+          <SmoothScroll />
+          <Cursor />
+          <Navbar switcherLabel={dict.languageSwitcher.label} />
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

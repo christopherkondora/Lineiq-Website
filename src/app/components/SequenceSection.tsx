@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Link from "next/link";
+import Link from "./LocaleLink";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
 import styles from "./SequenceSection.module.css";

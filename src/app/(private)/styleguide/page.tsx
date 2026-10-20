@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import styles from "./styleguide.module.css";
-import CtaSwap from "../components/CtaSwap";
+import CtaSwap from "../../components/CtaSwap";
 
 export const metadata: Metadata = {
   title: "Styleguide — LineiQ",

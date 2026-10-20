@@ -52,14 +52,16 @@ describe("service redirects", () => {
     });
   });
 
-  it("turns each entry into a permanent redirect under /services", () => {
-    expect(serviceRedirectRules()).toContainEqual({
-      source: "/services/mobile-apps",
-      destination: "/services/software-solutions",
-      permanent: true,
-    });
+  it("turns each entry into a permanent redirect under /services, in every locale", () => {
+    for (const prefix of ["", "/hu", "/de"]) {
+      expect(serviceRedirectRules()).toContainEqual({
+        source: `${prefix}/services/mobile-apps`,
+        destination: `${prefix}/services/software-solutions`,
+        permanent: true,
+      });
+    }
     expect(serviceRedirectRules()).toHaveLength(
-      Object.keys(serviceRedirects).length
+      Object.keys(serviceRedirects).length * 3
     );
   });
 });

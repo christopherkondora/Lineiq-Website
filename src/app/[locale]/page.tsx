@@ -1,17 +1,24 @@
-import HomeIntro, { introGateScript } from "./components/HomeIntro";
-import Hero from "./components/Hero";
-import Intro from "./components/Intro";
-import Work from "./components/Work";
-import Partners from "./components/Partners";
-import Manifesto from "./components/Manifesto";
-import WhatWeDo from "./components/WhatWeDo";
-import SequenceSection from "./components/SequenceSection";
-import Footer from "./components/Footer";
-import SplashLink from "./components/SplashLink";
-import CtaSwap from "./components/CtaSwap";
+import { notFound } from "next/navigation";
+import HomeIntro, { introGateScript } from "../components/HomeIntro";
+import Hero from "../components/Hero";
+import Intro from "../components/Intro";
+import Work from "../components/Work";
+import Partners from "../components/Partners";
+import Manifesto from "../components/Manifesto";
+import WhatWeDo from "../components/WhatWeDo";
+import SequenceSection from "../components/SequenceSection";
+import Footer from "../components/Footer";
+import SplashLink from "../components/SplashLink";
+import CtaSwap from "../components/CtaSwap";
+import { getDictionary } from "../i18n/dictionary";
+import { isLocale } from "../i18n/routing";
 import styles from "./page.module.css";
 
-export default function Home() {
+export default async function Home({ params }: PageProps<"/[locale]">) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  const t = getDictionary(locale).home;
+
   return (
     <main>
       {/* Még az első festés előtt fut, és csak ezen az útvonalon: eldönti,
@@ -50,9 +57,12 @@ export default function Home() {
           left a half-empty band after the Manifesto (Lineiq-Website#10). */}
       <div className={styles.mobileFooter}>
         <div className={`section--dark ${styles.mobileClose}`}>
-          <p className={styles.mobileCloseHeadline}>Ready?</p>
+          <p className={styles.mobileCloseHeadline}>{t.close.headline}</p>
           <SplashLink href="/contact" className={styles.mobileCloseCta}>
-            <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's go!" />
+            <CtaSwap
+              defaultLabel={t.close.cta}
+              hoverLabel={t.close.ctaHover}
+            />
           </SplashLink>
         </div>
         <Footer />
