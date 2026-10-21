@@ -81,7 +81,7 @@ export default function RootDocument({
         <LocaleProvider locale={locale}>
           <SmoothScroll />
           <Cursor />
-          <Navbar switcherLabel={dict.languageSwitcher.label} />
+          <Navbar t={dict.nav} switcherLabel={dict.languageSwitcher.label} />
           {children}
         </LocaleProvider>
       </body>

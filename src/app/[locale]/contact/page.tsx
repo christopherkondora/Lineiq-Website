@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import ContactFlow from "./ContactFlow";
+import Footer from "../../components/Footer";
+import { getDictionary } from "../../i18n/dictionary";
+import { isLocale } from "../../i18n/routing";
 
 export const metadata: Metadata = {
   title: "Contact — LineiQ",
@@ -11,10 +15,14 @@ export const metadata: Metadata = {
 // anything under the fold would be a second page the wheel has to fight the
 // camera to reach. The footer comes back with the confirmation, where leaving
 // is the point. See [[contact/ContactFlow]].
-export default function ContactPage() {
+export default async function ContactPage({
+  params,
+}: PageProps<"/[locale]/contact">) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
   return (
     <main>
-      <ContactFlow />
+      <ContactFlow footer={<Footer t={getDictionary(locale).footer} />} />
     </main>
   );
 }

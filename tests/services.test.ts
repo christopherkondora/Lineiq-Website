@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { getService, services } from "@/app/data/services";
+import {
+  getService,
+  localizedServices,
+  services,
+} from "@/app/data/services";
+import { dictionaries } from "@/app/i18n/dictionary";
+import { locales } from "@/app/i18n/routing";
 import {
   serviceRedirectRules,
   serviceRedirects,
@@ -16,8 +22,10 @@ describe("service catalogue", () => {
     ]);
   });
 
-  it("names nothing LineiQ does not sell", () => {
-    const text = JSON.stringify(services).toLowerCase();
+  it.each(locales)("names nothing LineiQ does not sell, in %s", (locale) => {
+    const text = JSON.stringify(
+      localizedServices(dictionaries[locale].services.categories)
+    ).toLowerCase();
     for (const term of [
       "content management",
       "packaging",
@@ -28,6 +36,53 @@ describe("service catalogue", () => {
     ]) {
       expect(text, term).not.toContain(term);
     }
+  });
+});
+
+describe("the catalogue in a language", () => {
+  it.each(locales)(
+    "%s has copy for exactly the categories in the catalogue",
+    (locale) => {
+      expect(
+        Object.keys(dictionaries[locale].services.categories).sort()
+      ).toEqual(services.map((s) => s.slug).sort());
+    }
+  );
+
+  it.each(locales)(
+    "%s has copy for exactly each category's sub-services, nothing extra",
+    (locale) => {
+      for (const s of services) {
+        const copy = dictionaries[locale].services.categories[s.slug];
+        expect(Object.keys(copy.subServices).sort(), s.slug).toEqual(
+          [...s.subServices].sort()
+        );
+      }
+    }
+  );
+
+  it("keeps the catalogue's order and takes the words from the dictionary", () => {
+    const en = localizedServices(dictionaries.en.services.categories);
+    expect(en.map((c) => c.slug)).toEqual(services.map((s) => s.slug));
+    expect(en[0].title).toBe("Brand Architecture");
+    expect(en[0].essence).toBe("soul.");
+    expect(en[0].subServices.map((ss) => ss.id)).toEqual(
+      services[0].subServices
+    );
+    expect(en[0].subServices[3]).toEqual({
+      id: "naming",
+      title: "Naming",
+      desc: "Company, product and campaign names that stick.",
+    });
+  });
+
+  it("follows the dictionary it is given", () => {
+    const copy = structuredClone(dictionaries.en.services.categories);
+    copy.ecommerce.title = "Webshop";
+    copy.ecommerce.subServices.webshop.desc = "Ours.";
+    const ecommerce = localizedServices(copy)[2];
+    expect(ecommerce.title).toBe("Webshop");
+    expect(ecommerce.subServices[0].desc).toBe("Ours.");
   });
 });
 

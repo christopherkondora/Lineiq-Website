@@ -311,7 +311,7 @@ export default function Work({ t }: { t: Dictionary["home"]["work"] }) {
     // This effect runs a render AFTER every other section created its triggers
     // (see the `enabled` two-step above), so our pin lands at the END of
     // ScrollTrigger's internal array. Refresh processes that array in order:
-    // triggers for sections BELOW the pin (Process, Manifesto) would calculate
+    // triggers for sections BELOW the pin (WhatWeDo, Manifesto) would calculate
     // before the pin and never receive its ~2.4-viewport pin-spacer offset —
     // their animations then fire that far too early, finishing below the fold.
     // sort() reorders the array by document position so the pin calculates

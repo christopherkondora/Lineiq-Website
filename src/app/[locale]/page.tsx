@@ -12,12 +12,17 @@ import SplashLink from "../components/SplashLink";
 import CtaSwap from "../components/CtaSwap";
 import { getDictionary } from "../i18n/dictionary";
 import { isLocale } from "../i18n/routing";
+import { localizedServices } from "../data/services";
 import styles from "./page.module.css";
 
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const t = getDictionary(locale).home;
+  const dict = getDictionary(locale);
+  const t = dict.home;
+  const categories = localizedServices(dict.services.categories).map(
+    ({ slug, title }) => ({ slug, title })
+  );
 
   return (
     <main>
@@ -37,7 +42,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
           fehér háttéren. Bal oldalon lélegző vonal-kaszkád, háttérben a hoverelt
           szolgáltatás óriás Kranky esszencia-szava, a kurzor mellé úszó noir
           fotóval. Önálló szekció — már nem parkol. */}
-      <WhatWeDo />
+      <WhatWeDo categories={categories} />
       {/* A Partners egy self-contained, full-viewport pinnelt sequence (saját
           scroll-budget + sticky színpad). A végállapotára (We take on partners +
           hasábok) csúszik fölé a Manifesto sötét panele: a .rise negatív margója
@@ -46,7 +51,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
       <div className={styles.rise}>
         <Manifesto t={t.manifesto} />
       </div>
-      <SequenceSection t={t.close} />
+      <SequenceSection t={t.close} footer={dict.footer} />
       {/* Mobilon a SequenceSection overlay footere elrejtve; helyette ez a
           normál, statikus footer folyik a szekvencia alá. Desktopon az overlay
           marad, ezt a wrapper rejti.
@@ -65,7 +70,7 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
             />
           </SplashLink>
         </div>
-        <Footer />
+        <Footer t={dict.footer} />
       </div>
     </main>
   );

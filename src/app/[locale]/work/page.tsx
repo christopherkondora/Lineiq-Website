@@ -1,6 +1,10 @@
+import { Fragment } from "react";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Placeholder from "../../components/Placeholder";
 import Footer from "../../components/Footer";
+import { getDictionary } from "../../i18n/dictionary";
+import { isLocale } from "../../i18n/routing";
 
 export const metadata: Metadata = {
   title: "Work — LineiQ",
@@ -8,23 +12,29 @@ export const metadata: Metadata = {
     "Selected case studies from the LineiQ portfolio. Brand, web, marketing.",
 };
 
-export default function MunkainkPage() {
+export default async function WorkPage({ params }: PageProps<"/[locale]/work">) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  const dict = getDictionary(locale);
+  const t = dict.work;
+
   return (
     <main>
       <Placeholder
-        label="◆ Portfolio"
-        title={
-          <>
-            The work we
-            <br />
-            put our name on.
-          </>
-        }
+        t={dict.placeholder}
+        label={`◆ ${t.label}`}
+        title={t.titleLines.map((line, i) => (
+          <Fragment key={i}>
+            {i > 0 && <br />}
+            {line}
+          </Fragment>
+        ))}
         signature="proof."
-        lede="Detailed case studies on brand, web and marketing projects. Each piece is its own entry: scope, process, visuals, results. The page is coming soon."
-        nextStep="Case study content is being added."
+        lede={t.lede}
+        nextStep={t.status}
+        eta={t.launch}
       />
-      <Footer />
+      <Footer t={dict.footer} />
     </main>
   );
 }

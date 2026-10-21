@@ -1,232 +1,138 @@
-// Single source of truth for the service catalogue. Drives the homepage index
-// (WhatWeDo), each /services/[slug] category page and the redirects from
-// retired slugs (serviceRedirects.ts).
+// Single source of truth for the service catalogue's structure. Drives the
+// homepage index (WhatWeDo), each /services/[slug] category page and the
+// redirects from retired slugs (serviceRedirects.ts).
 // Content mirrors strategy/service_delivery.md in the Kontrast Vault: the five
 // listed categories, in its order. Content Management is unlisted for Q4 2026
 // (Service Delivery §2.2) and never appears here.
 //
-// Intro strings carry *highlight* markers: the category page renders the marked
-// words as oversized Fraunces inline (the Intro/Manifesto mixed-typography
-// idiom). Everywhere plain text is needed, run them through plainIntro().
+// What is here: the slugs, the order, the Kranky essence word (a mark, English
+// in every language) and the order of each category's sub-services. What each
+// one is called and says is in the dictionaries (services.categories), keyed by
+// the slug and the sub-service ids below. localizedServices() joins the two.
 
-export interface SubService {
-  title: string;
-  desc: string;
-}
+import type { Dictionary } from "../i18n/dictionary";
+
+type CategoryCopy = Dictionary["services"]["categories"];
+
+/** A category's id is its slug. */
+export type CategoryId = keyof CategoryCopy;
 
 export interface ServiceCategory {
-  slug: string;
-  title: string;
+  slug: CategoryId;
   essence: string; // Kranky one-word signature
-  intro: string;
-  teaser: string[]; // short labels for the homepage hover reveal (max 3)
-  subServices: SubService[];
+  subServices: readonly string[]; // ids, in reading order
 }
 
-// Every category runs through the Dream Outcome Process (Service Delivery §1),
-// so every category page says so.
-export const processNote =
-  "Every engagement runs through the Dream Outcome Process. Research, your customer and your positioning come first; the work is built on them.";
+/** Typed per category, so a sub-service id the dictionary lacks fails the build. */
+function category<Id extends CategoryId>(c: {
+  slug: Id;
+  essence: string;
+  subServices: readonly (keyof CategoryCopy[Id]["subServices"] & string)[];
+}): ServiceCategory {
+  return c;
+}
 
 export const services: ServiceCategory[] = [
-  {
+  category({
     slug: "brand-architecture",
-    title: "Brand Architecture",
     essence: "soul.",
-    intro:
-      "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for the people who lead them, so it becomes *recognizable*.",
-    teaser: ["Positioning and strategy", "Brand world", "Logo and identity"],
     subServices: [
-      {
-        title: "Audience, market and competitor research",
-        desc: "Who you're talking to, what they want to hear, and who else is talking to them.",
-      },
-      {
-        title: "Positioning and strategy",
-        desc: "Where you stand in the market, and the one-sentence reason to choose you.",
-      },
-      {
-        title: "Brand world and tone of voice",
-        desc: "The story, the founder story and the voice the brand speaks with everywhere.",
-      },
-      {
-        title: "Naming",
-        desc: "Company, product and campaign names that stick.",
-      },
-      {
-        title: "Logo and identity",
-        desc: "The primary mark and the entire system built around it.",
-      },
-      {
-        title: "Visual language and design system",
-        desc: "Colors, typography, grid and components as one, with a brand guidelines document.",
-      },
-      {
-        title: "Rebranding",
-        desc: "Repositioning and refreshing an existing brand.",
-      },
+      "research",
+      "positioning",
+      "brandWorld",
+      "naming",
+      "identity",
+      "designSystem",
+      "rebranding",
     ],
-  },
-  {
+  }),
+  category({
     slug: "web-development",
-    title: "Web Development",
     essence: "craft.",
-    intro:
-      "Bespoke, animated sites built on Next.js and on the brand's foundations, lightning fast and *alive* under your hands.",
-    teaser: ["Bespoke website", "Web design (UI/UX)", "Motion and animation"],
     subServices: [
-      {
-        title: "Bespoke website development",
-        desc: "No templates, built for your brand.",
-      },
-      {
-        title: "Web design (UI/UX)",
-        desc: "An interface that's clear and converts.",
-      },
-      {
-        title: "Motion and animation",
-        desc: "GSAP, Lenis, motion that sets you apart.",
-      },
-      {
-        title: "Website copy",
-        desc: "Written from your positioning and your customers' own words.",
-      },
-      {
-        title: "Landing and campaign pages",
-        desc: "One goal, one message, maximum conversion.",
-      },
-      {
-        title: "Multilingual sites",
-        desc: "Every language your customers read.",
-      },
-      {
-        title: "CMS integration",
-        desc: "Content you manage yourself, without a developer.",
-      },
-      {
-        title: "Performance and technical SEO",
-        desc: "Fast loading, Core Web Vitals, a searchable structure.",
-      },
-      {
-        title: "Maintenance plan",
-        desc: "The site stays live, updated and secure.",
-      },
+      "bespokeSite",
+      "webDesign",
+      "motion",
+      "copy",
+      "landingPages",
+      "multilingual",
+      "cms",
+      "performance",
+      "maintenance",
     ],
-  },
-  {
+  }),
+  category({
     slug: "ecommerce",
-    title: "Ecommerce",
     essence: "sell.",
-    intro:
-      "Webshops that don't just look good but *convert*, from the product page to the invoice and the *returning* customer.",
-    teaser: ["Webshop build", "Shop UX design", "Payment and invoicing"],
     subServices: [
-      {
-        title: "Webshop build",
-        desc: "Our own webshop system with an admin you log in to, and a storefront made for your brand.",
-      },
-      {
-        title: "Shop UX and product page design",
-        desc: "The buying journey and product pages that lead to the cart.",
-      },
-      {
-        title: "Catalogue upload and product copy",
-        desc: "Your whole catalogue in, described in your customers' own words.",
-      },
-      {
-        title: "Payment and shipping integration",
-        desc: "Hungarian and international solutions wired in.",
-      },
-      {
-        title: "Invoicing integration",
-        desc: "Számlázz.hu, Billingo and international equivalents, hooked up automatically.",
-      },
-      {
-        title: "Analytics and conversion tracking",
-        desc: "Every sale traced back to where it came from.",
-      },
-      {
-        title: "Shop upkeep and conversion optimization",
-        desc: "After launch, a monthly funnel review and improvements shipped.",
-      },
+      "webshop",
+      "shopUx",
+      "catalogue",
+      "paymentShipping",
+      "invoicing",
+      "analytics",
+      "upkeep",
     ],
-  },
-  {
+  }),
+  category({
     slug: "software-solutions",
-    title: "Software Solutions",
     essence: "ship.",
-    intro:
-      "Web apps, *iOS and Android* apps, portals and internal tools, from the same *DNA* we built our own platform from.",
-    teaser: ["Web application", "Mobile app (iOS and Android)", "MVP development"],
     subServices: [
-      {
-        title: "Web application development",
-        desc: "The SaaS, internal tool, portal or dashboard you need.",
-      },
-      {
-        title: "Mobile app development (iOS and Android)",
-        desc: "A thumb-first app, from idea to store launch.",
-      },
-      {
-        title: "Product UI/UX design",
-        desc: "A product interface that's self-explanatory.",
-      },
-      {
-        title: "MVP development",
-        desc: "A working first version, fast to market.",
-      },
-      {
-        title: "API and integration",
-        desc: "Your systems, finally talking to each other.",
-      },
-      {
-        title: "AI features",
-        desc: "Assistants, search and summaries inside the software, where they help.",
-      },
-      {
-        title: "Maintenance and further development",
-        desc: "The product doesn't stop at launch.",
-      },
+      "webApp",
+      "mobileApp",
+      "productDesign",
+      "mvp",
+      "integration",
+      "aiFeatures",
+      "maintenance",
     ],
-  },
-  {
+  }),
+  category({
     slug: "strategic-marketing",
-    title: "Strategic Marketing",
     essence: "grow.",
-    intro:
-      "Where and why the brand shows up, across paid and organic channels, with *measurable* goals so it *grows*.",
-    teaser: ["Channel strategy", "Paid advertising", "SEO"],
     subServices: [
-      {
-        title: "Campaign and channel strategy",
-        desc: "A unified plan across channels, with measurable goals.",
-      },
-      {
-        title: "Organic social strategy",
-        desc: "The one channel where your customers are, and how to show up there.",
-      },
-      {
-        title: "Paid advertising (Meta, Google)",
-        desc: "Ads that bring revenue, not just clicks.",
-      },
-      {
-        title: "SEO and content marketing",
-        desc: "Ongoing discoverability in search and in AI answers.",
-      },
-      {
-        title: "Email marketing",
-        desc: "The list that stays yours, and turns into buyers.",
-      },
-      {
-        title: "Tracking, reporting and strategy",
-        desc: "Measured properly, reported monthly, with a strategy session.",
-      },
+      "channelStrategy",
+      "organicSocial",
+      "paidAds",
+      "seo",
+      "email",
+      "reporting",
     ],
-  },
+  }),
 ];
 
 export function getService(slug: string): ServiceCategory | undefined {
   return services.find((s) => s.slug === slug);
+}
+
+export interface SubService {
+  id: string;
+  title: string;
+  desc: string;
+}
+
+/** A category as a page shows it: the structure joined with one language's copy. */
+export interface LocalizedCategory {
+  slug: CategoryId;
+  essence: string;
+  title: string;
+  intro: string;
+  subServices: SubService[];
+}
+
+/** The catalogue in one language, in Service Delivery's order. */
+export function localizedServices(copy: CategoryCopy): LocalizedCategory[] {
+  return services.map((s) => {
+    const c = copy[s.slug];
+    const subCopy = c.subServices as Record<string, Omit<SubService, "id">>;
+    return {
+      slug: s.slug,
+      essence: s.essence,
+      title: c.title,
+      intro: c.intro,
+      subServices: s.subServices.map((id) => ({ id, ...subCopy[id] })),
+    };
+  });
 }
 
 export interface IntroSegment {

@@ -2,11 +2,12 @@
 // Strings move in here unchanged, slice by slice (Lineiq-Website#6, #7, #8);
 // the copy itself is rewritten later in one pass (#15).
 //
-// The Kranky signature words ("soul.", "craft.", "noise off.", the "partners"
-// under Partners' claim) are marks, not copy: they stay English in every
-// language and are not keyed here. Proper nouns stay in code too: the project
-// and client names, the book authors, the founders' names (their order per
-// language is data/founders.ts's job).
+// The Kranky signature words ("soul.", "craft.", "noise off.", "proof.", the
+// "partners" under Partners' claim) are marks, not copy: they stay English in
+// every language and are not keyed here. Proper nouns stay in code too: the
+// project and client names, the book authors, the founders' names (their order
+// per language is data/founders.ts's job), the company name and the channels in
+// the footer.
 //
 // Some sentences are cut into pieces because the design styles a word or a run
 // inside them (a highlight, a red redaction, a line break set for a measure).
@@ -241,6 +242,257 @@ const en = {
       cta: "Let's begin.",
       ctaHover: "Let's go!",
     },
+  },
+  services: {
+    // The frame every category page shares.
+    allServices: "All services",
+    includes: "What it includes",
+    // Every category runs through the Dream Outcome Process (Service Delivery
+    // §1), so every category page says so.
+    processNote:
+      "Every engagement runs through the Dream Outcome Process. Research, your customer and your positioning come first; the work is built on them.",
+    // Followed by the next category's name.
+    next: "Next",
+    // Followed by the remaining categories' names.
+    or: "Or:",
+    cta: "Let's begin.",
+    ctaHover: "Let's talk!",
+    // Keyed by category id (the slug) and, inside each, by sub-service id. The
+    // order of both, and the Kranky essence word, are in data/services.ts.
+    // Content mirrors strategy/service_delivery.md in the Kontrast Vault.
+    //
+    // Intros carry *highlight* markers around the words the design can set as
+    // oversized Fraunces inline (introSegments in data/services.ts).
+    categories: {
+      "brand-architecture": {
+        title: "Brand Architecture",
+        intro:
+          "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for the people who lead them, so it becomes *recognizable*.",
+        subServices: {
+          research: {
+            title: "Audience, market and competitor research",
+            desc: "Who you're talking to, what they want to hear, and who else is talking to them.",
+          },
+          positioning: {
+            title: "Positioning and strategy",
+            desc: "Where you stand in the market, and the one-sentence reason to choose you.",
+          },
+          brandWorld: {
+            title: "Brand world and tone of voice",
+            desc: "The story, the founder story and the voice the brand speaks with everywhere.",
+          },
+          naming: {
+            title: "Naming",
+            desc: "Company, product and campaign names that stick.",
+          },
+          identity: {
+            title: "Logo and identity",
+            desc: "The primary mark and the entire system built around it.",
+          },
+          designSystem: {
+            title: "Visual language and design system",
+            desc: "Colors, typography, grid and components as one, with a brand guidelines document.",
+          },
+          rebranding: {
+            title: "Rebranding",
+            desc: "Repositioning and refreshing an existing brand.",
+          },
+        },
+      },
+      "web-development": {
+        title: "Web Development",
+        intro:
+          "Bespoke, animated sites built on Next.js and on the brand's foundations, lightning fast and *alive* under your hands.",
+        subServices: {
+          bespokeSite: {
+            title: "Bespoke website development",
+            desc: "No templates, built for your brand.",
+          },
+          webDesign: {
+            title: "Web design (UI/UX)",
+            desc: "An interface that's clear and converts.",
+          },
+          motion: {
+            title: "Motion and animation",
+            desc: "GSAP, Lenis, motion that sets you apart.",
+          },
+          copy: {
+            title: "Website copy",
+            desc: "Written from your positioning and your customers' own words.",
+          },
+          landingPages: {
+            title: "Landing and campaign pages",
+            desc: "One goal, one message, maximum conversion.",
+          },
+          multilingual: {
+            title: "Multilingual sites",
+            desc: "Every language your customers read.",
+          },
+          cms: {
+            title: "CMS integration",
+            desc: "Content you manage yourself, without a developer.",
+          },
+          performance: {
+            title: "Performance and technical SEO",
+            desc: "Fast loading, Core Web Vitals, a searchable structure.",
+          },
+          maintenance: {
+            title: "Maintenance plan",
+            desc: "The site stays live, updated and secure.",
+          },
+        },
+      },
+      ecommerce: {
+        title: "Ecommerce",
+        intro:
+          "Webshops that don't just look good but *convert*, from the product page to the invoice and the *returning* customer.",
+        subServices: {
+          webshop: {
+            title: "Webshop build",
+            desc: "Our own webshop system with an admin you log in to, and a storefront made for your brand.",
+          },
+          shopUx: {
+            title: "Shop UX and product page design",
+            desc: "The buying journey and product pages that lead to the cart.",
+          },
+          catalogue: {
+            title: "Catalogue upload and product copy",
+            desc: "Your whole catalogue in, described in your customers' own words.",
+          },
+          paymentShipping: {
+            title: "Payment and shipping integration",
+            desc: "Hungarian and international solutions wired in.",
+          },
+          invoicing: {
+            title: "Invoicing integration",
+            desc: "Számlázz.hu, Billingo and international equivalents, hooked up automatically.",
+          },
+          analytics: {
+            title: "Analytics and conversion tracking",
+            desc: "Every sale traced back to where it came from.",
+          },
+          upkeep: {
+            title: "Shop upkeep and conversion optimization",
+            desc: "After launch, a monthly funnel review and improvements shipped.",
+          },
+        },
+      },
+      "software-solutions": {
+        title: "Software Solutions",
+        intro:
+          "Web apps, *iOS and Android* apps, portals and internal tools, from the same *DNA* we built our own platform from.",
+        subServices: {
+          webApp: {
+            title: "Web application development",
+            desc: "The SaaS, internal tool, portal or dashboard you need.",
+          },
+          mobileApp: {
+            title: "Mobile app development (iOS and Android)",
+            desc: "A thumb-first app, from idea to store launch.",
+          },
+          productDesign: {
+            title: "Product UI/UX design",
+            desc: "A product interface that's self-explanatory.",
+          },
+          mvp: {
+            title: "MVP development",
+            desc: "A working first version, fast to market.",
+          },
+          integration: {
+            title: "API and integration",
+            desc: "Your systems, finally talking to each other.",
+          },
+          aiFeatures: {
+            title: "AI features",
+            desc: "Assistants, search and summaries inside the software, where they help.",
+          },
+          maintenance: {
+            title: "Maintenance and further development",
+            desc: "The product doesn't stop at launch.",
+          },
+        },
+      },
+      "strategic-marketing": {
+        title: "Strategic Marketing",
+        intro:
+          "Where and why the brand shows up, across paid and organic channels, with *measurable* goals so it *grows*.",
+        subServices: {
+          channelStrategy: {
+            title: "Campaign and channel strategy",
+            desc: "A unified plan across channels, with measurable goals.",
+          },
+          organicSocial: {
+            title: "Organic social strategy",
+            desc: "The one channel where your customers are, and how to show up there.",
+          },
+          paidAds: {
+            title: "Paid advertising (Meta, Google)",
+            desc: "Ads that bring revenue, not just clicks.",
+          },
+          seo: {
+            title: "SEO and content marketing",
+            desc: "Ongoing discoverability in search and in AI answers.",
+          },
+          email: {
+            title: "Email marketing",
+            desc: "The list that stays yours, and turns into buyers.",
+          },
+          reporting: {
+            title: "Tracking, reporting and strategy",
+            desc: "Measured properly, reported monthly, with a strategy session.",
+          },
+        },
+      },
+    },
+  },
+  work: {
+    // After the ◆ the component sets in front of it.
+    label: "Portfolio",
+    titleLines: ["The work we", "put our name on."],
+    lede: "Detailed case studies on brand, web and marketing projects. Each piece is its own entry: scope, process, visuals, results. The page is coming soon.",
+    status: "Case study content is being added.",
+    launch: "2026 Q3",
+  },
+  // The frame of a page that is not built yet (components/Placeholder).
+  placeholder: {
+    cta: "Let's talk?",
+    ctaHover: "Let's go!",
+    back: "Back to home",
+    statusLabel: "Status",
+    launchLabel: "Launch",
+  },
+  nav: {
+    links: {
+      home: "Home",
+      services: "Services",
+      about: "About",
+      contact: "Contact",
+    },
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
+    cta: "Let's talk?",
+    ctaHover: "Let's go!",
+  },
+  // Both footers read this: components/Footer and the overlay on Home's closing
+  // sequence (components/SequenceSection). The links, the channel names and the
+  // company name are in data/footer.ts.
+  footer: {
+    studio: "Studio",
+    sitemap: "Sitemap",
+    connect: "Connect",
+    legal: "Legal",
+    // The switcher column's heading, and the switcher's accessible name.
+    language: "Language",
+    city: "Budapest, HU",
+    links: {
+      home: "Home",
+      services: "Services",
+      about: "About",
+      contact: "Contact",
+      terms: "Terms",
+      privacy: "Privacy",
+    },
+    copyright: "© {year} LineiQ. All rights reserved.",
   },
   languageSwitcher: {
     label: "Language",

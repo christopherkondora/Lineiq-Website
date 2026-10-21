@@ -1,52 +1,44 @@
-// A footer TARTALMA egy helyen. Két megjelenítése van, és ez szándékos:
+// The footer's structure in one place. It has two renderings, on purpose:
 //
-//   Footer.tsx            — önálló sötét szekció. Ez zárja az /about, /contact,
-//                           /work és a szolgáltatás-oldalakat minden szélességen,
-//                           a főoldalt pedig 900px alatt.
-//   SequenceSection.tsx   — overlay a frame-szekvencia vásznán, gradiens
-//                           lepellel. A főoldal desktop lezárása; a mozgókép
-//                           fölé írt footer a szekció kompozíciójának a része,
-//                           ezért NEM ugyanaz a layout.
+//   Footer.tsx            — a standalone dark section. It closes /about,
+//                           /contact, /work and the category pages at every
+//                           width, and the home page below 900px.
+//   SequenceSection.tsx   — an overlay on the frame sequence's canvas, under a
+//                           gradient veil. The home page's desktop close; a
+//                           footer written over the moving image is part of the
+//                           section's composition, so it is NOT the same layout.
 //
-// A kettő korábban külön-külön tartalmazta ugyanazokat a linkeket, és már el is
-// csúsztak egymástól. A megjelenítés maradhat kettő, a tartalomnak egynek kell
-// lennie — különben minden footer-módosítás két fájlban, két osztálynévrendszerrel
-// történik, és a következő eltérés csak idő kérdése.
+// The two used to hold the same links each, and had already drifted apart. The
+// rendering can stay two; the content has to be one, or every footer change
+// happens in two files with two class-name systems and the next drift is only a
+// matter of time. The words are in the dictionaries (footer); here are the
+// addresses, the order, and the proper nouns.
 
-export type FooterLink = { href: string; label: string };
+import type { Dictionary } from "../i18n/dictionary";
+
+type FooterLinkId = keyof Dictionary["footer"]["links"];
+
+export type FooterLink = { href: string; id: FooterLinkId };
 
 export const FOOTER_SITEMAP: FooterLink[] = [
-  { href: "/", label: "Home" },
-  { href: "/#services", label: "Services" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/", id: "home" },
+  { href: "/#services", id: "services" },
+  { href: "/about", id: "about" },
+  { href: "/contact", id: "contact" },
 ];
 
-/* A címkék és az útvonalak is angolok, mint az oldal többi része. A korábbi
-   "ÁSZF" / "Adatkezelési tájékoztató" a magyar nyelvű változatból maradt itt.
-   Egyik oldal sem létezik még (mindkettő 404), ezért az útvonal-váltásnak most
-   nincs ára: nincs mit átirányítani.
+/* Neither page exists yet (both 404), so changing their addresses costs
+   nothing now: there is nothing to redirect.
 
-   FIGYELEM: a címke angol, a DOKUMENTUM viszont egy magyar Kft. jogi irata —
-   az ÁSZF és az adatkezelési tájékoztató tartalma vélhetően magyarul (vagy
-   kétnyelvűen) kell hogy elkészüljön, függetlenül attól, mi áll a footerben. */
+   NOTE: whatever the label says, the DOCUMENT is a Hungarian Kft.'s legal
+   paper: the terms and the privacy notice probably have to be written in
+   Hungarian (or bilingual) regardless of the footer (Lineiq-Website#14). */
 export const FOOTER_LEGAL_LINKS: FooterLink[] = [
-  { href: "/terms", label: "Terms" },
-  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", id: "terms" },
+  { href: "/privacy", id: "privacy" },
 ];
 
-/** Élő URL nélküli csatornák: ott vannak, de nem linkek — döglött link nincs. */
+/** Channels with no live URL: present, but not links, so no dead link. */
 export const FOOTER_CHANNELS: string[] = ["Instagram", "LinkedIn", "Are.na"];
 
-export const FOOTER_STUDIO = { name: "LineiQ Kft.", city: "Budapest, HU" };
-
-export const FOOTER_LABELS = {
-  studio: "Studio",
-  sitemap: "Sitemap",
-  connect: "Connect",
-  legal: "Legal",
-} as const;
-
-/** Az évszám a build/render idejéből jön, nem beégetve. */
-export const footerCopyright = (year: number) =>
-  `© ${year} LineiQ. All rights reserved.`;
+export const FOOTER_STUDIO_NAME = "LineiQ Kft.";

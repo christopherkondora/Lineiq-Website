@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import Link from "../../../components/LocaleLink";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import SplashLink from "../../../components/SplashLink";
 import CtaSwap from "../../../components/CtaSwap";
-import Footer from "../../../components/Footer";
-import { services, plainIntro, processNote } from "../../../data/services";
+import { plainIntro, type LocalizedCategory } from "../../../data/services";
+import type { Dictionary } from "../../../i18n/dictionary";
 import styles from "./page.module.css";
 
 // A Kranky aláírás dőlése kategóriánként váltakozik, hogy ne ugyanabban a
@@ -18,12 +18,26 @@ const ESSENCE_ANGLES = [-6, 3.5, -2, 5, -4.5];
 // Editorial category chapter: oversized Fraunces opening with the Kranky
 // signature, mixed-typography lede, sticky essence on the margin beside the
 // numbered sub-service chapters, then a giant "next chapter" handoff.
-export default function CategoryArticle({ index }: { index: number }) {
+interface CategoryArticleProps {
+  /** The whole catalogue in the page's language, for the hand-off. */
+  categories: LocalizedCategory[];
+  index: number;
+  t: Omit<Dictionary["services"], "categories">;
+  /** Rendered by the server page, so its strings never pass through here. */
+  footer: ReactNode;
+}
+
+export default function CategoryArticle({
+  categories,
+  index,
+  t,
+  footer,
+}: CategoryArticleProps) {
   const rootRef = useRef<HTMLElement>(null);
 
-  const service = services[index];
-  const next = services[(index + 1) % services.length];
-  const rest = services.filter(
+  const service = categories[index];
+  const next = categories[(index + 1) % categories.length];
+  const rest = categories.filter(
     (s) => s.slug !== service.slug && s.slug !== next.slug
   );
 
@@ -81,7 +95,7 @@ export default function CategoryArticle({ index }: { index: number }) {
 
           <div className={`reveal ${styles.heroMeta}`} data-hero>
             <Link href="/#services" className={styles.back}>
-              All services
+              {t.allServices}
             </Link>
           </div>
 
@@ -108,14 +122,14 @@ export default function CategoryArticle({ index }: { index: number }) {
       <section className={`section ${styles.chapters}`}>
         <div className={`container ${styles.chaptersGrid}`}>
           <aside className={styles.rail}>
-            <p className={styles.railLabel}>What it includes</p>
+            <p className={styles.railLabel}>{t.includes}</p>
             <p className={styles.railIntro}>{plainIntro(service.intro)}</p>
-            <p className={styles.railProcess}>{processNote}</p>
+            <p className={styles.railProcess}>{t.processNote}</p>
           </aside>
 
           <ol className={styles.chapterList}>
             {service.subServices.map((ss, i) => (
-              <li key={ss.title} className={styles.chapter} data-reveal>
+              <li key={ss.id} className={styles.chapter} data-reveal>
                 <span className={styles.chapterNum}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -133,7 +147,7 @@ export default function CategoryArticle({ index }: { index: number }) {
       <section className={`section ${styles.nextSection}`}>
         <div className="container">
           <p className={styles.nextLabel} data-reveal>
-            <span className={styles.diamond}>◆</span> Next
+            <span className={styles.diamond}>◆</span> {t.next}
           </p>
           <div data-reveal>
             <Link
@@ -147,7 +161,7 @@ export default function CategoryArticle({ index }: { index: number }) {
             </Link>
           </div>
           <p className={styles.restRow} data-reveal>
-            Or:{" "}
+            {t.or}{" "}
             {rest.map((o, i) => (
               <span key={o.slug}>
                 <Link
@@ -168,13 +182,13 @@ export default function CategoryArticle({ index }: { index: number }) {
         <div className={`container ${styles.ctaInner}`}>
           <div data-reveal>
             <SplashLink href="/contact" className={styles.ctaLink}>
-              <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's talk!" />
+              <CtaSwap defaultLabel={t.cta} hoverLabel={t.ctaHover} />
             </SplashLink>
           </div>
         </div>
       </section>
 
-      <Footer />
+      {footer}
     </main>
   );
 }

@@ -30,7 +30,8 @@ export default async function AboutPage({
 }: PageProps<"/[locale]/about">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  const t = getDictionary(locale).about;
+  const dict = getDictionary(locale);
+  const t = dict.about;
   const ages = founderAges();
 
   return (
@@ -60,7 +61,7 @@ export default async function AboutPage({
           roster itself is not lost: it lives in the vault at World.md §4. */}
       <BookshelfSection t={t.bookshelf} />
       <AboutClose t={t.close} />
-      <Footer />
+      <Footer t={dict.footer} />
     </main>
   );
 }

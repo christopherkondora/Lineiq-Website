@@ -11,10 +11,11 @@
 /* Tartalomszélességű hasábok, a maradék hely egyenletesen elosztva — ugyanaz a
    megfontolás, mint a SequenceSection overlay-footerénél (a részletes indoklás
    ott áll). Négy egyenlő 1fr sávnál a rövid utolsó hasáb után holt hely maradt
-   a jobb margóig, és a blokk balra csúszottnak látszott. */
+   a jobb margóig, és a blokk balra csúszottnak látszott. The fifth column is
+   the language switcher. */
 .row {
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(5, auto);
   justify-content: space-between;
   gap: var(--space-lg);
   padding-bottom: var(--space-lg);
@@ -82,6 +83,27 @@
   cursor: default;
 }
 
+/* The language switcher brings the menu overlay's look: a row of 44px entries
+   at body size. In the footer it takes a column's: stacked, at the links' size
+   and opacity, with the current language in full white. */
+.switcher ul {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: var(--space-xs);
+}
+
+.switcher a {
+  min-height: 0;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: normal;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.switcher a[aria-current="true"] {
+  color: var(--color-white);
+}
+
 /* ─── Legal ────────────────────────────────────────────── */
 .legal {
   padding-top: var(--space-lg);
@@ -103,11 +125,13 @@
    interaktív: nélküle a Connect hasáb 18px-es sorai kilógnának a másik két
    hasáb 44px-es ritmusából. */
 @media (pointer: coarse) {
-  .list {
+  .list,
+  .switcher ul {
     gap: 0;
   }
   .list a,
-  .soon {
+  .soon,
+  .switcher a {
     display: flex;
     align-items: center;
     min-height: 44px;
@@ -162,7 +186,8 @@
      magassága van, nem pszeudoelemes túlnyúlása, tehát a szomszédos linkek
      találati felülete nem fedi egymást. */
   .list a,
-  .soon {
+  .soon,
+  .switcher a {
     justify-content: center;
     min-height: 40px;
   }
@@ -171,7 +196,8 @@
      súlyából. 1rem az a méret, ahol a link még nem menü-főcím, de olvasható. */
   .list a,
   .soon,
-  .text {
+  .text,
+  .switcher a {
     font-size: var(--text-lg);
   }
 
@@ -197,6 +223,18 @@
   }
   .colLegal {
     order: 4;
+  }
+
+  /* The switcher closes the block on a row of its own, across both columns,
+     its three languages side by side. */
+  .colLanguage {
+    order: 5;
+    grid-column: 1 / -1;
+  }
+  .switcher ul {
+    flex-direction: row;
+    justify-content: center;
+    gap: 0 var(--space-lg);
   }
 
   .legal {
