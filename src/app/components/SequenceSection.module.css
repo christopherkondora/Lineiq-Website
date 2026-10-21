@@ -87,7 +87,8 @@
    terül szét: a rács 1440px-nél megáll és középre kerül. */
 .footerGrid {
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  /* The fifth column is the language switcher. */
+  grid-template-columns: repeat(5, auto);
   justify-content: space-between;
   gap: var(--space-xl);
   padding: var(--space-lg) var(--container-pad) var(--space-md);
@@ -144,6 +145,29 @@
   font-size: var(--text-sm);
   color: rgba(255, 255, 255, 0.55);
   cursor: default;
+}
+
+/* The switcher brings the menu overlay's look; here it takes a column's, as in
+   Footer.module.css: stacked, at the links' size and opacity, the current
+   language in full white. */
+.footerSwitcher ul {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 5px;
+}
+
+.footerSwitcher a {
+  min-height: 0;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: normal;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 200ms ease;
+}
+
+.footerSwitcher a:hover,
+.footerSwitcher a[aria-current="true"] {
+  color: var(--color-white);
 }
 
 .footerLegal {

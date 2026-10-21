@@ -9,24 +9,28 @@ import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { stripLocale } from "../i18n/routing";
+import type { Dictionary } from "../i18n/dictionary";
+
+type NavCopy = Dictionary["nav"];
 
 type MenuItem = {
-  label: string;
+  id: keyof NavCopy["links"];
   href: string;
 };
 
 const menuItems: MenuItem[] = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/#services" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
+  { id: "home", href: "/" },
+  { id: "services", href: "/#services" },
+  { id: "about", href: "/about" },
+  { id: "contact", href: "/contact" },
 ];
 
 interface NavbarProps {
+  t: NavCopy;
   switcherLabel: string;
 }
 
-export default function Navbar({ switcherLabel }: NavbarProps) {
+export default function Navbar({ t, switcherLabel }: NavbarProps) {
   // Without its locale: /hu/contact is the contact page too.
   const pathname = stripLocale(usePathname());
   const [open, setOpen] = useState(false);
@@ -127,7 +131,7 @@ export default function Navbar({ switcherLabel }: NavbarProps) {
           className={styles.toggle}
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          aria-label={open ? "Close menu" : "Open menu"}
+          aria-label={open ? t.closeMenu : t.openMenu}
         >
           <span className={`${styles.bar} ${open ? styles.barOpenA : ""}`} />
           <span className={`${styles.bar} ${open ? styles.barOpenB : ""}`} />
@@ -137,7 +141,7 @@ export default function Navbar({ switcherLabel }: NavbarProps) {
             mutatna — ott nem jelenik meg. */}
         {!hideCta && pathname !== "/contact" && (
           <SplashLink href="/contact" className={styles.cta} onClick={closeMenu}>
-            <CtaSwap defaultLabel="Let's talk?" hoverLabel="Let's go!" />
+            <CtaSwap defaultLabel={t.cta} hoverLabel={t.ctaHover} />
           </SplashLink>
         )}
       </header>
@@ -159,7 +163,7 @@ export default function Navbar({ switcherLabel }: NavbarProps) {
                   onClick={closeMenu}
                   className={styles.menuLink}
                 >
-                  <span>{item.label}</span>
+                  <span>{t.links[item.id]}</span>
                   <span className={styles.menuArrow}>↗</span>
                 </Link>
               </li>

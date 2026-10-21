@@ -4,15 +4,15 @@ import { useEffect, useRef } from "react";
 import Link from "./LocaleLink";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
+import LanguageSwitcher from "./LanguageSwitcher";
 import styles from "./SequenceSection.module.css";
 import type { Dictionary } from "../i18n/dictionary";
+import { format } from "../i18n/format";
 import {
   FOOTER_CHANNELS,
-  FOOTER_LABELS,
   FOOTER_LEGAL_LINKS,
   FOOTER_SITEMAP,
-  FOOTER_STUDIO,
-  footerCopyright,
+  FOOTER_STUDIO_NAME,
 } from "../data/footer";
 
 const FRAME_COUNT = 40;
@@ -21,8 +21,10 @@ const frameSrc = (i: number) =>
 
 export default function SequenceSection({
   t,
+  footer,
 }: {
   t: Dictionary["home"]["close"];
+  footer: Dictionary["footer"];
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -128,25 +130,25 @@ export default function SequenceSection({
         <div className={styles.footerOverlay}>
           <div className={styles.footerGrid}>
             <div>
-              <p className={styles.footerLabel}>{FOOTER_LABELS.studio}</p>
+              <p className={styles.footerLabel}>{footer.studio}</p>
               <p className={styles.footerText}>
-                {FOOTER_STUDIO.name}
+                {FOOTER_STUDIO_NAME}
                 <br />
-                {FOOTER_STUDIO.city}
+                {footer.city}
               </p>
             </div>
             <div>
-              <p className={styles.footerLabel}>{FOOTER_LABELS.sitemap}</p>
+              <p className={styles.footerLabel}>{footer.sitemap}</p>
               <ul className={styles.footerList}>
                 {FOOTER_SITEMAP.map((l) => (
                   <li key={l.href}>
-                    <Link href={l.href}>{l.label}</Link>
+                    <Link href={l.href}>{footer.links[l.id]}</Link>
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <p className={styles.footerLabel}>{FOOTER_LABELS.connect}</p>
+              <p className={styles.footerLabel}>{footer.connect}</p>
               {/* Channels without a live URL render as plain text — no dead links. */}
               <ul className={styles.footerList}>
                 {FOOTER_CHANNELS.map((c) => (
@@ -157,20 +159,30 @@ export default function SequenceSection({
               </ul>
             </div>
             <div>
-              <p className={styles.footerLabel}>{FOOTER_LABELS.legal}</p>
+              <p className={styles.footerLabel}>{footer.legal}</p>
               <ul className={styles.footerList}>
                 {FOOTER_LEGAL_LINKS.map((l) => (
                   <li key={l.href}>
-                    <Link href={l.href}>{l.label}</Link>
+                    <Link href={l.href}>{footer.links[l.id]}</Link>
                   </li>
                 ))}
               </ul>
+            </div>
+            {/* The same switcher as in the menu, as in Footer.tsx. */}
+            <div>
+              <p className={styles.footerLabel} aria-hidden="true">
+                {footer.language}
+              </p>
+              <LanguageSwitcher
+                label={footer.language}
+                className={styles.footerSwitcher}
+              />
             </div>
           </div>
           {/* Az évszám korábban be volt égetve ("© 2026"), miközben a Footer.tsx
               számolta — a kettő januárban szétcsúszott volna. */}
           <p className={styles.footerLegal}>
-            {footerCopyright(new Date().getFullYear())}
+            {format(footer.copyright, { year: new Date().getFullYear() })}
           </p>
         </div>
       </div>

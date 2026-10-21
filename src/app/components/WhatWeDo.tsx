@@ -6,7 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CustomEase } from "gsap/CustomEase";
 import styles from "./WhatWeDo.module.css";
-import { services } from "../data/services";
+import type { LocalizedCategory } from "../data/services";
 
 // bymonolog.com "what we can help with" receptje, fehér szekción, LineiQ
 // tipográfiával: jobb oldalt óriás, egymásra rakott Fraunces szolgáltatás-nevek
@@ -14,7 +14,11 @@ import { services } from "../data/services";
 // ripelt MONOLOG ut() függvény szerint SIMÁN úszik az aktív névhez (translateY
 // tween ease-transition-nel, kép-crossfade ease-fade-del). Bal oldalt egy
 // beszédes mondat + egy egyszerű, átsuhanó vonal-animáció.
-export default function WhatWeDo() {
+export default function WhatWeDo({
+  categories,
+}: {
+  categories: Pick<LocalizedCategory, "slug" | "title">[];
+}) {
   const rootRef = useRef<HTMLElement>(null);
 
   // A fotó az aktív névhez úszik. A ripelt bundle ut() függvényének portja:
@@ -138,7 +142,7 @@ export default function WhatWeDo() {
           <div className={styles.main}>
             <div className={styles.content}>
               <ul className={styles.list}>
-                {services.map((s) => (
+                {categories.map((s) => (
                   <li key={s.slug} className={styles.rowItem} data-reveal>
                     <Link
                       href={`/services/${s.slug}`}
@@ -154,7 +158,7 @@ export default function WhatWeDo() {
               <div className={styles.card}>
                 <div className={styles.cardCenterer}>
                   <div className={styles.cardInner}>
-                    {services.map((s) => (
+                    {categories.map((s) => (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         key={s.slug}

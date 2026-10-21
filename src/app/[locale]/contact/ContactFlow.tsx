@@ -12,7 +12,6 @@ import {
 } from "react";
 import { gsap } from "gsap";
 import CtaSwap from "../../components/CtaSwap";
-import Footer from "../../components/Footer";
 import styles from "./page.module.css";
 import {
   BUDGET_BANDS,
@@ -196,7 +195,8 @@ function Ask({ index }: { index: number }) {
   );
 }
 
-export default function ContactFlow() {
+/** The footer is rendered by the server page and shown with the confirmation. */
+export default function ContactFlow({ footer }: { footer: ReactNode }) {
   const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
   const [stage, setStage] = useState<StageId | null>(null);
@@ -681,7 +681,7 @@ export default function ContactFlow() {
             </div>
           </div>
         </section>
-        <Footer />
+        {footer}
       </>
     );
   }
