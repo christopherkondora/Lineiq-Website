@@ -21,6 +21,6 @@ export const SITE_INDEXABLE = false;
 
 /**
  * Routes that stay out of the index even after the blackout lifts. /styleguide
- * and /preloader are working surfaces for us, not pages for a visitor.
+ * is a working surface for us, not a page for a visitor.
  */
-export const PRIVATE_ROUTES = ["/styleguide", "/preloader"];
+export const PRIVATE_ROUTES = ["/styleguide"];
