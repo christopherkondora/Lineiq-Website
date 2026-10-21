@@ -108,19 +108,18 @@ describe("a path in another locale", () => {
 describe("private routes", () => {
   it("knows the working routes", () => {
     expect(isPrivatePath("/styleguide")).toBe(true);
-    expect(isPrivatePath("/preloader?mode=scrub")).toBe(true);
+    expect(isPrivatePath("/styleguide?section=type")).toBe(true);
     expect(isPrivatePath("/about")).toBe(false);
     expect(isPrivatePath("/styleguides")).toBe(false);
   });
 
   it("are never localised", () => {
     expect(localizePath("/styleguide", "hu")).toBe("/styleguide");
-    expect(localizePath("/preloader", "de")).toBe("/preloader");
+    expect(localizePath("/styleguide", "de")).toBe("/styleguide");
   });
 
   it("have no alternates", () => {
     expect(alternates("/styleguide")).toBeNull();
-    expect(alternates("/preloader")).toBeNull();
   });
 });
 
@@ -178,7 +177,6 @@ describe("what the proxy does", () => {
 
   it("passes the private routes through at their own address", () => {
     expect(routeRequest("/styleguide")).toEqual({ action: "next" });
-    expect(routeRequest("/preloader")).toEqual({ action: "next" });
   });
 });
 

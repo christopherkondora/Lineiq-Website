@@ -53,6 +53,11 @@ export const rootMetadata: Metadata = {
   // Inherited by every route, so no page can opt itself back in by accident.
   // Lifts with SITE_INDEXABLE on launch day. See [[data/site]].
   robots: SITE_INDEXABLE ? undefined : { index: false, follow: false },
+  // With translate="no" on <html>: browsers must not machine-translate the
+  // page. Translation rewrites the text nodes that SplitText, CtaSwap and the
+  // scroll sequences have split and measured, and the layout falls apart. A
+  // visitor changes language with the switcher instead.
+  other: { google: "notranslate" },
 };
 
 export default function RootDocument({
@@ -67,6 +72,7 @@ export default function RootDocument({
   return (
     <html
       lang={locale}
+      translate="no"
       className={`${fraunces.variable} ${wix.variable} ${kranky.variable}`}
       // a főoldal gate-scriptje paint előtt data-intro attribútumot tehet fel
       suppressHydrationWarning
