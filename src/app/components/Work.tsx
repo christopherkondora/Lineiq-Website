@@ -8,6 +8,7 @@ import { SplitText } from "gsap/SplitText";
 import styles from "./Work.module.css";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
+import type { Dictionary } from "../i18n/dictionary";
 
 // Diagonal step per page. MUST stay in sync with --stepx / --stepy in the CSS.
 // Low X / high Y = a near-vertical path: images rise and exit the top rather
@@ -27,29 +28,13 @@ const ENTRY_STEPS = 1.04;
 const ENTRY_X = STEP_X * ENTRY_STEPS; // 0.281 vw
 const ENTRY_Y = STEP_Y * ENTRY_STEPS; // 0.749 vh
 
-const projects = [
-  {
-    client: "Klient",
-    image: "/work/klient.jpg",
-    href: "/work",
-    desc:
-      "Projects, invoicing and client communication on a single surface. The software we built for ourselves before we ever sold it to anyone.",
-  },
-  {
-    client: "North",
-    image: "/work/helios.jpg",
-    href: "/work",
-    desc:
-      "A budgeting app for iOS that makes money feel calm. A clear visual system, fluid native interactions, and a flow that turns everyday spending into a habit people actually keep.",
-  },
-  {
-    client: "Miért?",
-    image: "/work/miert.jpg",
-    href: "/work",
-    desc:
-      "A podcast whose brand is the question. An editorial system, a motion language and a visual voice that sounds the same, recognizably, in every episode.",
-  },
-];
+// The names are proper nouns and stay in code; each description is in the
+// dictionary (home.work.projects), keyed by id.
+const PROJECTS = [
+  { id: "klient", client: "Klient", image: "/work/klient.jpg", href: "/work" },
+  { id: "north", client: "North", image: "/work/helios.jpg", href: "/work" },
+  { id: "miert", client: "Miért?", image: "/work/miert.jpg", href: "/work" },
+] as const;
 
 // Három mód, egyetlen szekció. A `diagonal` a pinelt, széles nézetű
 // koreográfia; a `stacked` a telefon függőleges kártyalistája a SAJÁT
@@ -57,7 +42,7 @@ const projects = [
 // egyik JS-effekt sem épül fel és a CSS base layout az igazság.
 type Mode = "static" | "diagonal" | "stacked";
 
-export default function Work() {
+export default function Work({ t }: { t: Dictionary["home"]["work"] }) {
   const rootRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -163,7 +148,7 @@ export default function Work() {
       // a soft crossfade. Absolute timeline positions keep the offset independent
       // of scroll speed.
       const swapText = (active: number) => {
-        const p = projects[active];
+        const p = PROJECTS[active];
         swapTl?.kill(); // a fast scroll past two works can't stack swaps
         const tl = gsap.timeline();
         if (brandEl) {
@@ -173,7 +158,7 @@ export default function Work() {
         if (copyEl) {
           tl.to(copyEl, { autoAlpha: 0, duration: 0.3, ease: "power2.in" }, 0.18)
             .add(() => {
-              copyEl.textContent = p.desc;
+              copyEl.textContent = t.projects[p.id];
             }, 0.48)
             .to(copyEl, { autoAlpha: 1, duration: 0.5, ease: "power2.out" }, 0.48);
         }
@@ -340,7 +325,7 @@ export default function Work() {
       brandSplit?.revert();
       ctx.revert();
     };
-  }, [mode]);
+  }, [mode, t]);
 
   // ─── Stacked mód (telefon) koreográfiája ────────────────────────────────
   // A diagonális pin ≤768px-en ki van kapcsolva, és a helyére lépő függőleges
@@ -549,13 +534,13 @@ export default function Work() {
     >
       <div ref={stageRef} className={styles.stage}>
         <div ref={trackRef} className={styles.track}>
-          {projects.map((p, i) => (
+          {PROJECTS.map((p, i) => (
             <Link
               key={p.client}
               href={p.href}
               className={styles.page}
               data-page
-              data-cursor-text="View case"
+              data-cursor-text={t.cursor}
               style={{ "--i": i } as CSSProperties}
             >
               <div className={styles.inner} data-inner>
@@ -572,7 +557,7 @@ export default function Work() {
                   {p.client}
                 </h3>
                 <p className={styles.captionDesc} data-caption-desc>
-                  {p.desc}
+                  {t.projects[p.id]}
                 </p>
               </div>
             </Link>
@@ -583,21 +568,21 @@ export default function Work() {
             használja a saját pinelt sarkában. */}
         <div className={styles.stackedCta} data-stacked-cta>
           <SplashLink href="/work" className={styles.cornerCtaLink}>
-            <CtaSwap defaultLabel="All our work ↗" hoverLabel="Let's see ↗" />
+            <CtaSwap defaultLabel={t.allWork} hoverLabel={t.allWorkHover} />
           </SplashLink>
         </div>
 
         <p className={styles.copy} data-copy>
-          {projects[0].desc}
+          {t.projects[PROJECTS[0].id]}
         </p>
 
         <h3 className={styles.brand} data-brand>
-          {projects[0].client}
+          {PROJECTS[0].client}
         </h3>
 
         <div className={styles.cornerCta} data-corner-cta>
           <SplashLink href="/work" className={styles.cornerCtaLink}>
-            <CtaSwap defaultLabel="All our work ↗" hoverLabel="Let's see ↗" />
+            <CtaSwap defaultLabel={t.allWork} hoverLabel={t.allWorkHover} />
           </SplashLink>
         </div>
       </div>

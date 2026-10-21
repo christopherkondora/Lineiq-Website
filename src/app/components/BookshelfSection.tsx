@@ -4,9 +4,13 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./BookshelfSection.module.css";
+import { getFounder, founderName, type Founder } from "../data/founders";
+import type { Dictionary } from "../i18n/dictionary";
+import { useLocale } from "../i18n/LocaleProvider";
 
 interface BookData {
-  title: string;
+  /** Keys the title and the commentary in the dictionary (about.bookshelf). */
+  id: keyof Dictionary["about"]["bookshelf"]["books"];
   author: string;
   spineColor: string;
   spineTextColor: string;
@@ -14,11 +18,11 @@ interface BookData {
   coverTextColor: string;
   height: number;
   thickness: number;
-  /* What the book is to us, not what the book says. The panel used to lead
-     with a pulled quote and file this underneath it as a reaction; the quote
-     was the book's voice doing the talking on a page about ours. */
-  commentary: string;
-  commentaryAuthor: string;
+  /* Who signs the commentary: what the book is to us, not what the book says.
+     The panel used to lead with a pulled quote and file the commentary
+     underneath it as a reaction; the quote was the book's voice doing the
+     talking on a page about ours. */
+  commentaryBy: Founder["id"];
   coverImage?: string;
   spineImage?: string;
   spineBgSize?: string;
@@ -39,7 +43,7 @@ const BOOK_GAPS = [0, 50, 70, 45, 60];
 
 const BOOKS: BookData[] = [
   {
-    title: "Principles",
+    id: "principles",
     author: "Ray Dalio",
     spineColor: "#1a1a1a",
     spineTextColor: "#d0d0d0",
@@ -47,14 +51,12 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 560,
     thickness: 140,
-    commentary:
-      "LineiQ runs on principles, not assumptions. Who we take on, what we charge, what we refuse: all of it is written down before it is needed, so no decision gets made twice and none of them gets made in a bad week.",
-    commentaryAuthor: "Kristóf Kondora",
+    commentaryBy: "kondora-kristof",
     coverImage: "/books/elvek-front.webp",
     spineImage: "/books/elvek-side.webp",
   },
   {
-    title: "Atomic Habits",
+    id: "atomicHabits",
     author: "James Clear",
     spineColor: "#7B5B3A",
     spineTextColor: "#f0e6d4",
@@ -62,14 +64,12 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 490,
     thickness: 100,
-    commentary:
-      "The reason we sell systems and not campaigns. A goal is a thing you announce; a system is a thing that still runs on the week nobody is watching. We build the second kind, for ourselves and for the people who hire us.",
-    commentaryAuthor: "Sütő Áron",
+    commentaryBy: "suto-aron",
     coverImage: "/books/atomic-front.webp",
     spineImage: "/books/atomic-side.webp",
   },
   {
-    title: "Zero to One",
+    id: "zeroToOne",
     author: "Peter Thiel",
     spineColor: "#0055a4",
     spineTextColor: "#ffffff",
@@ -77,14 +77,12 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 420,
     thickness: 82,
-    commentary:
-      "Where our refusal to be another agency comes from. The work is not to win the category, it is to be the only one in it: international-grade craft on the Hungarian market, which is a thing that either exists or does not.",
-    commentaryAuthor: "Kristóf Kondora",
+    commentaryBy: "kondora-kristof",
     coverImage: "/books/zero-front.webp",
     spineImage: "/books/zero-side.webp",
   },
   {
-    title: "The Hard Thing About Hard Things",
+    id: "hardThing",
     author: "Ben Horowitz",
     spineColor: "#2d2d2d",
     spineTextColor: "#d0d0d0",
@@ -92,14 +90,12 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 580,
     thickness: 125,
-    commentary:
-      "Our licence to have the hard conversation instead of the comfortable one. Building a company offers no good answers, only less bad decisions, and a studio that flinches from saying so ends up selling the comfortable one.",
-    commentaryAuthor: "Sütő Áron",
+    commentaryBy: "suto-aron",
     coverImage: "/books/hard-front.webp",
     spineImage: "/books/hard-side.webp",
   },
   {
-    title: "Deep Work",
+    id: "deepWork",
     author: "Cal Newport",
     spineColor: "#8b0000",
     spineTextColor: "#e0c0c0",
@@ -107,15 +103,18 @@ const BOOKS: BookData[] = [
     coverTextColor: "#ffffff",
     height: 510,
     thickness: 95,
-    commentary:
-      "Why we hold three seats and no more. There is no Slack flood here and no meeting marathon, because the work we sell cannot be done in the gaps between them. Calm is not a perk of the process, it is the process.",
-    commentaryAuthor: "Kristóf Kondora",
+    commentaryBy: "kondora-kristof",
     coverImage: "/books/deep-front.webp",
     spineImage: "/books/deep-side.webp",
   },
 ];
 
-export default function BookshelfSection() {
+export default function BookshelfSection({
+  t,
+}: {
+  t: Dictionary["about"]["bookshelf"];
+}) {
+  const locale = useLocale();
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const wrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -586,12 +585,13 @@ export default function BookshelfSection() {
   }, [activeBook, closeBook]);
 
   const displayData = displayBook !== null ? BOOKS[displayBook] : null;
+  const displayCopy = displayData ? t.books[displayData.id] : null;
 
   return (
     <section ref={sectionRef} className={styles.section}>
       <div ref={bgTitleRef} className={styles.bgTitle}>
         <span ref={bgTitleInnerRef} className={styles.bgTitleInner}>
-          The literature that shapes us.
+          {t.title}
         </span>
       </div>
 
@@ -610,7 +610,7 @@ export default function BookshelfSection() {
         <div className={styles.shelf}>
           {BOOKS.map((book, i) => (
             <div
-              key={book.title}
+              key={book.id}
               ref={(el) => {
                 wrapperRefs.current[i] = el;
               }}
@@ -665,7 +665,7 @@ export default function BookshelfSection() {
                 >
                   {!book.coverImage && (
                     <>
-                      <span className={styles.coverTitle}>{book.title}</span>
+                      <span className={styles.coverTitle}>{t.books[book.id].title}</span>
                       <span className={styles.coverAuthor}>{book.author}</span>
                     </>
                   )}
@@ -690,7 +690,7 @@ export default function BookshelfSection() {
                 >
                   {!book.spineImage && (
                     <>
-                      <span className={styles.spineTitle}>{book.title}</span>
+                      <span className={styles.spineTitle}>{t.books[book.id].title}</span>
                       <span className={styles.spineAuthor}>{book.author}</span>
                     </>
                   )}
@@ -765,7 +765,7 @@ export default function BookshelfSection() {
               >
                 {!book.coverImage && (
                   <>
-                    <span className={styles.coverTitle}>{book.title}</span>
+                    <span className={styles.coverTitle}>{t.books[book.id].title}</span>
                     <span className={styles.coverAuthor}>{book.author}</span>
                   </>
                 )}
@@ -789,17 +789,17 @@ export default function BookshelfSection() {
           {displayData && (
             <>
               <h3 ref={detailTitleRef} className={styles.detailTitle}>
-                {displayData.title}
+                {displayCopy?.title}
               </h3>
 
               <p ref={detailCommentaryRef} className={styles.detailCommentary}>
-                {displayData.commentary}
+                {displayCopy?.commentary}
               </p>
               <span
                 ref={detailAuthorRef}
                 className={styles.detailCommentaryAuthor}
               >
-                {displayData.commentaryAuthor}
+                {founderName(getFounder(displayData.commentaryBy), locale)}
               </span>
             </>
           )}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import AboutHero from "../../components/AboutHero";
 import AboutOrigin from "../../components/AboutOrigin";
 import AboutCompounds from "../../components/AboutCompounds";
@@ -9,6 +10,8 @@ import BookshelfSection from "../../components/BookshelfSection";
 import AboutClose from "../../components/AboutClose";
 import Footer from "../../components/Footer";
 import { ageSentence, founderAges } from "../../data/founders";
+import { getDictionary } from "../../i18n/dictionary";
+import { isLocale } from "../../i18n/routing";
 
 export const metadata: Metadata = {
   title: "About — LineiQ",
@@ -22,33 +25,41 @@ export const metadata: Metadata = {
 // them is invisible.
 export const revalidate = 86400;
 
-export default function AboutPage() {
+export default async function AboutPage({
+  params,
+}: PageProps<"/[locale]/about">) {
+  const { locale } = await params;
+  if (!isLocale(locale)) notFound();
+  const t = getDictionary(locale).about;
   const ages = founderAges();
 
   return (
     <main>
-      <AboutHero />
-      <AboutOrigin />
+      <AboutHero t={t.hero} />
+      <AboutOrigin t={t.origin} />
       {/* The Ism, on its own viewport. It shares AboutOrigin's black with no
           seam: the prose argues its way to the word "compounds", and the
           section below detonates it. Same movement, so same background. */}
-      <AboutCompounds />
-      <AboutBeliefs />
-      <AboutFounders />
+      <AboutCompounds t={t.compounds} />
+      <AboutBeliefs t={t.beliefs} />
+      <AboutFounders t={t.founders} />
       {/* AboutRefusals stood here until 2026-09-25. Its three refusals were cut
           (two restated costed beliefs, the third had no cost to file) and its
           Limitation, which wrongly claimed neither founder had ever had a
           client, was promoted to its own viewport with the record that answers
           it. Vault: identity/World.md §3, corrected the same day. */}
-      <AboutRecord ageSentence={ageSentence(ages)} />
+      <AboutRecord
+        t={t.record}
+        ageSentence={ageSentence(ages, t.record)}
+      />
       {/* AboutMentors used to sit here: five names the studio runs on, rendered
           as initials in rectangles. It was cut on 2026-09-07. The roster was
           never confirmed, and structurally it was the borrowed-authority
           section, five famous people standing in for our own claims. The shelf
           stays because the commentary on it is signed and first-person. The
           roster itself is not lost: it lives in the vault at World.md §4. */}
-      <BookshelfSection />
-      <AboutClose />
+      <BookshelfSection t={t.bookshelf} />
+      <AboutClose t={t.close} />
       <Footer />
     </main>
   );

@@ -17,41 +17,24 @@
 //
 // Home definitions live in the vault at academy/_Frameworks.md. Do not restate
 // a framework's meaning here in different words; if a line needs changing, the
-// canonical index changes first.
+// canonical index changes first, then the dictionary.
 
-export interface Framework {
-  /** v2 canonical name. The v1 aliases are not for public use. */
-  name: string;
-  /** One line, in our voice, that the reader can apply immediately. */
-  line: string;
-}
+/** Five of twenty-two, in reading order. Chosen because each one works on
+    first contact, with no setup: a reader can run the Stop-Paying Test on their
+    own spend before they finish the sentence. The remaining seventeen are not
+    secrets, they are just not first impressions. Each one's v2 canonical name
+    (the v1 aliases are not for public use) and its one line, in our voice, that
+    the reader can apply immediately, are in the dictionary
+    (about.founders.frameworks), keyed by these ids. */
+export const FRAMEWORK_IDS = [
+  "compoundVsTax",
+  "stopPaying",
+  "roiAutopsy",
+  "velvetRope",
+  "futureWalk",
+] as const;
 
-/** Five of twenty-two. Chosen because each one works on first contact, with no
-    setup: a reader can run the Stop-Paying Test on their own spend before they
-    finish the sentence. The remaining seventeen are not secrets, they are just
-    not first impressions. */
-export const FRAMEWORKS: Framework[] = [
-  {
-    name: "The Compound vs Tax Engine",
-    line: "Every forint you spend either builds an asset or pays rent.",
-  },
-  {
-    name: "The Stop-Paying Test",
-    line: "If you stopped paying for this tomorrow, would the work survive?",
-  },
-  {
-    name: "The ROI Autopsy",
-    line: "We find where the current spend is dying before we propose anything.",
-  },
-  {
-    name: "The Velvet Rope",
-    line: "People are screened out before any deep work begins, not after.",
-  },
-  {
-    name: "The Future Walk",
-    line: "Day 1, 30, 90 and 365, walked through before an offer exists.",
-  },
-];
+export type FrameworkId = (typeof FRAMEWORK_IDS)[number];
 
 /** The shape, not the size. Structure is the thing mass-generated volume does
     not have, which is why the architecture is quotable and the word count is

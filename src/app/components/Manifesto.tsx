@@ -4,8 +4,13 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Manifesto.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 
-export default function Manifesto() {
+export default function Manifesto({
+  t,
+}: {
+  t: Dictionary["home"]["manifesto"];
+}) {
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -119,30 +124,31 @@ export default function Manifesto() {
           <div className={styles.copy}>
             <h2 className={`text-statement ${styles.heading}`}>
               <span className={styles.headLine} data-head-line>
-                <span>We didn&apos;t lose taste to AI.</span>
+                <span>{t.headingOne}</span>
               </span>
               <span className={styles.headLine} data-head-line>
-                <span>We taught it ours.</span>
+                <span>{t.headingTwo}</span>
               </span>
             </h2>
 
             <p className={styles.lead}>
               <span className={styles.line1} data-lead-line>
-                A Hungarian studio,{" "}
+                {t.leadOneBefore}{" "}
                 {/* "by Western-European" is held as one unbreakable run. The
                     hyphen alone was the first bug (it split the compound); once
                     that was fixed the two-word remainder stranded "by" on a line
                     of its own at ~900px. The only break left in the clause is the
                     space before "standards." */}
                 <span className={styles.highlight}>
-                  <span className={styles.nobreak}>by Western-European</span>{" "}
-                  standards.
+                  <span className={styles.nobreak}>{t.leadOneNoBreak}</span>{" "}
+                  {t.leadOneEnd}
                 </span>
               </span>
               <span className={styles.line2} data-lead-line>
-                Everyone uses AI. The difference is the{" "}
-                <span className={styles.highlight}>mind</span> and the{" "}
-                <span className={styles.highlight}>taste.</span>
+                {t.leadTwoBefore}{" "}
+                <span className={styles.highlight}>{t.mind}</span>{" "}
+                {t.leadTwoMiddle}{" "}
+                <span className={styles.highlight}>{t.taste}</span>
               </span>
               {/* A záró tömb EGY animált egység, nem két külön sor. Telefonon a
                   két mondat egyetlen szövegfolyamban tördelődik (lásd
@@ -153,11 +159,11 @@ export default function Manifesto() {
                   amúgy is egy gesztusként fogja össze a két mondatot. */}
               <span className={styles.lastBlock} data-lead-line>
                 <span className={styles.line3}>
-                  Brand, content and code from creative minds,
+                  {t.leadThree}
                 </span>{" "}
                 <span className={styles.line4}>
-                  with technical and theoretical{" "}
-                  <span className={styles.highlight}>expertise.</span>
+                  {t.leadFourBefore}{" "}
+                  <span className={styles.highlight}>{t.expertise}</span>
                 </span>
               </span>
             </p>
@@ -168,7 +174,7 @@ export default function Manifesto() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/work/studio.jpg"
-                alt="LineiQ studio"
+                alt={t.imageAlt}
                 className={styles.image}
                 data-reveal-image
               />

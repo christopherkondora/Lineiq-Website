@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Partners.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 
 // Full-viewport, görgetésre vezérelt "tagadás → állítás" sequence. A szekció egy
 // magas wrapper (scroll-budget), benne egy sticky 100vh színpad. A scrub-idővonal
@@ -17,7 +18,11 @@ import styles from "./Partners.module.css";
 // a három mondat egy üres színpadra érkezik (5b) — két képernyő, két külön
 // gondolat. Reduced-motion mellett a színpad statikus, minden egyszerre látszik
 // (a CSS base layout, JS nélkül).
-export default function Partners() {
+export default function Partners({
+  t,
+}: {
+  t: Dictionary["home"]["partners"];
+}) {
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -220,12 +225,15 @@ export default function Partners() {
           <div className={styles.stageHead} data-stage-head>
             {/* (1–3) tagadás */}
             <h2 className={styles.lineOne} data-line-one>
-              <span className={styles.word} data-word>We</span>{" "}
-              <span className={styles.word} data-word>don&apos;t</span>{" "}
-              <span className={styles.word} data-word>take</span>{" "}
-              <span className={styles.word} data-word>on</span>{" "}
+              {t.denial.split(" ").map((word, i) => (
+                <Fragment key={i}>
+                  <span className={styles.word} data-word>
+                    {word}
+                  </span>{" "}
+                </Fragment>
+              ))}
               <span className={`${styles.word} ${styles.clients}`} data-word>
-                clients
+                {t.denialMark}
                 <span
                   className={styles.clientsHighlight}
                   data-clients-highlight
@@ -237,9 +245,14 @@ export default function Partners() {
             {/* (4) állítás */}
             <div className={styles.lineTwo} data-line-two>
               <h2 className={styles.lineTwoHead}>
-                <span className={styles.word} data-word2>We</span>{" "}
-                <span className={styles.word} data-word2>take</span>{" "}
-                <span className={styles.word} data-word2>on</span>
+                {t.claim.split(" ").map((word, i) => (
+                  <Fragment key={i}>
+                    {i > 0 && " "}
+                    <span className={styles.word} data-word2>
+                      {word}
+                    </span>
+                  </Fragment>
+                ))}
               </h2>
               <span className={styles.script}>
                 <span className={styles.scriptInner} data-script-inner>
@@ -262,20 +275,14 @@ export default function Partners() {
               composition's corner ornaments, never the main read. */}
           <div className={styles.paras} data-paras>
             <div className={styles.col}>
-              <p>
-                That&apos;s the difference: a studio you keep, not a vendor you
-                replace. Built on trust, consistency, and a point of view.
-              </p>
-              <p>
-                Curious, transparent, ambitious. And a little obsessed with the
-                details most people never notice.
-              </p>
+              {t.columnOne.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
             <div className={styles.col}>
-              <p>
-                Setup, a retainer, and a real relationship behind both. We pick up
-                the phone, and we show up in person.
-              </p>
+              {t.columnTwo.map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
           </div>
         </div>

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Hero.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 import {
   HERO_LINE_A,
   HERO_LINE_B,
@@ -25,7 +26,7 @@ import {
 // a belépő megvárja. Nem a végét, hanem a fedő TÁVOZÁSÁNAK kezdetét — így a
 // két mozdulat átfedi egymást, és nincs üres képkocka a kettő között.
 
-export default function Hero() {
+export default function Hero({ t }: { t: Dictionary["home"]["hero"] }) {
   const rootRef = useRef<HTMLElement>(null);
   const lineARef = useRef<SVGPathElement>(null);
   const lineBRef = useRef<SVGPathElement>(null);
@@ -213,17 +214,19 @@ export default function Hero() {
 
       <div className={`container ${styles.inner}`}>
         <h1 className={styles.title}>
-          <span className={styles.word} data-hero-word>
-            Forget
-          </span>{" "}
-          <span className={styles.word} data-hero-word>
-            being
-          </span>
+          {t.lineOne.split(" ").map((word, i) => (
+            <Fragment key={i}>
+              {i > 0 && " "}
+              <span className={styles.word} data-hero-word>
+                {word}
+              </span>
+            </Fragment>
+          ))}
           <br />
           <span className={styles.ordinaryWrap}>
             {/* no whitespace between word and dot — they must read "ordinary." */}
             <span className={styles.word} data-hero-word>
-              ordinary
+              {t.lastWord}
             </span>
             <span className={styles.dot} data-hero-dot>
               .

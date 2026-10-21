@@ -1,3 +1,6 @@
+import type { Locale } from "../i18n/routing";
+import { format } from "../i18n/format";
+
 // The two founders. No photograph: the section was rebuilt on 2026-09-25 so it
 // stops depending on a shoot nobody has booked. The portrait slot is composed
 // and waiting, holding the initials until the real shots arrive — the frame,
@@ -10,64 +13,75 @@
 // with pride). The two dates sit one day apart, so between December 6 and 7 the
 // ages differ. The copy handles that instead of averaging it away.
 export interface Founder {
-  /** Filename-safe id; the portrait will key off this when it exists. */
-  id: string;
-  /** Stands in the portrait slot until the commissioned shots land. Not a
-      placeholder in the lorem-ipsum sense: the mark is designed, and the
-      photograph replaces it inside the same frame with no layout change. */
-  initials: string;
-  name: string;
+  /** Filename-safe id; the portrait will key off this when it exists, and the
+      founder's rows in the dictionary are keyed by it. */
+  id: "kondora-kristof" | "suto-aron";
+  givenName: string;
+  familyName: string;
   /** ISO birth date. */
   born: string;
-  /** The rows under the name. Facts, not characterisation: the previous set
-      were literal placeholders, and the set before those described the two of
-      us in adjectives a reader skims. Both founders carry four, and the count
-      is held on purpose because an uneven pair reads as a lead and a second.
-      Keep each row under ~40 characters. It may wrap, and the row masks and
-      rises as a block either way. What it must not do is say nothing.
-
-      Sources, so this never has to be reconstructed from memory again:
-      Kristof's client work and the Viltor relationship are in the vault at
-      docs/lineiq_fundamentum.md:40, Klient at :81. The ownership split behind
-      Aron's rows is identity/Culture.md:109, and three of the four Deep
-      Research pillars carry owner: "Aron" in their frontmatter. */
-  lines: string[];
 }
 
+// The rows under each name live in the dictionary (about.founders.lines),
+// keyed by id. Facts, not characterisation: the previous set were literal
+// placeholders, and the set before those described the two of us in adjectives
+// a reader skims. Both founders carry four, and the count is held on purpose
+// because an uneven pair reads as a lead and a second. Keep each row under ~40
+// characters. It may wrap, and the row masks and rises as a block either way.
+// What it must not do is say nothing.
+//
+// Sources, so this never has to be reconstructed from memory again: Kristof's
+// client work and the Viltor relationship are in the vault at
+// docs/lineiq_fundamentum.md:40, Klient at :81. The ownership split behind
+// Aron's rows is identity/Culture.md:109, and three of the four Deep Research
+// pillars carry owner: "Aron" in their frontmatter.
+//
 // The rows were placeholders from 2026-09-13 until 2026-09-25, when Kristof
 // pointed out that the page was running on words that say nothing, and that its
 // one factual claim about the founders was false. The replacements are facts he
 // gave in session, cross-checked against the vault.
-//
 export const FOUNDERS: Founder[] = [
   {
     id: "kondora-kristof",
-    initials: "KK",
-    // Given name first. The site is English-only today (no locale routing, no
-    // next-intl), so this is the English rendering. The Hungarian order,
-    // "Kondora Kristóf", is what a Hungarian page will want when there is one.
-    name: "Kristóf Kondora",
+    givenName: "Kristóf",
+    familyName: "Kondora",
     born: "2006-12-06",
-    lines: [
-      "Two years of client work.",
-      "Marketing and SEO at Viltor.hu.",
-      "Reads the numbers first.",
-      "Built Klient. Designed North.",
-    ],
   },
   {
     id: "suto-aron",
-    initials: "SÁ",
-    name: "Sütő Áron",
+    givenName: "Áron",
+    familyName: "Sütő",
     born: "2006-12-07",
-    lines: [
-      "Most of our 22 frameworks.",
-      "Market and ICP research.",
-      "Positioning, voice and sales.",
-      "Taking care of our money.",
-    ],
   },
 ];
+
+export function getFounder(id: Founder["id"]): Founder {
+  return FOUNDERS.find((f) => f.id === id)!;
+}
+
+/**
+ * The name as the language writes it: family name first in Hungarian, given
+ * name first in English and German (Kristóf, 2026-10-21). Until then the page
+ * mixed the two, "Kristóf Kondora" next to "Sütő Áron".
+ */
+export function founderName(founder: Founder, locale: Locale): string {
+  return locale === "hu"
+    ? `${founder.familyName} ${founder.givenName}`
+    : `${founder.givenName} ${founder.familyName}`;
+}
+
+/**
+ * What stands in the portrait slot until the commissioned shots land: the
+ * initials of the name as it is written on the page. Not a placeholder in the
+ * lorem-ipsum sense: the mark is designed, and the photograph replaces it inside
+ * the same frame with no layout change.
+ */
+export function founderInitials(founder: Founder, locale: Locale): string {
+  return founderName(founder, locale)
+    .split(" ")
+    .map((part) => part[0])
+    .join("");
+}
 
 /**
  * Completed years on a given day. The month/day comparison means the day before
@@ -91,12 +105,15 @@ export function founderAges(on: Date = new Date()): number[] {
 }
 
 /**
- * Opening line of the Refusals section. When the two ages differ (exactly one
- * day a year, between December 6 and 7) it states both instead of collapsing
- * them into a single claim that would be wrong for one of us.
+ * Opening line of the record's closing paragraph. When the two ages differ
+ * (exactly one day a year, between December 6 and 7) it states both instead of
+ * collapsing them into a single claim that would be wrong for one of us.
  */
-export function ageSentence(ages: number[]): string {
+export function ageSentence(
+  ages: number[],
+  t: { ageSame: string; ageDifferent: string }
+): string {
   const unique = Array.from(new Set(ages)).sort((a, b) => a - b);
-  if (unique.length === 1) return `We are both ${unique[0]}.`;
-  return `We are ${unique.join(" and ")}.`;
+  if (unique.length === 1) return format(t.ageSame, { age: unique[0] });
+  return format(t.ageDifferent, { younger: unique[0], older: unique[1] });
 }

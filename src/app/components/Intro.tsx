@@ -4,8 +4,9 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Intro.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 
-export default function Intro() {
+export default function Intro({ t }: { t: Dictionary["home"]["intro"] }) {
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -76,17 +77,17 @@ export default function Intro() {
         <div className={styles.composition}>
           <p className={styles.lead} data-reveal>
             <span className={styles.firstLine}>
-              A brand-building{" "}
+              {t.lineOneBefore}{" "}
               <span className={styles.swap}>
                 <span
                   className={`${styles.swapWord} ${styles.agency}`}
                   aria-hidden="true"
                 >
-                  Agency
+                  {t.struck}
                 </span>
                 <span className={styles.redaction} data-redaction>
                   <span className={`${styles.swapWord} ${styles.studio}`}>
-                    {"Studio".split("").map((ch, i) => (
+                    {t.replacement.split("").map((ch, i) => (
                       <span key={i} className={styles.studioLetter} data-studio-letter>
                         {ch}
                       </span>
@@ -94,23 +95,24 @@ export default function Intro() {
                   </span>
                 </span>
               </span>{" "}
-              and software house.
+              {t.lineOneAfter}
             </span>
             <span className={styles.secondLine}>
-              <span className={styles.highlight}>We don&apos;t just</span> execute,
-              and we don&apos;t deliver standalone services.
+              <span className={styles.highlight}>{t.lineTwoHighlight}</span>{" "}
+              {t.lineTwoRest}
             </span>
             <span className={styles.thirdLine}>
-              We build a name, backed by custom software and a marketing
+              {t.lineThree}
               {/* Desktopon a "system." a 4. sorban ül (lent); mobilon viszont a
                   3. mondat végéhez tartozik, ezért ott külön megjelenítjük. */}
-              <span className={styles.systemMobile}>{" "}system.</span>
+              <span className={styles.systemMobile}>{" "}{t.system}</span>
             </span>
             <span className={styles.fourthLine}>
-              <span className={styles.support}>system.</span>{" "}
+              <span className={styles.support}>{t.system}</span>{" "}
               <span className={styles.ecosystem}>
-                An <span className={styles.highlight}>ecosystem</span>{" "}
-                with a single purpose:
+                {t.ecosystemBefore}{" "}
+                <span className={styles.highlight}>{t.ecosystem}</span>{" "}
+                {t.ecosystemAfter}
               </span>
             </span>
           </p>
@@ -118,12 +120,13 @@ export default function Intro() {
           {/* Mobil-only: az ecosystem mondat balra rendezve, a záró nagybetűs
               sorral közös bal éllel. Desktopon rejtve (ott a .lead-ben él). */}
           <p className={styles.kicker} data-reveal>
-            An <span className={styles.highlight}>ecosystem</span> with a single
-            purpose:
+            {t.ecosystemBefore}{" "}
+            <span className={styles.highlight}>{t.ecosystem}</span>{" "}
+            {t.ecosystemAfter}
           </p>
 
           <p className={styles.closing} data-reveal>
-            To introduce you to the world.
+            {t.closing}
           </p>
         </div>
       </div>
