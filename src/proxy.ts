@@ -6,7 +6,8 @@ import { LOCALE_COOKIE, rememberedLocale } from "./app/i18n/rememberedLocale";
 // decides: the plain English address is served from the internal [locale]=en
 // segment, /hu and /de pass through, and a visitor who chose Hungarian or
 // German in the switcher is sent from a plain address to their language. That
-// redirect is a 307: it depends on the cookie, so no browser may keep it. The
+// redirect depends on the cookie, so it is a 307 marked private and no-store:
+// no browser or shared cache may keep it and replay it to someone else. The
 // /en collapse is a next.config redirect (localeRedirectRules), not a proxy
 // redirect: see routing.ts.
 //
@@ -23,9 +24,11 @@ export function proxy(request: NextRequest) {
 
   const url = request.nextUrl.clone();
   url.pathname = decision.to;
-  return decision.action === "redirect"
-    ? NextResponse.redirect(url, 307)
-    : NextResponse.rewrite(url);
+  if (decision.action === "rewrite") return NextResponse.rewrite(url);
+
+  const response = NextResponse.redirect(url, 307);
+  response.headers.set("Cache-Control", "private, no-store");
+  return response;
 }
 
 export const config = {
