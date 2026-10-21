@@ -180,6 +180,40 @@ describe("what the proxy does", () => {
   });
 });
 
+describe("what the proxy does with a remembered language", () => {
+  it("sends a plain address to the same page in the chosen language", () => {
+    expect(routeRequest("/about", "hu")).toEqual({
+      action: "redirect",
+      to: "/hu/about",
+    });
+    expect(routeRequest("/", "hu")).toEqual({ action: "redirect", to: "/hu" });
+    expect(routeRequest("/services/ecommerce", "de")).toEqual({
+      action: "redirect",
+      to: "/de/services/ecommerce",
+    });
+  });
+
+  it("keeps a remembered English at the plain address", () => {
+    expect(routeRequest("/about", "en")).toEqual({
+      action: "rewrite",
+      to: "/en/about",
+    });
+  });
+
+  it("serves English to a visitor who never chose", () => {
+    expect(routeRequest("/", null)).toEqual({ action: "rewrite", to: "/en" });
+  });
+
+  it("never moves an address that already names its language", () => {
+    expect(routeRequest("/de/about", "hu")).toEqual({ action: "next" });
+    expect(routeRequest("/hu", "de")).toEqual({ action: "next" });
+  });
+
+  it("leaves the private routes where they are", () => {
+    expect(routeRequest("/styleguide", "hu")).toEqual({ action: "next" });
+  });
+});
+
 describe("the /en collapse", () => {
   it("308s /en and everything under it to the plain address", () => {
     expect(localeRedirectRules()).toEqual([

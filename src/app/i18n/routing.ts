@@ -102,16 +102,26 @@ export function localeRedirectRules() {
   ];
 }
 
-export type ProxyDecision = { action: "rewrite"; to: string } | { action: "next" };
+export type ProxyDecision =
+  | { action: "rewrite"; to: string }
+  | { action: "redirect"; to: string }
+  | { action: "next" };
 
 /**
  * What the proxy does with a request path. A plain address is served from the
- * internal en segment; anything already in a locale, and the private routes,
- * pass through.
+ * internal en segment, unless the visitor chose another language in the
+ * switcher: then it redirects to the same page in that language. Anything
+ * already in a locale, and the private routes, pass through.
  */
-export function routeRequest(pathname: string): ProxyDecision {
+export function routeRequest(
+  pathname: string,
+  remembered: Locale | null = null
+): ProxyDecision {
   if (isPrivatePath(pathname) || isLocale(firstSegment(pathname))) {
     return { action: "next" };
+  }
+  if (remembered && remembered !== defaultLocale) {
+    return { action: "redirect", to: localizePath(pathname, remembered) };
   }
   return {
     action: "rewrite",
