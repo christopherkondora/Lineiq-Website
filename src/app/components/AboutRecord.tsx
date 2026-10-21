@@ -5,6 +5,7 @@ import styles from "./AboutRecord.module.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CLIENTS, CLIENT_NAMES_CLEARED } from "../data/record";
+import type { Dictionary } from "../i18n/dictionary";
 
 // The Limitation, rebuilt on 2026-09-25 as its own viewport, and no longer a
 // confession. It replaces AboutRefusals, which held three refusals and buried
@@ -92,7 +93,13 @@ const TRAVEL = 0.8;
 // the whole time for motion nobody is watching.
 const REST = 0.1;
 
-export default function AboutRecord({ ageSentence }: { ageSentence: string }) {
+export default function AboutRecord({
+  t,
+  ageSentence,
+}: {
+  t: Dictionary["about"]["record"];
+  ageSentence: string;
+}) {
   const rootRef = useRef<HTMLElement>(null);
   const rosterRef = useRef<HTMLDivElement>(null);
 
@@ -257,17 +264,13 @@ export default function AboutRecord({ ageSentence }: { ageSentence: string }) {
       <div className="container">
         <header className={styles.head}>
           <p className={`text-label ${styles.label}`} data-reveal>
-            The one thing we will not dress up
+            {t.label}
           </p>
           <h2 className={`text-statement ${styles.title}`} data-reveal>
-            LineiQ has never published a case study.
+            {t.title}
           </h2>
           <p className={styles.lead} data-reveal>
-            That is true and we are not going to dress it up. It is also not the
-            same as starting from zero. Kristóf brought the client record below.
-            Áron wrote most of the twenty-two frameworks the studio runs on and
-            owns the research underneath them. Different work, not different
-            weight.
+            {t.lead}
           </p>
         </header>
 
@@ -278,7 +281,7 @@ export default function AboutRecord({ ageSentence }: { ageSentence: string }) {
           <div
             className={styles.roster}
             ref={rosterRef}
-            aria-label="Clients and projects"
+            aria-label={t.rosterLabel}
           >
             {LANES.map((lane, laneIndex) => (
               <div
@@ -317,11 +320,7 @@ export default function AboutRecord({ ageSentence }: { ageSentence: string }) {
             the count a fourth time in one section is how a page starts sounding
             like it only has one fact. */}
         <p className={styles.close} data-reveal>
-          {ageSentence} The studio is younger than the method it runs on: we
-          built the Academy and the Dream Outcome Process before anyone had paid
-          us a forint, because we refuse to charge a price we cannot run a
-          procedure to justify. We will still be students in two years. The one
-          thing we do, we do well.
+          {ageSentence} {t.close}
         </p>
       </div>
     </section>

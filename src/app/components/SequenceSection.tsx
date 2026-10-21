@@ -5,6 +5,7 @@ import Link from "./LocaleLink";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
 import styles from "./SequenceSection.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 import {
   FOOTER_CHANNELS,
   FOOTER_LABELS,
@@ -18,7 +19,11 @@ const FRAME_COUNT = 40;
 const frameSrc = (i: number) =>
   `/frames/frame-${String(i + 1).padStart(4, "0")}.jpg`;
 
-export default function SequenceSection() {
+export default function SequenceSection({
+  t,
+}: {
+  t: Dictionary["home"]["close"];
+}) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const endTextRef = useRef<HTMLDivElement>(null);
@@ -114,9 +119,9 @@ export default function SequenceSection() {
         <canvas ref={canvasRef} className={styles.canvas} />
 
         <div ref={endTextRef} className={styles.endText}>
-          <p className={styles.endHeadline}>Ready?</p>
+          <p className={styles.endHeadline}>{t.headline}</p>
           <SplashLink href="/contact" className={styles.endCta}>
-            <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's go!" />
+            <CtaSwap defaultLabel={t.cta} hoverLabel={t.ctaHover} />
           </SplashLink>
         </div>
 

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import styles from "./AboutBeliefs.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -23,58 +24,37 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 // wealthy" and "Setbacks are tuition" are aphorisms that would survive being
 // pasted onto any studio site, which is the test this section exists to fail.
 // A cost could be hunted down for each, but a cost that has to be hunted for is
-// not a cost being paid. `cost` is required by the type on purpose, so a
-// conviction without one cannot appear here.
+// not a cost being paid. `cost` is required by the dictionary's type on
+// purpose, so a conviction without one cannot appear here.
 //
 // Full rationale, including what was taken from wearedirect.co/agency and what
 // was deliberately not, in docs/prd/2026-09-11-about-beliefs-scroll-reveal.md.
-interface Belief {
-  /** Verbatim from Beliefs.md (locked v1). Never edit to fit the layout. */
-  conviction: string;
-  /** Condensed from the matching House Rule's Cost of Holding line. */
-  cost: string;
-  /** Which House Rule supplies the cost. Not rendered; kept so the next person
-      can trace a line back to the doc without re-deriving the mapping. */
-  rule: string;
-}
-
-const BELIEFS: Belief[] = [
-  {
-    conviction: "Compounding wins.",
-    cost: "We turn down €1,500 to €4,000 a month in campaign work, the kind most studios live on. It stops paying the day it ships.",
-    rule: "P1 Build the Compound, Never the Tax",
-  },
-  {
-    conviction: "We would rather own a small world than rent a big market.",
-    cost: "We hold three seats, and we leave real revenue on the table in the months we can least afford to.",
-    rule: "P3 Three Seats Only",
-  },
-  {
-    conviction: "We compete with our last piece of work, not with anyone else.",
-    cost: "We rebuild work that is already good enough, spending hours other studios would bank.",
-    rule: "P8 The Wow Bar",
-  },
-  {
-    // Sourced from P6, not P7. P7's cost of holding names YouTube and Instagram
-    // as channels we are absent from, and both are now the two channels we run.
-    // P6 is the better line anyway: an absence cannot be checked, but a reader
-    // can check our publishing pace against the actual feed in four seconds.
-    conviction: "Calm is the product.",
-    cost: "We publish less, and slower, than firms that mass-generate. We say no to easy volume.",
-    rule: "P6 Ship No Slop",
-  },
-  {
-    conviction: "Win-win, or no deal.",
-    cost: "We carry ninety days of unpaid delivery risk on every pilot before anyone owes us anything.",
-    rule: "P4 Earned Pay, No Refunds",
-  },
-];
+// The words are in the dictionary (about.beliefs.items), keyed by id: each
+// conviction verbatim from Beliefs.md (locked v1, never edited to fit the
+// layout) and its cost condensed from the matching House Rule's Cost of Holding
+// line. `rule` is not rendered; it is kept so the next person can trace a line
+// back to the doc without re-deriving the mapping.
+const BELIEFS = [
+  { id: "compounding", rule: "P1 Build the Compound, Never the Tax" },
+  { id: "smallWorld", rule: "P3 Three Seats Only" },
+  { id: "lastWork", rule: "P8 The Wow Bar" },
+  // Sourced from P6, not P7. P7's cost of holding names YouTube and Instagram
+  // as channels we are absent from, and both are now the two channels we run.
+  // P6 is the better line anyway: an absence cannot be checked, but a reader
+  // can check our publishing pace against the actual feed in four seconds.
+  { id: "calm", rule: "P6 Ship No Slop" },
+  { id: "winWin", rule: "P4 Earned Pay, No Refunds" },
+] as const;
 
 /** Inactive convictions. Readable as a set, clearly secondary to the open one.
     Not the 5% black the reference uses: that is ~1.05:1 against white. */
 const GHOST = "rgba(0, 0, 0, 0.3)";
 
-export default function AboutBeliefs() {
+export default function AboutBeliefs({
+  t,
+}: {
+  t: Dictionary["about"]["beliefs"];
+}) {
   const rootRef = useRef<HTMLElement>(null);
   const rowsRef = useRef<HTMLDivElement>(null);
 
@@ -294,12 +274,10 @@ export default function AboutBeliefs() {
           {/* Sticky, so the question stays on screen while the answers move. */}
           <header className={styles.head}>
             <h2 className={`text-section ${styles.title}`} data-reveal>
-              What we believe, and what believing it costs us.
+              {t.title}
             </h2>
             <p className={styles.lead} data-reveal>
-              These are not slogans and they are not negotiable. A principle that
-              costs nothing is just a comfortable belief, so each one below is
-              filed with the bill.
+              {t.lead}
             </p>
           </header>
 
@@ -308,14 +286,14 @@ export default function AboutBeliefs() {
               read as. Nothing here is interactive, so nothing responds to a
               cursor. The sequence comes from the scroll. */}
           <div ref={rowsRef} className={styles.rows}>
-            {BELIEFS.map((belief) => (
-              <article key={belief.conviction} className={styles.row}>
+            {BELIEFS.map(({ id }) => (
+              <article key={id} className={styles.row}>
                 <h3 className={styles.conviction} data-head>
-                  {belief.conviction}
+                  {t.items[id].conviction}
                 </h3>
                 <div className={styles.costOuter} data-cost-outer>
                   <p className={styles.cost} data-cost>
-                    {belief.cost}
+                    {t.items[id].cost}
                   </p>
                 </div>
               </article>

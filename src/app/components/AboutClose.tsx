@@ -4,10 +4,15 @@ import { useEffect, useRef } from "react";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
 import styles from "./AboutClose.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export default function AboutClose() {
+export default function AboutClose({
+  t,
+}: {
+  t: Dictionary["about"]["close"];
+}) {
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -41,13 +46,13 @@ export default function AboutClose() {
     <section ref={rootRef} className={`section section--dark ${styles.close}`}>
       <div className={`container ${styles.inner}`}>
         <h2 className={`text-statement ${styles.heading}`} data-reveal>
-          If this resonates,
+          {t.headingOne}
           <br />
-          let&apos;s talk.
+          {t.headingTwo}
         </h2>
         <div className={styles.actions} data-reveal>
           <SplashLink href="/contact" className={styles.ctaLink}>
-            <CtaSwap defaultLabel="Let's begin." hoverLabel="Let's go!" />
+            <CtaSwap defaultLabel={t.cta} hoverLabel={t.ctaHover} />
           </SplashLink>
         </div>
       </div>

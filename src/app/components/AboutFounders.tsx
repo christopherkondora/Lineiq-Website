@@ -4,10 +4,11 @@ import { useEffect, useRef } from "react";
 import styles from "./AboutFounders.module.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { FOUNDERS } from "../data/founders";
-import { FRAMEWORKS, METHOD_SHAPE } from "../data/method";
-
-const BAND_WORDS = "one voice.";
+import { FOUNDERS, founderInitials, founderName } from "../data/founders";
+import { FRAMEWORK_IDS, METHOD_SHAPE } from "../data/method";
+import type { Dictionary } from "../i18n/dictionary";
+import { format } from "../i18n/format";
+import { useLocale } from "../i18n/LocaleProvider";
 
 // The section enacts its own heading. "Two founders, one voice." is not a
 // caption here, it is the geometry: two columns run side by side, each one a
@@ -39,7 +40,12 @@ const BAND_WORDS = "one voice.";
 // on the text inside it, and .figure must stay free of anything that creates a
 // stacking context (transform, will-change, z-index with position) or the name
 // would blend against an empty backdrop and silently do nothing.
-export default function AboutFounders() {
+export default function AboutFounders({
+  t,
+}: {
+  t: Dictionary["about"]["founders"];
+}) {
+  const locale = useLocale();
   const rootRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -208,14 +214,14 @@ export default function AboutFounders() {
       <div className="container">
         <header className={styles.head} data-head>
           <h2 className={`text-statement ${styles.title}`} data-reveal>
-            Two founders,{" "}
+            {t.headingBefore}{" "}
             <span className={styles.swap}>
               {/* The accessible copy. It ends up under the band, which is why the
                   letters of the band itself are hidden from the reader. */}
-              <span className={styles.baseWord}>{BAND_WORDS}</span>
+              <span className={styles.baseWord}>{t.band}</span>
               <span className={styles.band} data-band aria-hidden="true">
                 <span className={styles.bandText}>
-                  {BAND_WORDS.split("").map((ch, i) => (
+                  {t.band.split("").map((ch, i) => (
                     <span key={i} className={styles.bandLetter} data-band-letter>
                       {/* Non-breaking, not a plain space. Each letter is its own
                           inline-block so it can be staggered, and a lone normal
@@ -239,18 +245,20 @@ export default function AboutFounders() {
                     commissioned shots will be. The mark is not a gap waiting to
                     be filled, it is the same rectangle, occupied. */}
                 <div className={styles.mark} data-mark aria-hidden="true">
-                  <span className={styles.markInitials}>{f.initials}</span>
+                  <span className={styles.markInitials}>
+                    {founderInitials(f, locale)}
+                  </span>
                 </div>
 
                 <div className={styles.nameWrap}>
                   <h3 className={styles.name} data-name>
-                    {f.name}
+                    {founderName(f, locale)}
                   </h3>
                 </div>
               </div>
 
               <ul className={styles.lines}>
-                {f.lines.map((row, i) => (
+                {t.lines[f.id].map((row, i) => (
                   <li key={i} className={styles.lineRow}>
                     <span className={styles.lineRowInner} data-line-row>
                       {row}
@@ -264,14 +272,14 @@ export default function AboutFounders() {
 
         <div className={styles.method} data-method>
           <p className={`text-label ${styles.methodLabel}`} data-reveal>
-            The method both of us run on
+            {t.methodLabel}
           </p>
 
           <ol className={styles.frameworks}>
-            {FRAMEWORKS.map((fw) => (
-              <li key={fw.name} className={styles.framework} data-framework>
-                <h4 className={styles.frameworkName}>{fw.name}</h4>
-                <p className={styles.frameworkLine}>{fw.line}</p>
+            {FRAMEWORK_IDS.map((id) => (
+              <li key={id} className={styles.framework} data-framework>
+                <h4 className={styles.frameworkName}>{t.frameworks[id].name}</h4>
+                <p className={styles.frameworkLine}>{t.frameworks[id].line}</p>
               </li>
             ))}
           </ol>
@@ -282,11 +290,10 @@ export default function AboutFounders() {
           <p className={styles.methodShape} data-reveal>
             <span className={styles.methodShapeText}>
               <span className={styles.methodShapeLine}>
-                Five of {METHOD_SHAPE.frameworks}, across {METHOD_SHAPE.layers}{" "}
-                layers. The rest are not secrets,
+                {format(t.methodShapeOne, METHOD_SHAPE)}
               </span>
               <span className={styles.methodShapeLine}>
-                they are just not first impressions.
+                {t.methodShapeTwo}
               </span>
             </span>
           </p>

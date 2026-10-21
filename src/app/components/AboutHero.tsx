@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import styles from "./AboutHero.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 
 // The page's entry moment: the Mission from Positioning.md, alone on a full
 // white viewport. The label, the lede and the drawn red rule all came out. The
@@ -22,39 +23,37 @@ import styles from "./AboutHero.module.css";
 // display:none also keeps the unused set out of the accessibility tree.
 //
 // The sets are strings rather than markup so the breaks are legible as breaks.
-// renderLine puts the red hyphen back wherever the word appears.
-const WIDE_LINES = [
-  "We exist to end",
-  "short-termism in the",
-  "brands worth building.",
-];
-
-const NARROW_LINES = [
-  "We exist to end",
-  "short-termism",
-  "in the brands",
-  "worth building.",
-];
-
-const HYPHENATED = "short-termism";
-
-function renderLine(text: string) {
-  const at = text.indexOf(HYPHENATED);
-  if (at === -1) return text;
+// They are in the dictionary (about.hero), with the word whose hyphen is the
+// red mark; renderLine puts the red hyphen back wherever that word appears.
+function renderLine(text: string, hyphenated: string) {
+  const at = text.indexOf(hyphenated);
+  const dash = hyphenated.indexOf("-");
+  if (at === -1 || dash === -1) return text;
   return (
     <>
-      {text.slice(0, at)}short<span className={styles.hyphen}>-</span>termism
-      {text.slice(at + HYPHENATED.length)}
+      {text.slice(0, at)}
+      {hyphenated.slice(0, dash)}
+      <span className={styles.hyphen}>-</span>
+      {hyphenated.slice(dash + 1)}
+      {text.slice(at + hyphenated.length)}
     </>
   );
 }
 
-function LineSet({ lines, className }: { lines: string[]; className: string }) {
+function LineSet({
+  lines,
+  hyphenated,
+  className,
+}: {
+  lines: string[];
+  hyphenated: string;
+  className: string;
+}) {
   return (
     <span className={className}>
       {lines.map((line) => (
         <span key={line} className={styles.headLine} data-hero-line>
-          <span>{renderLine(line)}</span>
+          <span>{renderLine(line, hyphenated)}</span>
         </span>
       ))}
     </span>
@@ -70,7 +69,11 @@ function LineSet({ lines, className }: { lines: string[]; className: string }) {
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export default function AboutHero() {
+export default function AboutHero({
+  t,
+}: {
+  t: Dictionary["about"]["hero"];
+}) {
   const rootRef = useRef<HTMLElement>(null);
 
   useIsomorphicLayoutEffect(() => {
@@ -107,8 +110,16 @@ export default function AboutHero() {
     <section ref={rootRef} className={styles.hero} id="about-hero">
       <div className={`container ${styles.inner}`}>
         <h1 className={`text-hero ${styles.heading}`}>
-          <LineSet lines={WIDE_LINES} className={styles.linesWide} />
-          <LineSet lines={NARROW_LINES} className={styles.linesNarrow} />
+          <LineSet
+            lines={t.wideLines}
+            hyphenated={t.hyphenated}
+            className={styles.linesWide}
+          />
+          <LineSet
+            lines={t.narrowLines}
+            hyphenated={t.hyphenated}
+            className={styles.linesNarrow}
+          />
         </h1>
       </div>
     </section>

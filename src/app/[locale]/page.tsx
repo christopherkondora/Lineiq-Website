@@ -30,9 +30,9 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
         dangerouslySetInnerHTML={{ __html: introGateScript }}
       />
       <HomeIntro />
-      <Hero />
-      <Intro />
-      <Work />
+      <Hero t={t.hero} />
+      <Intro t={t.intro} />
+      <Work t={t.work} />
       {/* Szolgáltatások: tiszta, sorszám nélküli lista (bymonolog.com recept),
           fehér háttéren. Bal oldalon lélegző vonal-kaszkád, háttérben a hoverelt
           szolgáltatás óriás Kranky esszencia-szava, a kurzor mellé úszó noir
@@ -42,11 +42,11 @@ export default async function Home({ params }: PageProps<"/[locale]">) {
           scroll-budget + sticky színpad). A végállapotára (We take on partners +
           hasábok) csúszik fölé a Manifesto sötét panele: a .rise negatív margója
           húzza rá, a magas z-index + átlátszatlan háttér takarja. */}
-      <Partners />
+      <Partners t={t.partners} />
       <div className={styles.rise}>
-        <Manifesto />
+        <Manifesto t={t.manifesto} />
       </div>
-      <SequenceSection />
+      <SequenceSection t={t.close} />
       {/* Mobilon a SequenceSection overlay footere elrejtve; helyette ez a
           normál, statikus footer folyik a szekvencia alá. Desktopon az overlay
           marad, ezt a wrapper rejti.

@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./AboutCompounds.module.css";
+import type { Dictionary } from "../i18n/dictionary";
 
 // The Ism, given its own viewport. It used to sit at the bottom of AboutOrigin
 // as a pull-quote with a red rule under it; the rule's whole job was separating
@@ -63,7 +64,11 @@ type Mode = "static" | "pinned";
 const useIsomorphicLayoutEffect =
   typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-export default function AboutCompounds() {
+export default function AboutCompounds({
+  t,
+}: {
+  t: Dictionary["about"]["compounds"];
+}) {
   const rootRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const inlineRef = useRef<HTMLSpanElement>(null);
@@ -236,13 +241,13 @@ export default function AboutCompounds() {
       <div ref={stageRef} className={styles.stage}>
         <div className={`container ${styles.inner}`}>
           <p className={`text-statement ${styles.sentences}`}>
-            <span data-fade>Most marketing is a tax.</span>
+            <span data-fade>{t.first}</span>
             <br />
-            <span data-fade>Brand is the only thing that </span>
+            <span data-fade>{t.secondBefore} </span>
             <span ref={inlineRef} className={styles.inlineWord}>
-              compounds
+              {t.word}
             </span>
-            <span data-fade>.</span>
+            <span data-fade>{t.secondAfter}</span>
           </p>
 
           {/* The display copy: same face, weight, tracking and opsz as the
@@ -253,7 +258,7 @@ export default function AboutCompounds() {
             className={`text-statement ${styles.big}`}
             aria-hidden="true"
           >
-            compounds
+            {t.word}
           </span>
         </div>
       </div>

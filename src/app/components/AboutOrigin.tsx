@@ -5,6 +5,7 @@ import styles from "./AboutOrigin.module.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ORIGIN_LINE } from "./aboutOriginLine";
+import type { Dictionary } from "../i18n/dictionary";
 
 // The origin story (World.md §2, the canonical origin, condensed). The diagonal
 // word-wave is salvaged from the old RolunkCulture, which spent a full viewport
@@ -18,12 +19,14 @@ import { ORIGIN_LINE } from "./aboutOriginLine";
 //
 // The Ism that used to close this section now has its own full viewport in
 // [[components/AboutCompounds]].
-const PARAGRAPHS = [
-  "For as long as we have been paying attention, marketing has been eating itself. Every year a new platform. Every quarter a new tactic. Every week another founder learning that the thing they spent six months building has already been replaced by something shinier.",
-  "We started LineiQ because we could not find a studio doing the work we wanted to do. Work that compounds. Brands that outlast the people who built them. Systems worth more every year instead of less.",
-];
+//
+// The paragraphs are in the dictionary (about.origin.paragraphs).
 
-export default function AboutOrigin() {
+export default function AboutOrigin({
+  t,
+}: {
+  t: Dictionary["about"]["origin"];
+}) {
   const rootRef = useRef<HTMLElement>(null);
   const lineRef = useRef<SVGPathElement>(null);
 
@@ -155,7 +158,7 @@ export default function AboutOrigin() {
 
       <div className="container">
         <div className={styles.copy}>
-          {PARAGRAPHS.map((para, pi) => (
+          {t.paragraphs.map((para, pi) => (
             <p key={pi} className={styles.para}>
               {para.split(" ").map((word, wi) => (
                 <span key={wi}>
