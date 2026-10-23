@@ -290,17 +290,41 @@
     padding-block: var(--space-lg);
   }
 
+  /* Stacked, on alternating sides (lineiq-website#11, chosen by Kristóf on
+     his phone 2026-10-23). Stacked at full width, each founder was a screen of
+     black and the pair ran to two near-empty screens. Side by side was tried
+     and rejected: in a 160px column every row wrapped and the names fell to
+     26px. Here the frame is smaller, the second founder is mirrored to the
+     right edge, and the rows keep their full width and the desktop size, one
+     line each. Both frames are the same size, so the offset is a side, not a
+     rank. */
   .pair {
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-3xl);
-  }
-
-  .figure {
-    max-width: min(340px, 78vw);
+    gap: var(--space-xl);
   }
 
   .founder {
-    --name-size: clamp(1.98rem, 8.8vw, 3.3rem);
+    gap: var(--space-md);
+    --name-size: clamp(2.5rem, 6vw, 3.3rem);
+  }
+
+  .founder:nth-child(2) {
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  /* The mark, not .figure: the name lives inside .figure, under the mark, and
+     needs the full width. */
+  .mark {
+    width: 60%;
+  }
+
+  .founder:nth-child(2) .mark {
+    margin-left: auto;
+  }
+
+  .nameWrap {
+    margin-top: var(--space-sm);
   }
 
   .framework {

@@ -88,6 +88,14 @@ export default function AboutFounders({
       // rather than one inverting copy, because there is no way to flip type at a
       // moving edge within a single element, and mix-blend-mode is no help here:
       // white over #da0303 returns cyan, not white.
+      //
+      // Not on a phone. The wipe is scrubbed, so the moment between "band
+      // first" and "then words" is a place a reader can stop, and on a phone
+      // that place is the middle of the screen: the heading read "Two
+      // founders," and a red block (lineiq-website#11). There the letters are
+      // on from the start and the band reveals them as it wipes, so the words
+      // are legible in every frame. Read once, like AboutOrigin's breakpoint.
+      const phone = window.matchMedia("(max-width: 900px)").matches;
       if (band) {
         const tl = gsap.timeline({
           scrollTrigger: {
@@ -104,44 +112,55 @@ export default function AboutFounders({
           0
         );
         // Starts at the end of the wipe so it reads as "band first, then words".
-        tl.fromTo(
-          bandLetters,
-          { opacity: 0 },
-          { opacity: 1, ease: "power3.inOut", stagger: 0.09, duration: 0.5 },
-          1.0
-        );
+        if (phone) {
+          gsap.set(bandLetters, { opacity: 1 });
+        } else {
+          tl.fromTo(
+            bandLetters,
+            { opacity: 0 },
+            { opacity: 1, ease: "power3.inOut", stagger: 0.09, duration: 0.5 },
+            1.0
+          );
+        }
       }
 
       // Both columns are triggered off the pair, not off themselves, so the two
       // founders resolve together. Staggering them would read as a ranking.
+      // On a phone they are stacked, the pair is near a thousand pixels tall,
+      // and its centre arrives long after the first founder: the name was
+      // still rising through its mask while the reader was on it. There each
+      // founder resolves off their own block, as they arrive.
       const pair = root.querySelector<HTMLElement>("[data-pair]");
       const head = root.querySelector<HTMLElement>("[data-head]");
       if (pair && head) {
-        const marks = pair.querySelectorAll<HTMLElement>("[data-mark]");
-        const names = pair.querySelectorAll<HTMLElement>("[data-name]");
+        const groups = phone
+          ? Array.from(pair.querySelectorAll<HTMLElement>("[data-founder]"))
+          : [pair];
 
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: pair,
-            start: "top 80%",
-            end: "center 55%",
-            scrub: 0.6,
-          },
-        });
+        for (const group of groups) {
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: group,
+              start: "top 80%",
+              end: "center 55%",
+              scrub: 0.6,
+            },
+          });
 
-        // 1) the marks resolve, 2) only once they have landed do the names rise
-        // through them. The same two-beat order the portraits had.
-        tl.fromTo(
-          marks,
-          { yPercent: 14, scale: 0.9, autoAlpha: 0 },
-          { yPercent: 0, scale: 1, autoAlpha: 1, ease: "none", duration: 0.6 }
-        );
-        tl.fromTo(
-          names,
-          { yPercent: 70, autoAlpha: 0 },
-          { yPercent: 0, autoAlpha: 1, ease: "none", duration: 0.4 },
-          ">"
-        );
+          // 1) the marks resolve, 2) only once they have landed do the names
+          // rise through them. The same two-beat order the portraits had.
+          tl.fromTo(
+            group.querySelectorAll<HTMLElement>("[data-mark]"),
+            { yPercent: 14, scale: 0.9, autoAlpha: 0 },
+            { yPercent: 0, scale: 1, autoAlpha: 1, ease: "none", duration: 0.6 }
+          );
+          tl.fromTo(
+            group.querySelectorAll<HTMLElement>("[data-name]"),
+            { yPercent: 70, autoAlpha: 0 },
+            { yPercent: 0, autoAlpha: 1, ease: "none", duration: 0.4 },
+            ">"
+          );
+        }
 
         // The heading gets out of the way. Once both portraits are on screen
         // they are the subject, and a sentence set at display scale above them
@@ -171,18 +190,20 @@ export default function AboutFounders({
 
         // The rows are not scrubbed. Text that scrubs backwards while you read
         // it is unpleasant, and that holds harder over four rows than over two.
-        gsap.fromTo(
-          pair.querySelectorAll<HTMLElement>("[data-line-row]"),
-          { yPercent: 110 },
-          {
-            yPercent: 0,
-            duration: 0.8,
-            stagger: 0.06,
-            ease: "power3.out",
-            clearProps: "transform",
-            scrollTrigger: { trigger: pair, start: "top 55%" },
-          }
-        );
+        for (const group of groups) {
+          gsap.fromTo(
+            group.querySelectorAll<HTMLElement>("[data-line-row]"),
+            { yPercent: 110 },
+            {
+              yPercent: 0,
+              duration: 0.8,
+              stagger: 0.06,
+              ease: "power3.out",
+              clearProps: "transform",
+              scrollTrigger: { trigger: group, start: "top 55%" },
+            }
+          );
+        }
       }
 
       // The method arrives as one set, on its own trigger, after the pair has
@@ -239,7 +260,7 @@ export default function AboutFounders({
 
         <div className={styles.pair} data-pair>
           {FOUNDERS.map((f) => (
-            <article key={f.id} className={styles.founder}>
+            <article key={f.id} className={styles.founder} data-founder>
               <div className={styles.figure}>
                 {/* The portrait slot, on a 4:5 frame because that is what the
                     commissioned shots will be. The mark is not a gap waiting to
