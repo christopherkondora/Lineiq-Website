@@ -12,14 +12,18 @@ import {
 } from "react";
 import { gsap } from "gsap";
 import CtaSwap from "../../components/CtaSwap";
+import { useLocale } from "../../i18n/LocaleProvider";
+import type { Dictionary } from "../../i18n/dictionary";
 import styles from "./page.module.css";
 import {
-  BUDGET_BANDS,
   EMAIL_RE,
   HONEYPOT_FIELD,
   NEEDS,
   STAGES,
-  labelOf,
+  bandOptions,
+  errorMessage,
+  optionsOf,
+  type BandId,
   type BudgetMode,
   type NeedId,
   type StageId,
@@ -50,14 +54,12 @@ import {
 // far in am I" is two digits, and one gesture per page is the rule.
 //
 // The intake contract is untouched: [[contact/intake]] still owns the ids and
-// the API route still validates against the same lists.
+// the API route still validates against the same lists. The words are the
+// dictionary's (contact), passed in by the server page, and the route's
+// refusals arrive as codes this component puts into those words.
 
-/** Shape-accurate placeholders. The copy pass comes last and once. No em-dash
- *  anywhere: Voice v2, and this page is outward-facing. */
-const HEADING = "Let's talk for real.";
-const LEDE =
-  "Three clients a year. Five questions, and you will know where you stand.";
-const ASIDE = "Or just hit us up.";
+type ContactCopy = Dictionary["contact"];
+
 const DIRECT_EMAIL = "hello@lineiqgroup.com";
 
 // The panels, by name. The indices are read by the camera, the counter and the
@@ -71,14 +73,15 @@ const P_NOTE = 5;
 const P_REVIEW = 6;
 const LAST = P_REVIEW;
 
-/** What each panel asks. The statement and the review are not questions and are
- *  not counted: the page promises five and shows five. */
-const QUESTIONS: Record<number, string> = {
-  [P_WHO]: "Who are you?",
-  [P_STAGE]: "Where's the money now?",
-  [P_NEED]: "What do you need?",
-  [P_BUDGET]: "What can you put behind it?",
-  [P_NOTE]: "Anything we should know?",
+/** What each panel asks, by its key in contact.questions. The statement and the
+ *  review are not questions and are not counted: the page promises five and
+ *  shows five. */
+const QUESTIONS: Record<number, keyof ContactCopy["questions"]> = {
+  [P_WHO]: "who",
+  [P_STAGE]: "stage",
+  [P_NEED]: "need",
+  [P_BUDGET]: "budget",
+  [P_NOTE]: "note",
 };
 
 const COUNTED = [P_WHO, P_STAGE, P_NEED, P_BUDGET, P_NOTE];
@@ -187,22 +190,29 @@ function Panel({
 /** A question's heading, and nothing above it. The screen carries one question
  *  at display scale and the count belongs to the readout at the foot of the
  *  page, which is the one thing on this page that does not travel. */
-function Ask({ index }: { index: number }) {
+function Ask({ index, t }: { index: number; t: ContactCopy["questions"] }) {
   return (
     <h2 className={styles.ask} id={`q-${index}`}>
-      {QUESTIONS[index]}
+      {t[QUESTIONS[index]]}
     </h2>
   );
 }
 
 /** The footer is rendered by the server page and shown with the confirmation. */
-export default function ContactFlow({ footer }: { footer: ReactNode }) {
+export default function ContactFlow({
+  t,
+  footer,
+}: {
+  t: ContactCopy;
+  footer: ReactNode;
+}) {
+  const locale = useLocale();
   const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
   const [stage, setStage] = useState<StageId | null>(null);
   const [need, setNeed] = useState<NeedId | null>(null);
   const [budgetMode, setBudgetMode] = useState<BudgetMode>("monthly");
-  const [band, setBand] = useState<string | null>(null);
+  const [band, setBand] = useState<BandId | null>(null);
   const [note, setNote] = useState("");
 
   const [at, setAt] = useState(P_STATEMENT);
@@ -571,7 +581,7 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
     commit(P_NEED);
   };
 
-  const pickBand = (id: string) => {
+  const pickBand = (id: BandId) => {
     setBand(id);
     commit(P_BUDGET);
   };
@@ -599,9 +609,7 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
       if (!filled[atRef.current]) {
         if (atRef.current === P_WHO) {
           setError(
-            company.trim().length === 0
-              ? "We need the company name, so we know who we are looking at."
-              : "We need a valid email address, so we have somewhere to reply."
+            company.trim().length === 0 ? t.errors.company : t.errors.email
           );
         }
         return;
@@ -623,6 +631,8 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           need,
           budget: { mode: budgetMode, band },
           note: note.trim(),
+          // Stated in the enquiry email, so the reply is written in it.
+          locale,
           [HONEYPOT_FIELD]: honeypotRef.current?.value ?? "",
           elapsedMs: Date.now() - mountedAt.current,
         }),
@@ -631,18 +641,20 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
         const data = (await res.json().catch(() => null)) as {
           error?: string;
         } | null;
-        setError(data?.error ?? "Submission failed, please try again.");
+        setError(errorMessage(t.errors, data?.error));
         return;
       }
       setDone(true);
     } catch {
-      setError("Submission failed, please try again.");
+      setError(t.errors.failed);
     } finally {
       setSending(false);
     }
   };
 
-  const bands = BUDGET_BANDS[budgetMode];
+  const stages = optionsOf(STAGES, t.stages);
+  const needs = optionsOf(NEEDS, t.needs);
+  const bands = bandOptions(budgetMode, t.bands);
   const counted = COUNTED.indexOf(at) + 1;
 
   // The confirmation is not a panel. The travel is over, the questions are gone
@@ -657,24 +669,18 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           <div className={styles.panel} data-active="true">
             <div className={styles.holder}>
               <div className={styles.doneBlock} role="status">
-                <h2 className={styles.doneTitle}>Got it.</h2>
+                <h2 className={styles.doneTitle}>{t.done.title}</h2>
                 <p className={styles.doneSignature} aria-hidden="true">
                   talk soon.
                 </p>
                 <div className={styles.doneGrid}>
                   <div>
-                    <p className="text-label">Next step</p>
-                    <p className={styles.doneText}>
-                      We will read your answers against your market, and arrive
-                      at the first call already having something to say.
-                    </p>
+                    <p className="text-label">{t.done.nextLabel}</p>
+                    <p className={styles.doneText}>{t.done.next}</p>
                   </div>
                   <div>
-                    <p className="text-label">Response time</p>
-                    <p className={styles.doneText}>
-                      You will hear back by email within 48 hours on business
-                      days.
-                    </p>
+                    <p className="text-label">{t.done.responseLabel}</p>
+                    <p className={styles.doneText}>{t.done.response}</p>
                   </div>
                 </div>
               </div>
@@ -715,18 +721,18 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           holderRef={holderRefSetters[P_STATEMENT]}
         >
           <h1 className={`${styles.rv} ${styles.title}`} data-reveal>
-            {HEADING}
+            {t.heading}
           </h1>
           <p className={`${styles.rv} ${styles.lede}`} data-reveal>
-            {LEDE}
+            {t.lede}
           </p>
           <div className={`${styles.rv} ${styles.foot}`} data-reveal>
             <button type="submit" className={styles.begin}>
-              <CtaSwap defaultLabel="Begin" hoverLabel="Let's go!" />
+              <CtaSwap defaultLabel={t.begin} hoverLabel={t.beginHover} />
             </button>
           </div>
           <p className={`${styles.rv} ${styles.aside}`} data-reveal>
-            {ASIDE}
+            {t.aside}
           </p>
           <a
             className={`${styles.rv} ${styles.direct}`}
@@ -749,11 +755,11 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           panelRef={panelRefSetters[P_WHO]}
           holderRef={holderRefSetters[P_WHO]}
         >
-          <Ask index={P_WHO} />
+          <Ask index={P_WHO} t={t.questions} />
           <div className={styles.fields}>
             <div className={styles.field}>
               <label className={styles.label} htmlFor="contact-company">
-                Company
+                {t.company}
               </label>
               <input
                 id="contact-company"
@@ -770,7 +776,7 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
             </div>
             <div className={styles.field}>
               <label className={styles.label} htmlFor="contact-email">
-                Email
+                {t.email}
               </label>
               <input
                 id="contact-email"
@@ -788,7 +794,7 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           </div>
           <div className={styles.foot}>
             <button type="submit" className={styles.next}>
-              Next
+              {t.next}
             </button>
             {error && (
               <p className={styles.error} role="alert">
@@ -809,13 +815,13 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           panelRef={panelRefSetters[P_STAGE]}
           holderRef={holderRefSetters[P_STAGE]}
         >
-          <Ask index={P_STAGE} />
+          <Ask index={P_STAGE} t={t.questions} />
           <div
             className={styles.options}
             role="group"
             aria-labelledby={`q-${P_STAGE}`}
           >
-            {STAGES.map((o) => (
+            {stages.map((o) => (
               <button
                 key={o.id}
                 type="button"
@@ -838,13 +844,13 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           panelRef={panelRefSetters[P_NEED]}
           holderRef={holderRefSetters[P_NEED]}
         >
-          <Ask index={P_NEED} />
+          <Ask index={P_NEED} t={t.questions} />
           <div
             className={styles.options}
             role="group"
             aria-labelledby={`q-${P_NEED}`}
           >
-            {NEEDS.map((o) => (
+            {needs.map((o) => (
               <button
                 key={o.id}
                 type="button"
@@ -871,12 +877,12 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           panelRef={panelRefSetters[P_BUDGET]}
           holderRef={holderRefSetters[P_BUDGET]}
         >
-          <Ask index={P_BUDGET} />
+          <Ask index={P_BUDGET} t={t.questions} />
           <button
             type="button"
             role="switch"
             aria-checked={budgetMode === "one-time"}
-            aria-label="Show one-time budgets instead of monthly"
+            aria-label={t.switchLabel}
             className={styles.switch}
             onClick={throwSwitch}
           >
@@ -885,14 +891,14 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
                 budgetMode === "monthly" ? styles.switchOn : ""
               }`}
             >
-              Monthly
+              {t.monthly}
             </span>
             <span
               className={`${styles.switchSide} ${
                 budgetMode === "one-time" ? styles.switchOn : ""
               }`}
             >
-              One-time
+              {t.oneTime}
             </span>
           </button>
           <div
@@ -926,8 +932,8 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           panelRef={panelRefSetters[P_NOTE]}
           holderRef={holderRefSetters[P_NOTE]}
         >
-          <Ask index={P_NOTE} />
-          <p className={styles.optional}>Optional</p>
+          <Ask index={P_NOTE} t={t.questions} />
+          <p className={styles.optional}>{t.optional}</p>
           <input
             id="contact-note"
             aria-labelledby={`q-${P_NOTE}`}
@@ -939,7 +945,7 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           />
           <div className={styles.foot}>
             <button type="submit" className={styles.next}>
-              {note.trim().length > 0 ? "Next" : "Skip"}
+              {note.trim().length > 0 ? t.next : t.skip}
             </button>
           </div>
         </Panel>
@@ -956,40 +962,44 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           panelRef={panelRefSetters[P_REVIEW]}
           holderRef={holderRefSetters[P_REVIEW]}
         >
-          <h2 className={styles.ask}>This is what we have.</h2>
+          <h2 className={styles.ask}>{t.review.heading}</h2>
           <ul className={styles.review}>
-            {[
-              { label: "Company", value: company.trim(), to: P_WHO },
-              { label: "Email", value: email.trim(), to: P_WHO },
-              {
-                label: "Money",
-                value: stage ? labelOf(STAGES, stage) : "",
-                to: P_STAGE,
-              },
-              {
-                label: "Need",
-                value: need ? labelOf(NEEDS, need) : "",
-                to: P_NEED,
-              },
-              {
-                label: "Budget",
-                value: band ? labelOf(bands, band) : "",
-                to: P_BUDGET,
-              },
-              { label: "Note", value: note.trim(), to: P_NOTE },
-            ].map((row) => (
-              <li key={row.label}>
+            {(
+              [
+                { key: "company", value: company.trim(), to: P_WHO },
+                { key: "email", value: email.trim(), to: P_WHO },
+                {
+                  key: "stage",
+                  value: stage ? t.stages[stage] : "",
+                  to: P_STAGE,
+                },
+                {
+                  key: "need",
+                  value: need ? t.needs[need] : "",
+                  to: P_NEED,
+                },
+                {
+                  key: "budget",
+                  value: bands.find((b) => b.id === band)?.label ?? "",
+                  to: P_BUDGET,
+                },
+                { key: "note", value: note.trim(), to: P_NOTE },
+              ] as const
+            ).map((row) => (
+              <li key={row.key}>
                 <button
                   type="button"
                   className={styles.reviewRow}
                   onClick={() => goTo(row.to)}
                 >
-                  <span className={styles.reviewLabel}>{row.label}</span>
+                  <span className={styles.reviewLabel}>
+                    {t.review[row.key]}
+                  </span>
                   <span className={styles.reviewValue}>
-                    {row.value || "Not answered"}
+                    {row.value || t.review.notAnswered}
                   </span>
                   <span className={styles.reviewEdit} aria-hidden="true">
-                    Change
+                    {t.review.change}
                   </span>
                 </button>
               </li>
@@ -998,8 +1008,8 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           <div className={styles.foot}>
             <button type="submit" className={styles.send} disabled={sending}>
               <CtaSwap
-                defaultLabel={sending ? "Sending…" : "Send"}
-                hoverLabel="Let's go!"
+                defaultLabel={sending ? t.sending : t.send}
+                hoverLabel={t.sendHover}
               />
             </button>
             {error && (
@@ -1037,7 +1047,7 @@ export default function ContactFlow({ footer }: { footer: ReactNode }) {
           onClick={() => goTo(atRef.current - 1)}
           disabled={at === P_STATEMENT}
         >
-          Back
+          {t.back}
         </button>
         {/* Only on the questions. The review is not the sixth of five, and a
             counter that has to lie about where it is is worse than no counter
