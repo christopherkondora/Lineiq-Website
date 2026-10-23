@@ -94,7 +94,6 @@ export const services: ServiceCategory[] = [
       "channelStrategy",
       "organicSocial",
       "paidAds",
-      "seo",
       "email",
       "reporting",
     ],

@@ -186,10 +186,16 @@
   max-width: 62ch;
 }
 
+/* On a phone the record keeps its desktop spacing between its three parts:
+   the admission, the roster and the close each get a full stop around them,
+   or the two paragraphs and the names read as one wall of grey. */
 @media (max-width: 768px) {
+  .record {
+    padding-block: var(--space-3xl);
+  }
+
   .close {
     margin-left: 0;
-    margin-top: var(--space-xl);
   }
 }
 

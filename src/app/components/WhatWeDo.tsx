@@ -134,6 +134,37 @@ export default function WhatWeDo({
     return () => ctx.revert();
   }, []);
 
+  // Arriving on /#services (a category page's "All services", the menu, the
+  // footer): the browser jumps to the anchor before Work has built its pin, so
+  // on a desktop it lands ~1700px too far, in Partners. Re-aim at every refresh
+  // while the layout settles, with the section centred in the viewport, until
+  // the visitor scrolls on their own.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root || window.location.hash !== "#services") return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    const centre = () => {
+      const r = root.getBoundingClientRect();
+      window.scrollTo(
+        0,
+        window.scrollY + r.top + r.height / 2 - window.innerHeight / 2
+      );
+    };
+    const inputs = ["wheel", "touchstart", "keydown"] as const;
+    const stop = () => {
+      window.clearTimeout(timer);
+      ScrollTrigger.removeEventListener("refresh", centre);
+      inputs.forEach((e) => window.removeEventListener(e, stop));
+    };
+    const timer = window.setTimeout(stop, 2500);
+    ScrollTrigger.addEventListener("refresh", centre);
+    inputs.forEach((e) => window.addEventListener(e, stop, { passive: true }));
+    centre();
+
+    return stop;
+  }, []);
+
   return (
     <section ref={rootRef} className={styles.whatwedo} id="services">
       <div className={`container ${styles.inner}`}>
