@@ -1,5 +1,5 @@
 import { dictionaries } from "../../i18n/dictionary";
-import type { Locale } from "../../i18n/routing";
+import { isLocale, type Locale } from "../../i18n/routing";
 import type {
   BandId,
   BudgetMode,
@@ -14,8 +14,10 @@ import type {
 // visitor's language, with one exception: the budget is quoted as the visitor
 // saw it, because the figures behind a band differ by language (forints on
 // /hu, Lineiq-Website#13) and an English label would quote a sum nobody chose.
-// The language itself is stated twice, in the subject and the body, because
-// it decides which language the reply is written in.
+// For the same reason a submission with no language gets no figure at all,
+// only the band's id: guessing the currency is how a budget is misread by about
+// four hundred times. The language itself is stated twice, in the subject
+// and the body, because it decides which language the reply is written in.
 
 export interface Enquiry {
   company: string;
@@ -37,33 +39,50 @@ const LANGUAGE_NAMES: Record<Locale, string> = {
   de: "German",
 };
 
+/** The language a submission says it came from. Anything that is not one of
+ *  the site's languages is not stated, rather than refused: the language is a
+ *  courtesy to the reply, not an answer the visitor gave. */
+export function intakeLocale(value: unknown): Locale | null {
+  return typeof value === "string" && isLocale(value) ? value : null;
+}
+
 export function enquiryLanguage(locale: Locale | null): string {
   return locale ? LANGUAGE_NAMES[locale] : "not stated";
 }
 
+/** The band as the visitor saw it, or its id when nobody can say which
+ *  currency they saw it in. */
+function budgetLine(e: Enquiry): string {
+  if (!e.locale) return `${e.band} (${e.mode}, figures unknown)`;
+  const bands = dictionaries[e.locale].contact.bands[e.mode] as Record<
+    string,
+    string
+  >;
+  return `${bands[e.band] ?? e.band} (${e.mode})`;
+}
+
 export function enquiryEmail(e: Enquiry): { subject: string; text: string } {
   const english = dictionaries.en.contact;
-  const seen = dictionaries[e.locale ?? "en"].contact;
-  const bands = seen.bands[e.mode] as Record<string, string>;
 
-  // Triage happens in a phone inbox, so the automatic no and the language
-  // flag themselves in the subject line. That is the difference between
-  // deciding in a second and opening the mail. Nothing about the visitor's
-  // side changes: the reply is still written by a person.
-  const autoNo = e.stage === "not-selling";
-  const tag = e.locale ? `[${e.locale.toUpperCase()}] ` : "";
+  // Triage happens in a phone inbox, so the language and the automatic no
+  // flag themselves in the subject line, after the words a mail rule matches
+  // on. That is the difference between deciding in a second and opening the
+  // mail. Nothing about the visitor's side changes: the reply is still written
+  // by a person.
+  const tag = e.locale ? ` [${e.locale.toUpperCase()}]` : "";
+  const autoNo = e.stage === "not-selling" ? " (auto-no)" : "";
 
   return {
-    subject: `${tag}New enquiry${autoNo ? " (auto-no)" : ""} — ${e.company}`,
+    subject: `New enquiry${tag}${autoNo} — ${e.company}`,
     text: [
       `Company: ${e.company}`,
       `Email: ${e.email}`,
       `Language: ${enquiryLanguage(e.locale)}`,
       `Stage: ${english.stages[e.stage]}`,
       `Need: ${english.needs[e.need]}`,
-      `Budget: ${bands[e.band] ?? e.band} (${e.mode})`,
+      `Budget: ${budgetLine(e)}`,
       "",
-      "Anything we should know?",
+      english.questions.note,
       e.note || "(not answered)",
     ].join("\n"),
   };
