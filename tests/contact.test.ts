@@ -9,11 +9,14 @@ import {
   STAGES,
   bandOptions,
   errorMessage,
-  intakeLocale,
   isBandId,
   optionsOf,
 } from "@/app/[locale]/contact/intake";
-import { enquiryEmail, type Enquiry } from "@/app/api/contact/enquiry";
+import {
+  enquiryEmail,
+  intakeLocale,
+  type Enquiry,
+} from "@/app/api/contact/enquiry";
 
 type SentEmail = { subject: string; text: string; replyTo: string };
 const send = vi.hoisted(() =>
@@ -127,25 +130,26 @@ describe("the enquiry email", () => {
 
   it("states the visitor's language in the subject and the body", () => {
     const { subject, text } = enquiryEmail(enquiry);
-    expect(subject).toBe("[HU] New enquiry — Acme");
+    expect(subject).toBe("New enquiry [HU] — Acme");
     expect(text).toContain("Language: Hungarian");
     expect(enquiryEmail({ ...enquiry, locale: "de" }).text).toContain(
       "Language: German"
     );
     expect(enquiryEmail({ ...enquiry, locale: "en" }).subject).toBe(
-      "[EN] New enquiry — Acme"
+      "New enquiry [EN] — Acme"
     );
   });
 
-  it("says so when the language is not stated", () => {
+  it("says so when the language is not stated, and quotes no figure", () => {
     const { subject, text } = enquiryEmail({ ...enquiry, locale: null });
     expect(subject).toBe("New enquiry — Acme");
     expect(text).toContain("Language: not stated");
+    expect(text).toContain("Budget: ot-15-30k (one-time, figures unknown)");
   });
 
   it("flags the automatic no", () => {
     expect(enquiryEmail({ ...enquiry, stage: "not-selling" }).subject).toBe(
-      "[HU] New enquiry (auto-no) — Acme"
+      "New enquiry [HU] (auto-no) — Acme"
     );
   });
 
@@ -157,7 +161,8 @@ describe("the enquiry email", () => {
     expect(text).toContain(
       `Budget: ${dictionaries.hu.contact.bands["one-time"]["ot-15-30k"]} (one-time)`
     );
-    expect(text).toContain("(not answered)");
+    expect(text).toContain(`${en.questions.note}
+(not answered)`);
   });
 });
 
@@ -213,12 +218,15 @@ describe("POST /api/contact", () => {
     for (const budget of forged) {
       const res = await post({ ...valid, budget });
       expect(res.status, JSON.stringify(budget)).toBe(400);
-      expect(await res.json()).toEqual({ error: "budget" });
+      expect(await res.json()).toEqual({
+        code: "budget",
+        error: dictionaries.en.contact.errors.budget,
+      });
     }
     expect(send).not.toHaveBeenCalled();
   });
 
-  it("answers every refusal with a code the page can translate", async () => {
+  it("answers every refusal with a code, and the English for older pages", async () => {
     const cases: [Record<string, unknown>, string][] = [
       [{ ...valid, company: " " }, "company"],
       [{ ...valid, email: "nope" }, "email"],
@@ -228,7 +236,9 @@ describe("POST /api/contact", () => {
     for (const [body, code] of cases) {
       const res = await post(body);
       expect(res.status).toBe(400);
-      expect(await res.json()).toEqual({ error: code });
+      const data = await res.json();
+      expect(data.code).toBe(code);
+      expect(data.error).toBe(errorMessage(dictionaries.en.contact.errors, code));
     }
   });
 
@@ -236,22 +246,30 @@ describe("POST /api/contact", () => {
     vi.stubEnv("RESEND_API_KEY", "");
     const res = await post(valid);
     expect(res.status).toBe(500);
-    expect(await res.json()).toEqual({ error: "unavailable" });
+    expect((await res.json()).code).toBe("unavailable");
   });
 
   it("sends the email in the visitor's language", async () => {
     await post(valid);
     const email = send.mock.calls[0][0];
-    expect(email.subject).toBe("[DE] New enquiry — Acme");
+    expect(email.subject).toBe("New enquiry [DE] — Acme");
     expect(email.text).toContain("Language: German");
     expect(email.replyTo).toBe("a@acme.test");
   });
 
-  it("still sends when the language is missing or forged", async () => {
+  it("still sends when the language is forged", async () => {
     const res = await post({ ...valid, locale: "<script>" });
     expect(res.status).toBe(200);
     const email = send.mock.calls[0][0];
     expect(email.text).toContain("Language: not stated");
     expect(email.text).not.toContain("<script>");
+  });
+
+  it("still sends when the language is missing, as from a page loaded before it was sent", async () => {
+    const withoutLocale: Record<string, unknown> = { ...valid };
+    delete withoutLocale.locale;
+    const res = await post(withoutLocale);
+    expect(res.status).toBe(200);
+    expect(send.mock.calls[0][0].text).toContain("Language: not stated");
   });
 });
