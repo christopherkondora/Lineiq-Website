@@ -1,6 +1,7 @@
 // The language routing core. Every localised address on the site comes from
-// here: the proxy, the language switcher, the internal links, and later the
-// hreflang set and the sitemap. Nothing else builds a localised URL by hand.
+// here: the proxy, the language switcher, the internal links, and through
+// i18n/seo the canonical, the hreflang set and the sitemap. Nothing else
+// builds a localised URL by hand.
 //
 // English lives at the plain address (/about), Hungarian and German under a
 // prefix (/hu/about, /de/about). /en/... is never a published address: it

@@ -2,7 +2,7 @@ import RootDocument, { rootMetadata } from "../components/RootDocument";
 
 // Root layout of the working routes (/styleguide). They sit
 // outside the [locale] segment: one address each, English, never indexed.
-export const metadata = rootMetadata;
+export const metadata = rootMetadata("en");
 
 export default function PrivateLayout({
   children,

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import AboutHero from "../../components/AboutHero";
 import AboutOrigin from "../../components/AboutOrigin";
@@ -12,12 +11,9 @@ import Footer from "../../components/Footer";
 import { ageSentence, founderAges } from "../../data/founders";
 import { getDictionary } from "../../i18n/dictionary";
 import { isLocale } from "../../i18n/routing";
+import { metadataFor } from "../../i18n/seo";
 
-export const metadata: Metadata = {
-  title: "About — LineiQ",
-  description:
-    "A brand and business architecture studio built in Hungary. Our mission, the five beliefs we run on and what they cost us, what we refuse, and the two founders behind it.",
-};
+export const generateMetadata = metadataFor("/about");
 
 // The founders' ages are derived from their birth dates, so the page has to be
 // re-rendered occasionally or a static build would freeze the number forever.

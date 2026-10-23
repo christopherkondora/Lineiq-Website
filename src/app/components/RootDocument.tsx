@@ -45,11 +45,14 @@ const kranky = Kranky({
   weight: ["400"],
 });
 
-export const rootMetadata: Metadata = {
+/**
+ * What every route inherits. The title and description are Home's, in the
+ * locale: the fallback for a page without its own, such as the 404. A visitor
+ * page sets its own, with its canonical and hreflang set: see [[i18n/seo]].
+ */
+export const rootMetadata = (locale: Locale): Metadata => ({
   metadataBase: new URL(SITE_URL),
-  title: "LineiQ — Brand. Code. Signal.",
-  description:
-    "Premium brand-building agency and software house. Western-European quality, Hungarian market knowledge.",
+  ...getDictionary(locale).meta.pages["/"],
   // Inherited by every route, so no page can opt itself back in by accident.
   // Lifts with SITE_INDEXABLE on launch day. See [[data/site]].
   robots: SITE_INDEXABLE ? undefined : { index: false, follow: false },
@@ -58,7 +61,7 @@ export const rootMetadata: Metadata = {
   // scroll sequences have split and measured, and the layout falls apart. A
   // visitor changes language with the switcher instead.
   other: { google: "notranslate" },
-};
+});
 
 export default function RootDocument({
   locale,
