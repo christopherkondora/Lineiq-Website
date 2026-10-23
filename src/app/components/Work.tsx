@@ -568,7 +568,7 @@ export default function Work({ t }: { t: Dictionary["home"]["work"] }) {
             használja a saját pinelt sarkában. */}
         <div className={styles.stackedCta} data-stacked-cta>
           <SplashLink href="/work" className={styles.cornerCtaLink}>
-            <CtaSwap defaultLabel={t.allWork} hoverLabel={t.allWorkHover} />
+            <CtaSwap defaultLabel={t.allWork} hoverLabel={t.allWorkHover} arrow />
           </SplashLink>
         </div>
 
@@ -582,7 +582,7 @@ export default function Work({ t }: { t: Dictionary["home"]["work"] }) {
 
         <div className={styles.cornerCta} data-corner-cta>
           <SplashLink href="/work" className={styles.cornerCtaLink}>
-            <CtaSwap defaultLabel={t.allWork} hoverLabel={t.allWorkHover} />
+            <CtaSwap defaultLabel={t.allWork} hoverLabel={t.allWorkHover} arrow />
           </SplashLink>
         </div>
       </div>

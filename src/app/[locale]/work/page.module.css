@@ -1,0 +1,167 @@
+/* The portfolio, which does not exist yet. One screen: the promise struck
+   through line by line, the answer written over it by hand, one sentence of
+   why, and the two ways out. */
+
+.page {
+  min-height: 100svh;
+  padding: 180px 0 var(--space-3xl);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  width: 100%;
+  max-width: 1100px;
+  /* The headline is sized against this column (see .title). */
+  container-type: inline-size;
+}
+
+.title {
+  margin-top: var(--space-sm);
+  /* `text-hero`, capped by the column: "put our name on." measures 6.2em, so
+     at 15cqw the longest line fills 93% of the column and never has to wrap.
+     The constant is tied to these words; change them and re-measure. */
+  font-size: min(clamp(3rem, 11vw, 10rem), 15cqw);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* One strike per line, so each line is a box of its own and never wraps: a
+   wrapped line would put its bar between the two rows instead of through them. */
+.line {
+  position: relative;
+  white-space: nowrap;
+  animation: lineFade 600ms var(--ease-out-quad) both;
+}
+
+/* The bar is the Partners redaction's red, thinned to a pen stroke, drawn left
+   to right with the style guide's in-out curve. */
+.line::after {
+  content: "";
+  position: absolute;
+  left: -0.04em;
+  right: -0.04em;
+  top: 52%;
+  height: 0.07em;
+  background: var(--color-red);
+  transform-origin: left center;
+  animation: strike 700ms var(--ease-in-out) both;
+}
+
+.line:nth-child(1),
+.line:nth-child(1)::after {
+  animation-delay: 450ms;
+}
+
+.line:nth-child(2),
+.line:nth-child(2)::after {
+  animation-delay: 750ms;
+}
+
+/* Written over the struck lines, tilted like a correction in the margin. */
+.answer {
+  align-self: flex-end;
+  margin-top: -0.35em;
+  margin-right: 0.2em;
+  color: var(--color-black);
+  transform: rotate(-5deg);
+  animation: answer 700ms var(--ease-out-expo) 1300ms both;
+}
+
+.answer :global(.text-signature) {
+  display: block;
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  line-height: 1;
+}
+
+.lede {
+  margin-top: var(--space-md);
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  color: var(--color-black);
+  max-width: 46ch;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-md);
+}
+
+/* Highlight-swap CTA — fekete kihúzás, fehér hover szöveg. */
+.ctaLink {
+  --cta-font: var(--font-display);
+  --cta-size: clamp(1.4rem, 2.4vw, 2rem);
+  --cta-weight: 500;
+  --cta-tracking: var(--tracking-tight);
+  --cta-case: none;
+  --cta-optical: "opsz" 100;
+  --cta-pad: 0.18em 0.3em;
+  color: var(--color-black);
+  display: inline-flex;
+  align-items: center;
+  margin-left: -0.3em;
+}
+
+/* Real height rather than a pseudo-element: the row wraps on a narrow screen,
+   and two 44px hit areas stacked by pseudo-elements would overlap. */
+.backLink {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-black);
+  transition: color 300ms var(--ease-out-quad);
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.backLink:hover {
+  color: var(--color-red);
+}
+
+@keyframes strike {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* The struck words step back as the bar crosses them. */
+@keyframes lineFade {
+  from { color: var(--color-black); }
+  to   { color: var(--color-muted); }
+}
+
+@keyframes answer {
+  from { opacity: 0; transform: rotate(-5deg) translateY(0.15em) scale(0.96); }
+  to   { opacity: 1; transform: rotate(-5deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line,
+  .line::after,
+  .answer {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 140px 0 var(--space-2xl);
+  }
+
+  /* At phone size the hand-written answer crowded the second struck line;
+     it sits just under it instead of on it. */
+  .answer {
+    margin-top: 0.1em;
+  }
+}

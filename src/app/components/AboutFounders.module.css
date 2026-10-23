@@ -342,3 +342,21 @@
     text-align: left;
   }
 }
+
+/* Air on a phone (Kristóf, 2026-10-23: "dense, no breathing space after the
+   founders"). Stacked, the two founders and the method ran on as one column of
+   prose with no change of pace. A full step more between the founders, and
+   the method opens a new movement instead of continuing the second founder. */
+@media (max-width: 768px) {
+  .pair {
+    gap: var(--space-2xl);
+  }
+
+  .method {
+    margin-top: var(--space-3xl);
+  }
+
+  .methodShape {
+    margin-top: var(--space-xl);
+  }
+}

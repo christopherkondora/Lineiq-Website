@@ -8,6 +8,7 @@ import styles from "./Navbar.module.css";
 import SplashLink from "./SplashLink";
 import CtaSwap from "./CtaSwap";
 import LanguageSwitcher from "./LanguageSwitcher";
+import ArrowUpRight from "./ArrowUpRight";
 import { stripLocale } from "../i18n/routing";
 import type { Dictionary } from "../i18n/dictionary";
 
@@ -164,7 +165,7 @@ export default function Navbar({ t, switcherLabel }: NavbarProps) {
                   className={styles.menuLink}
                 >
                   <span>{t.links[item.id]}</span>
-                  <span className={styles.menuArrow}>↗</span>
+                  <ArrowUpRight className={styles.menuArrow} />
                 </Link>
               </li>
             ))}

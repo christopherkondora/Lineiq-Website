@@ -37,6 +37,22 @@ describe("service catalogue", () => {
       expect(text, term).not.toContain(term);
     }
   });
+
+  // Technical SEO is part of a website build (Web Development); SEO as an
+  // ongoing service, rankings or AI-answer visibility is not sold
+  // (kontrast-vault#48).
+  it.each(locales)("sells no SEO beyond the technical setup, in %s", (locale) => {
+    const marketing = JSON.stringify(
+      dictionaries[locale].services.categories["strategic-marketing"]
+    ).toLowerCase();
+    expect(marketing).not.toContain("seo");
+    const all = JSON.stringify(
+      localizedServices(dictionaries[locale].services.categories)
+    ).toLowerCase();
+    for (const term of ["content marketing", "ai answers", "aeo", "geo"]) {
+      expect(all, term).not.toMatch(new RegExp(`\\b${term}\\b`));
+    }
+  });
 });
 
 describe("the catalogue in a language", () => {
