@@ -1,16 +1,12 @@
 import { Fragment } from "react";
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Placeholder from "../../components/Placeholder";
 import Footer from "../../components/Footer";
 import { getDictionary } from "../../i18n/dictionary";
 import { isLocale } from "../../i18n/routing";
+import { metadataFor } from "../../i18n/seo";
 
-export const metadata: Metadata = {
-  title: "Work — LineiQ",
-  description:
-    "Selected case studies from the LineiQ portfolio. Brand, web, marketing.",
-};
+export const generateMetadata = metadataFor("/work");
 
 export default async function WorkPage({ params }: PageProps<"/[locale]/work">) {
   const { locale } = await params;

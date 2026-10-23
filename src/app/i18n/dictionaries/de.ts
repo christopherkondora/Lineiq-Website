@@ -575,6 +575,32 @@ const de: Dictionary = {
   languageSwitcher: {
     label: "Language",
   },
+  meta: {
+    pages: {
+      "/": {
+        title: "LineiQ — Brand. Code. Signal.",
+        description:
+          "Premium brand-building agency and software house. Western-European quality, Hungarian market knowledge.",
+      },
+      "/about": {
+        title: "About — LineiQ",
+        description:
+          "A brand and business architecture studio built in Hungary. Our mission, the five beliefs we run on and what they cost us, what we refuse, and the two founders behind it.",
+      },
+      "/work": {
+        title: "Work — LineiQ",
+        description:
+          "Selected case studies from the LineiQ portfolio. Brand, web, marketing.",
+      },
+      "/contact": {
+        title: "Contact — LineiQ",
+        description:
+          "Five questions, mostly answered by clicking. Tell us where you are and we will tell you straight whether we are the studio for it.",
+      },
+    },
+    // A category page's title; its description is the category's intro.
+    serviceTitle: "{title} — LineiQ",
+  },
 };
 
 export default de;

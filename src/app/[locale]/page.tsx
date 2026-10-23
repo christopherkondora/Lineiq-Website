@@ -12,8 +12,11 @@ import SplashLink from "../components/SplashLink";
 import CtaSwap from "../components/CtaSwap";
 import { getDictionary } from "../i18n/dictionary";
 import { isLocale } from "../i18n/routing";
+import { metadataFor } from "../i18n/seo";
 import { localizedServices } from "../data/services";
 import styles from "./page.module.css";
+
+export const generateMetadata = metadataFor("/");
 
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const { locale } = await params;

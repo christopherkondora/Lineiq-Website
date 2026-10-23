@@ -1,15 +1,11 @@
-import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ContactFlow from "./ContactFlow";
 import Footer from "../../components/Footer";
 import { getDictionary } from "../../i18n/dictionary";
 import { isLocale } from "../../i18n/routing";
+import { metadataFor } from "../../i18n/seo";
 
-export const metadata: Metadata = {
-  title: "Contact — LineiQ",
-  description:
-    "Five questions, mostly answered by clicking. Tell us where you are and we will tell you straight whether we are the studio for it.",
-};
+export const generateMetadata = metadataFor("/contact");
 
 // No footer. The flow owns the viewport and nothing on this route scrolls, so
 // anything under the fold would be a second page the wheel has to fight the
