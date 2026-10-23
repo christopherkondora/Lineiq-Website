@@ -28,13 +28,23 @@ const page = await context.newPage();
 
 // --- The sitemap --------------------------------------------------------------
 const sitemapXml = await (await context.request.get(`${BASE}/sitemap.xml`)).text();
-const entries = [...sitemapXml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, body]) => ({
-  loc: body.match(/<loc>([^<]+)<\/loc>/)[1],
-  languages: Object.fromEntries(
+const urls = [...sitemapXml.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, body]) => body);
+const entries = urls.flatMap((body) => {
+  const loc = body.match(/<loc>([^<]+)<\/loc>/)?.[1];
+  if (!loc) {
+    fail("sitemap", `an entry has no <loc>: ${body.trim().slice(0, 80)}`);
+    return [];
+  }
+  const languages = Object.fromEntries(
     [...body.matchAll(/hreflang="([^"]+)" href="([^"]+)"/g)].map(([, l, h]) => [l, h])
-  ),
-}));
-if (entries.length === 0) fail("sitemap", "no entries");
+  );
+  return [{ loc, languages }];
+});
+if (entries.length === 0) {
+  await browser.close();
+  console.error(`sitemap: no entries at ${BASE}/sitemap.xml`);
+  process.exit(1);
+}
 const site = new URL(entries[0].loc).origin;
 const pathOf = (url) => new URL(url).pathname;
 const local = (url) => BASE + pathOf(url);

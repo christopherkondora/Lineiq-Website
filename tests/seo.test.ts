@@ -178,13 +178,16 @@ describe("every page under [locale]", () => {
     }
   });
 
+  // A hand-written generateMetadata would ship a title with no canonical and
+  // no hreflang set, so the page has to build it with metadataFor or
+  // pageMetadata.
   it("declares its metadata through the SEO layer", () => {
     for (const file of pages) {
+      const source = readFileSync(file, "utf8");
       expect(
-        /export (const|async function) generateMetadata/.test(
-          readFileSync(file, "utf8")
-        ),
-        `${relative(root, file)} exports no generateMetadata`
+        /export (const|async function) generateMetadata/.test(source) &&
+          /\b(metadataFor|pageMetadata)\(/.test(source),
+        `${relative(root, file)} builds no metadata with metadataFor or pageMetadata`
       ).toBe(true);
     }
   });
