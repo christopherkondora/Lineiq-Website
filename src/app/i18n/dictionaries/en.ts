@@ -453,6 +453,96 @@ const en = {
     status: "Case study content is being added.",
     launch: "2026 Q3",
   },
+  // The contact flow (contact/ContactFlow). The stages, needs and bands are
+  // keyed by the ids in contact/intake.ts, which are the same in every
+  // language: only these labels differ, so the route accepts the same answers
+  // from every page. "talk soon." on the confirmation is a mark and stays in
+  // code; so does the studio's address.
+  contact: {
+    heading: "Let's talk for real.",
+    lede: "Three clients a year. Five questions, and you will know where you stand.",
+    begin: "Begin",
+    beginHover: "Let's go!",
+    aside: "Or just hit us up.",
+    // One per counted panel; the statement and the review are not questions.
+    questions: {
+      who: "Who are you?",
+      stage: "Where's the money now?",
+      need: "What do you need?",
+      budget: "What can you put behind it?",
+      note: "Anything we should know?",
+    },
+    company: "Company",
+    email: "Email",
+    next: "Next",
+    // The note's button while the note is empty.
+    skip: "Skip",
+    optional: "Optional",
+    stages: {
+      "not-selling": "Not selling yet",
+      inconsistent: "Selling, but inconsistently",
+      "selling-well": "Selling well, want more",
+    },
+    needs: {
+      grow: "Grow",
+      rebrand: "Rebrand",
+      remarket: "Remarket",
+      launch: "Launch something new",
+    },
+    monthly: "Monthly",
+    oneTime: "One-time",
+    // The budget switch's accessible name.
+    switchLabel: "Show one-time budgets instead of monthly",
+    // The figures are per language: forints on /hu, euros elsewhere
+    // (Lineiq-Website#13). Four per mode, so the grid does not reflow.
+    bands: {
+      monthly: {
+        "mo-under-2k": "Under €2,000 / mo",
+        "mo-2-5k": "€2,000 – 5,000 / mo",
+        "mo-5-10k": "€5,000 – 10,000 / mo",
+        "mo-10k-up": "€10,000+ / mo",
+      },
+      "one-time": {
+        "ot-under-15k": "Under €15,000",
+        "ot-15-30k": "€15,000 – 30,000",
+        "ot-30-75k": "€30,000 – 75,000",
+        "ot-75k-up": "€75,000+",
+      },
+    },
+    review: {
+      heading: "This is what we have.",
+      company: "Company",
+      email: "Email",
+      stage: "Money",
+      need: "Need",
+      budget: "Budget",
+      note: "Note",
+      notAnswered: "Not answered",
+      change: "Change",
+    },
+    send: "Send",
+    sending: "Sending…",
+    sendHover: "Let's go!",
+    back: "Back",
+    // Keyed by the codes in contact/intake.ts (INTAKE_ERRORS). company and
+    // email are also what the flow says before it lets the visitor past the
+    // first question.
+    errors: {
+      company: "We need the company name, so we know who we are looking at.",
+      email: "We need a valid email address, so we have somewhere to reply.",
+      steps: "Answer every step and we will have something to work with.",
+      budget: "Pick a budget and we will have something to work with.",
+      unavailable: "The email service is not configured.",
+      failed: "Submission failed, please try again.",
+    },
+    done: {
+      title: "Got it.",
+      nextLabel: "Next step",
+      next: "We will read your answers against your market, and arrive at the first call already having something to say.",
+      responseLabel: "Response time",
+      response: "You will hear back by email within 48 hours on business days.",
+    },
+  },
   // The frame of a page that is not built yet (components/Placeholder).
   placeholder: {
     cta: "Let's talk?",

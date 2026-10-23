@@ -20,9 +20,10 @@ export default async function ContactPage({
 }: PageProps<"/[locale]/contact">) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+  const dict = getDictionary(locale);
   return (
     <main>
-      <ContactFlow footer={<Footer t={getDictionary(locale).footer} />} />
+      <ContactFlow t={dict.contact} footer={<Footer t={dict.footer} />} />
     </main>
   );
 }
