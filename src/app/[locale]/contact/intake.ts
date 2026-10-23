@@ -14,8 +14,6 @@
 // a package selector — which is the thing the persona rejects on sight, and the
 // reason nothing here is a card with a feature list under it.
 
-import { isLocale, type Locale } from "../../i18n/routing";
-
 export interface Option<T extends string> {
   id: T;
   label: string;
@@ -152,11 +150,4 @@ export function errorMessage(
   code: unknown
 ): string {
   return isIntakeError(code) ? messages[code] : messages.failed;
-}
-
-/** The language a submission says it came from. Anything that is not one of
- *  the site's languages is not stated, rather than refused: the language is a
- *  courtesy to the reply, not an answer the visitor gave. */
-export function intakeLocale(value: unknown): Locale | null {
-  return typeof value === "string" && isLocale(value) ? value : null;
 }

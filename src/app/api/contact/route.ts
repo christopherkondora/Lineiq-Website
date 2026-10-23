@@ -5,14 +5,14 @@ import {
   HONEYPOT_FIELD,
   MIN_ELAPSED_MS,
   NOTE_MAX,
-  intakeLocale,
   isBandId,
   isBudgetMode,
   isNeedId,
   isStageId,
   type IntakeError,
 } from "../../[locale]/contact/intake";
-import { enquiryEmail } from "./enquiry";
+import { dictionaries } from "../../i18n/dictionary";
+import { enquiryEmail, intakeLocale } from "./enquiry";
 
 // The contact flow's submission, forwarded to the studio by email through
 // Resend. from/to come from the environment so they can be repointed after a
@@ -29,7 +29,8 @@ import { enquiryEmail } from "./enquiry";
 // Since Lineiq-Website#8 the form is in three languages. The ids it submits are
 // the same in every one of them, so nothing here reads a label. The page adds
 // `locale`, which the email states, and a refusal is answered with a code the
-// page turns into a sentence in its own language.
+// page turns into a sentence in its own language. The English sentence rides
+// along in `error`, which is the field a page loaded before that change reads.
 
 const FALLBACK_TO = "hello@lineiqgroup.com";
 
@@ -38,7 +39,10 @@ function asString(value: unknown): string {
 }
 
 function refuse(code: IntakeError, status: number) {
-  return NextResponse.json({ error: code }, { status });
+  return NextResponse.json(
+    { code, error: dictionaries.en.contact.errors[code] },
+    { status }
+  );
 }
 
 /** Nothing sent, and a 200 anyway. A bot that learns which submissions were

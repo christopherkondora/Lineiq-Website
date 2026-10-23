@@ -639,9 +639,9 @@ export default function ContactFlow({
       });
       if (!res.ok) {
         const data = (await res.json().catch(() => null)) as {
-          error?: string;
+          code?: string;
         } | null;
-        setError(errorMessage(t.errors, data?.error));
+        setError(errorMessage(t.errors, data?.code));
         return;
       }
       setDone(true);
