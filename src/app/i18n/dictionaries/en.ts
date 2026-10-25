@@ -524,6 +524,8 @@ const en = {
     sending: "Sending…",
     sendHover: "Let's go!",
     back: "Back",
+    // Beside the send button: the privacy notice, where the data is given.
+    privacyLink: "How we handle your answers",
     // Keyed by the codes in contact/intake.ts (INTAKE_ERRORS). company and
     // email are also what the flow says before it lets the visitor past the
     // first question.
@@ -605,6 +607,19 @@ const en = {
         title: "Contact — LineiQ",
         description:
           "Five questions, mostly answered by clicking. Tell us where you are and we will tell you straight whether we are the studio for it.",
+      },
+      // The legal pages are in their own language from the start, in every
+      // dictionary: the Hungarian binds and the translations say so
+      // (data/legal).
+      "/terms": {
+        title: "Terms of Use — LineiQ",
+        description:
+          "The terms for using lineiqgroup.com: who runs it, what the site is and is not, and the rules for its content.",
+      },
+      "/privacy": {
+        title: "Privacy Notice — LineiQ",
+        description:
+          "How LineiQ handles the details given through lineiqgroup.com: the contact form, one language cookie, no analytics.",
       },
     },
     // A category page's title; its description is the category's intro.

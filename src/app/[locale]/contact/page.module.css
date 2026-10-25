@@ -479,6 +479,27 @@
   max-width: 34ch;
 }
 
+/* Beside Send, quiet: it informs, it does not compete with the button. Its own
+   44px of height, because it stands alone, not inside a sentence. */
+.privacyLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  /* Black at 70%, not --color-muted: the grey is under 3:1 on white, too
+     faint for a line the visitor should be able to read. */
+  color: rgb(0 0 0 / 0.7);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 300ms var(--ease-out-quad);
+}
+
+.privacyLink:hover {
+  color: var(--color-red);
+}
+
 /* ── The readout ───────────────────────────────────────────
    Fixed, quiet, and the only progress indicator on the page. It is outside the
    track for a reason: the travel needs one thing that does not travel, or the
