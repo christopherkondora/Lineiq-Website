@@ -2,12 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import ArrowUpRight from "./ArrowUpRight";
 import styles from "./CtaSwap.module.css";
 
 interface CtaSwapProps {
   defaultLabel: string;
   hoverLabel: string;
   className?: string;
+  /** A ↗ after both labels; on the hover side it surfaces as the last letter. */
+  arrow?: boolean;
 }
 
 /**
@@ -21,6 +24,7 @@ export default function CtaSwap({
   defaultLabel,
   hoverLabel,
   className,
+  arrow = false,
 }: CtaSwapProps) {
   const swapRef = useRef<HTMLSpanElement>(null);
 
@@ -86,13 +90,29 @@ export default function CtaSwap({
       ref={swapRef}
     >
       <span className={styles.box} aria-hidden="true" />
-      <span className={styles.default}>{defaultLabel}</span>
+      <span className={styles.default}>
+        {defaultLabel}
+        {arrow && (
+          <>
+            {"\u00a0"}
+            <ArrowUpRight />
+          </>
+        )}
+      </span>
       <span className={styles.hover} aria-hidden="true">
         {hoverLabel.split("").map((ch, i) => (
           <span key={i} className={styles.letter}>
             {ch === " " ? " " : ch}
           </span>
         ))}
+        {arrow && (
+          <>
+            <span className={styles.letter}>{"\u00a0"}</span>
+            <span className={styles.letter}>
+              <ArrowUpRight />
+            </span>
+          </>
+        )}
       </span>
     </span>
   );

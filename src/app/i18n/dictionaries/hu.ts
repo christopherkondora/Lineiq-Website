@@ -27,8 +27,8 @@ const hu: Dictionary = {
     },
     work: {
       cursor: "View case",
-      allWork: "All our work ↗",
-      allWorkHover: "Let's see ↗",
+      allWork: "All our work",
+      allWorkHover: "Let's see",
       projects: {
         klient:
           "Projects, invoicing and client communication on a single surface. The software we built for ourselves before we ever sold it to anyone.",
@@ -417,10 +417,6 @@ const hu: Dictionary = {
             title: "Paid advertising (Meta, Google)",
             desc: "Ads that bring revenue, not just clicks.",
           },
-          seo: {
-            title: "SEO and content marketing",
-            desc: "Ongoing discoverability in search and in AI answers.",
-          },
           email: {
             title: "Email marketing",
             desc: "The list that stays yours, and turns into buyers.",
@@ -434,12 +430,15 @@ const hu: Dictionary = {
     },
   },
   work: {
-    // After the ◆ the component sets in front of it.
+    // After the ◆ the page sets in front of it.
     label: "Portfolio",
+    // Struck through on the page and answered by the Kranky "not yet.", which
+    // is a mark and stays in code.
     titleLines: ["The work we", "put our name on."],
-    lede: "Detailed case studies on brand, web and marketing projects. Each piece is its own entry: scope, process, visuals, results. The page is coming soon.",
-    status: "Case study content is being added.",
-    launch: "2026 Q3",
+    lede: "The case studies are being written. We would rather show you nothing than something half-finished.",
+    cta: "Let's talk?",
+    ctaHover: "Let's go!",
+    back: "Back to home",
   },
   // The contact flow (contact/ContactFlow). The stages, needs and bands are
   // keyed by the ids in contact/intake.ts, which are the same in every
@@ -448,7 +447,7 @@ const hu: Dictionary = {
   // code; so does the studio's address.
   contact: {
     heading: "Let's talk for real.",
-    lede: "Three clients a year. Five questions, and you will know where you stand.",
+    lede: "Five questions, and you will know where you stand.",
     begin: "Begin",
     beginHover: "Let's go!",
     aside: "Or just hit us up.",
@@ -531,14 +530,6 @@ const hu: Dictionary = {
       response: "You will hear back by email within 48 hours on business days.",
     },
   },
-  // The frame of a page that is not built yet (components/Placeholder).
-  placeholder: {
-    cta: "Let's talk?",
-    ctaHover: "Let's go!",
-    back: "Back to home",
-    statusLabel: "Status",
-    launchLabel: "Launch",
-  },
   nav: {
     links: {
       home: "Home",
@@ -590,7 +581,7 @@ const hu: Dictionary = {
       "/work": {
         title: "Work — LineiQ",
         description:
-          "Selected case studies from the LineiQ portfolio. Brand, web, marketing.",
+          "The LineiQ portfolio. Not yet: the case studies are being written.",
       },
       "/contact": {
         title: "Contact — LineiQ",

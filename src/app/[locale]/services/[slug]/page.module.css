@@ -35,29 +35,37 @@
   width: 2.5px;
   background: var(--color-red);
   transform-origin: bottom center;
+  /* Its own compositor layer, so the hero's load reveal on the main thread
+     cannot make the breathing stutter. */
+  will-change: transform;
   animation: cascadeBreathe var(--duration-glacial) cubic-bezier(0.37, 0, 0.63, 1)
     infinite;
+  /* Negative delays: every line is already mid-breath on the first frame.
+     Positive ones held each line at full length until its turn, then snapped
+     it to 72%, one line after another for three seconds. The phase step is
+     still 220ms per line. */
+  animation-delay: calc(var(--i) * 220ms - var(--duration-glacial));
 }
 
 /* Hullámprofil: középen a leghosszabb, a szélek felé rövidül. A lépcső nem
    lineáris — a széleken alig nő a hossz, a közép felé egyre nagyobbat ugrik,
-   így a profil exponenciális ívet rajzol. A delay lépés végig 220ms, a hullám
-   egyenletes ütemben fut végig mind a 13 vonalon. */
-.cascade span:nth-child(1)  { height: 18%;  animation-delay: 0ms;    }
-.cascade span:nth-child(2)  { height: 22%;  animation-delay: 220ms;  }
-.cascade span:nth-child(3)  { height: 26%;  animation-delay: 440ms;  }
-.cascade span:nth-child(4)  { height: 31%;  animation-delay: 660ms;  }
-.cascade span:nth-child(5)  { height: 38%;  animation-delay: 880ms;  }
-.cascade span:nth-child(6)  { height: 47%;  animation-delay: 1100ms; }
-.cascade span:nth-child(7)  { height: 60%;  animation-delay: 1320ms; }
-.cascade span:nth-child(8)  { height: 75%;  animation-delay: 1540ms; }
-.cascade span:nth-child(9)  { height: 59%;  animation-delay: 1760ms; }
-.cascade span:nth-child(10) { height: 46%;  animation-delay: 1980ms; }
-.cascade span:nth-child(11) { height: 37%;  animation-delay: 2200ms; }
-.cascade span:nth-child(12) { height: 30%;  animation-delay: 2420ms; }
-.cascade span:nth-child(13) { height: 25%;  animation-delay: 2640ms; }
-.cascade span:nth-child(14) { height: 21%;  animation-delay: 2860ms; }
-.cascade span:nth-child(15) { height: 17%;  animation-delay: 3080ms; }
+   így a profil exponenciális ívet rajzol. A fázislépés végig 220ms (--i), a hullám
+   egyenletes ütemben fut végig mind a 15 vonalon. */
+.cascade span:nth-child(1)  { height: 18%;  --i: 0; }
+.cascade span:nth-child(2)  { height: 22%;  --i: 1; }
+.cascade span:nth-child(3)  { height: 26%;  --i: 2; }
+.cascade span:nth-child(4)  { height: 31%;  --i: 3; }
+.cascade span:nth-child(5)  { height: 38%;  --i: 4; }
+.cascade span:nth-child(6)  { height: 47%;  --i: 5; }
+.cascade span:nth-child(7)  { height: 60%;  --i: 6; }
+.cascade span:nth-child(8)  { height: 75%;  --i: 7; }
+.cascade span:nth-child(9)  { height: 59%;  --i: 8; }
+.cascade span:nth-child(10) { height: 46%;  --i: 9; }
+.cascade span:nth-child(11) { height: 37%;  --i: 10; }
+.cascade span:nth-child(12) { height: 30%;  --i: 11; }
+.cascade span:nth-child(13) { height: 25%;  --i: 12; }
+.cascade span:nth-child(14) { height: 21%;  --i: 13; }
+.cascade span:nth-child(15) { height: 17%;  --i: 14; }
 
 @keyframes cascadeBreathe {
   0%, 100% { transform: scaleY(0.72); }

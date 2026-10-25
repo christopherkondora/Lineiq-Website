@@ -457,9 +457,13 @@
 
 /* ── Responsive ─────────────────────────────────────── */
 
+/* Not on a phone (Kristóf, 2026-10-23). The shelf is a horizontal object: at
+   390px the spines ran off both edges, the open book covered half of them,
+   and the section read as a screen of fragments. Nothing here is a claim the
+   rest of the page needs, so it goes rather than being rebuilt small. */
 @media (max-width: 768px) {
   .section {
-    min-height: 500px;
+    display: none;
   }
 
   /* No font-size here any more: the shared `text-hero` clamp already lands
