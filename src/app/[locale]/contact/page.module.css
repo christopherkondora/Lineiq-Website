@@ -519,6 +519,15 @@
   pointer-events: none;
 }
 
+/* Target size (WCAG 2.2, 2.5.8: at least 24 x 24 px): the label sets the
+   button 18px tall. The padding grows its hit area and the negative margin
+   takes the growth back, so the readout keeps its height and the label its
+   place on the baseline. */
+.back {
+  padding-block: 3px;
+  margin-block: -3px;
+}
+
 .count {
   display: flex;
   align-items: baseline;
