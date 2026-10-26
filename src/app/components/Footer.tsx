@@ -7,6 +7,7 @@ import type { Dictionary } from "../i18n/dictionary";
 import { format } from "../i18n/format";
 import {
   FOOTER_CHANNELS,
+  FOOTER_CITIES,
   FOOTER_LEGAL_LINKS,
   FOOTER_SITEMAP,
   FOOTER_STUDIO_NAME,
@@ -22,8 +23,12 @@ export default function Footer({ t }: { t: Dictionary["footer"] }) {
             <p className={styles.label}>{t.studio}</p>
             <p className={styles.text}>
               {FOOTER_STUDIO_NAME}
-              <br />
-              {t.city}
+              {FOOTER_CITIES.map((city) => (
+                <span key={city}>
+                  <br />
+                  {city}
+                </span>
+              ))}
             </p>
           </div>
           <div className={`${styles.col} ${styles.colSitemap}`}>
