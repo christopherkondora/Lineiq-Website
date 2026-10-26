@@ -1,7 +1,8 @@
 // Visual diff (Lineiq-Website#12): a change that should not change how the
 // site looks is checked against screenshots. `capture` reads /sitemap.xml from
 // a running build and saves a full-page screenshot of every page at every
-// width, plus the contact flow's first question, where its readout (the Back
+// width, with a mouse and, at the three narrow ones, with touch (the
+// coarse-pointer styles differ), plus the contact flow's first question, where its readout (the Back
 // button) shows; `compare` counts the pixels that differ between two captures
 // and fails on any screenshot that is not identical.
 //
@@ -16,7 +17,7 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { inflateSync } from "node:zlib";
-import { chromium } from "file:///C:/Users/chris/.claude/skills/web-rip/node_modules/playwright/index.mjs";
+import { chromium, devices } from "file:///C:/Users/chris/.claude/skills/web-rip/node_modules/playwright/index.mjs";
 
 const VIEWPORTS = [
   { width: 320, height: 568 },
@@ -24,6 +25,16 @@ const VIEWPORTS = [
   { width: 768, height: 1024 },
   { width: 1280, height: 800 },
   { width: 1920, height: 1080 },
+];
+const SETUPS = [
+  ...VIEWPORTS.map((viewport) => ({ name: `${viewport.width}`, viewport })),
+  ...VIEWPORTS.filter((v) => v.width <= 768).map((viewport) => ({
+    name: `${viewport.width}-touch`,
+    viewport,
+    isMobile: true,
+    hasTouch: true,
+    userAgent: devices["iPhone 13"].userAgent,
+  })),
 ];
 
 const [mode, ...args] = process.argv.slice(2);
@@ -42,11 +53,11 @@ async function capture(baseArg, dir) {
   const browser = await chromium.launch();
   const sitemap = await (await fetch(`${base}/sitemap.xml`)).text();
   const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, loc]) => new URL(loc).pathname);
-  let shots = paths.length * VIEWPORTS.length;
+  let shots = paths.length * SETUPS.length;
 
   await Promise.all(
-    VIEWPORTS.map(async (viewport) => {
-      const context = await browser.newContext({ viewport, reducedMotion: "reduce" });
+    SETUPS.map(async ({ name, ...options }) => {
+      const context = await browser.newContext({ ...options, reducedMotion: "reduce" });
       const page = await context.newPage();
       for (const path of paths) {
         // The pointer stays where the last click left it, which would hover
@@ -55,7 +66,7 @@ async function capture(baseArg, dir) {
         await page.goto(base + path, { waitUntil: "networkidle" });
         await page.evaluate(() => document.fonts.ready);
         await page.waitForTimeout(800);
-        const file = join(dir, `${slug(path)}@${viewport.width}.png`);
+        const file = join(dir, `${slug(path)}@${name}.png`);
         await page.screenshot({ path: file, fullPage: true, animations: "disabled", caret: "hide" });
 
         if (path.endsWith("/contact")) {
@@ -63,7 +74,7 @@ async function capture(baseArg, dir) {
           await page.locator('[data-panel="1"][data-active="true"]').waitFor({ timeout: 5000 });
           await page.mouse.move(0, 0);
           await page.waitForTimeout(800);
-          const step = join(dir, `${slug(path)}-panel1@${viewport.width}.png`);
+          const step = join(dir, `${slug(path)}-panel1@${name}.png`);
           await page.screenshot({ path: step, animations: "disabled", caret: "hide" });
           shots++;
         }
@@ -79,6 +90,9 @@ async function compare(dirA, dirB) {
   if (!dirA || !dirB) throw new Error("compare needs two directories");
   const files = (await readdir(dirA)).filter((f) => f.endsWith(".png")).sort();
   const failures = [];
+  for (const file of await readdir(dirB)) {
+    if (file.endsWith(".png") && !files.includes(file)) failures.push(`${file}: missing in ${dirA}`);
+  }
 
   for (const file of files) {
     const a = await readFile(join(dirA, file));

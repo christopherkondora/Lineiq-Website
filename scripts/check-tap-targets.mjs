@@ -84,8 +84,9 @@ await Promise.all(
           await ((await option.count()) ? option : active.locator('button[type="submit"]')).click();
           await page.locator(`[data-panel="${panel}"][data-active="true"]`).waitFor({ timeout: 5000 });
           await page.waitForTimeout(800); // the camera's travel to the panel
-          // The panel on screen, and the readout with the Back button.
-          await audit(page, record, `contact ${panel}`, '[data-active="true"], [class*="__hud"]');
+          // The whole page: the panels off screen are inert and skipped, the
+          // readout with the Back button is not.
+          await audit(page, record, `contact ${panel}`);
         }
       }
 
