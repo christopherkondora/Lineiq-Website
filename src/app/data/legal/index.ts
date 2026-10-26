@@ -15,7 +15,7 @@
 
 import { format } from "../../i18n/format";
 import { localizePath, type Locale } from "../../i18n/routing";
-import type { Fact, LegalDocumentText } from "./types";
+import type { LegalDocumentText } from "./types";
 import en from "./en";
 import hu from "./hu";
 import de from "./de";
@@ -83,13 +83,6 @@ export function legalPage(kind: LegalKind, locale: Locale): LegalPage {
             label: chrome.original,
           },
   };
-}
-
-/** The facts that are known: a null value is left out, never printed. */
-export function presentFacts(
-  facts: readonly Fact[]
-): (readonly [string, string])[] {
-  return facts.filter((f): f is readonly [string, string] => f[1] !== null);
 }
 
 export type TextSegment =

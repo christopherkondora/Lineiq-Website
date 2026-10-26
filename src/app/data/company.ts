@@ -3,36 +3,28 @@
 // Eker. tv. 4. § requires a Hungarian site to publish its operator's name,
 // seat, registration and tax number, an email address, and its host.
 //
-// A field that is null is not known to the repo yet. The legal pages leave its
-// row out rather than print a blank, so a missing number shows up as a missing
-// line, never as "null". Fill them in from the company papers; they are public
-// registry data, so they belong here, unlike anything from the contracts.
+// Source: the Szombathelyi Törvényszék Cégbírósága's registration order
+// (Cg.18-09-116839/6, 2026-10-21), and the tax number as registered on
+// 2026-10-20. Public registry data only: nothing about the founders beyond
+// their names and offices belongs in this repo.
 
-export interface Company {
-  /** The short name (rövidített cégnév). */
-  name: string;
+export const COMPANY = {
+  /** The short name (rövidített cégnév), as registered: no full stop. */
+  name: "LineiQ Group Kft",
   /** The full registered name (cégnév). */
-  legalName: string | null;
+  legalName: "LineiQ Group Korlátolt Felelősségű Társaság",
   /** The registered seat (székhely). */
-  seat: string | null;
+  seat: "9700 Szombathely, Minerva utca 14/A A. ép. Fsz. 3. ajtó",
   /** Cégjegyzékszám. */
-  registrationNumber: string | null;
-  /** The court of registration (cégbíróság), which follows from the seat. */
-  registryCourt: string | null;
+  registrationNumber: "18-09-116839",
+  /** The court of registration (cégbíróság). */
+  registryCourt: "Szombathelyi Törvényszék Cégbírósága",
   /** Adószám. */
-  taxNumber: string | null;
-  email: string;
-}
-
-export const COMPANY: Company = {
-  name: "LineiQ Kft.",
-  legalName: null,
-  seat: null,
-  registrationNumber: null,
-  registryCourt: null,
-  taxNumber: null,
+  taxNumber: "33149389-1-18",
+  /** The studio's mailbox, the one the site prints everywhere. The registry's
+   *  delivery address is contact@lineiqgroup.com; this is not that. */
   email: "hello@lineiqgroup.com",
-};
+} as const;
 
 /** The host, which the Eker. tv. 4. § also asks for. Checked 2026-10-25: the
  *  site answers with `Server: Vercel`, and the address is Vercel's privacy

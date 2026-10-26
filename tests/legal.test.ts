@@ -6,10 +6,10 @@ import {
   legalPage,
   legalTexts,
   linkify,
-  presentFacts,
   type LegalBlock,
   type LegalKind,
 } from "@/app/data/legal";
+import { COMPANY } from "@/app/data/company";
 import { FOOTER_LEGAL_LINKS } from "@/app/data/footer";
 import { dictionaries } from "@/app/i18n/dictionary";
 import { locales } from "@/app/i18n/routing";
@@ -37,7 +37,7 @@ function allText(kind: LegalKind, locale: (typeof locales)[number]): string {
           ? [b]
           : "list" in b
             ? b.list
-            : b.facts.flatMap(([label, value]) => [label, value ?? ""])
+            : b.facts.flat()
       ),
     ])
     .join("\n");
@@ -61,6 +61,20 @@ describe("the legal documents", () => {
 
   it.each(locales)("the privacy notice in %s names the language cookie", (locale) => {
     expect(allText("privacy", locale)).toContain(LOCALE_COOKIE);
+  });
+
+  it.each(locales)("%s names the company as the registry does, in both documents", (locale) => {
+    for (const kind of kinds) {
+      const text = allText(kind, locale);
+      for (const fact of [
+        COMPANY.legalName,
+        COMPANY.seat,
+        COMPANY.registrationNumber,
+        COMPANY.taxNumber,
+      ]) {
+        expect(text, `${kind}: ${fact}`).toContain(fact);
+      }
+    }
   });
 
   it("the cookie lives as long as the notice says: one year", () => {
@@ -125,17 +139,6 @@ describe("formatLegalDate", () => {
     expect(formatLegalDate("2026-01-05", "en")).toBe("5 January 2026");
     expect(formatLegalDate("2026-01-05", "hu")).toBe("2026. január 5.");
     expect(formatLegalDate("2026-01-05", "de")).toBe("5. Januar 2026");
-  });
-});
-
-describe("presentFacts", () => {
-  it("leaves out a fact that is not known yet", () => {
-    expect(
-      presentFacts([
-        ["Name", "LineiQ Kft."],
-        ["Tax number", null],
-      ])
-    ).toEqual([["Name", "LineiQ Kft."]]);
   });
 });
 

@@ -11,7 +11,10 @@ const company: readonly Fact[] = [
   ["Firmenbuchnummer", COMPANY.registrationNumber],
   ["Registergericht", COMPANY.registryCourt],
   ["Steuernummer", COMPANY.taxNumber],
-  ["Vertreten durch", "Kristóf Kondora und Áron Sütő, Geschäftsführer"],
+  [
+    "Vertreten durch",
+    "Kristóf Máté Kondora und Áron Sütő, Geschäftsführer, jeweils einzeln",
+  ],
   ["E-Mail", COMPANY.email],
 ];
 

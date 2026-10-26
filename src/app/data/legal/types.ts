@@ -1,9 +1,8 @@
 // The shape of a legal document, the same in every language, so a translation
 // can be checked against the Hungarian block for block (tests/legal.test.ts).
 
-/** A labelled line: the company's data, the cookie's properties. A null value
- *  is not known yet and its row is left out (see data/company). */
-export type Fact = readonly [label: string, value: string | null];
+/** A labelled line: the company's data, the cookie's properties. */
+export type Fact = readonly [label: string, value: string];
 
 /** A paragraph, a bulleted list, or a run of labelled facts. */
 export type LegalBlock =

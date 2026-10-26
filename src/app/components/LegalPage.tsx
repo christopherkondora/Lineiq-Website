@@ -7,7 +7,6 @@ import {
   BINDING_LOCALE,
   legalPage,
   linkify,
-  presentFacts,
   type LegalBlock,
   type LegalKind,
 } from "../data/legal";
@@ -57,7 +56,7 @@ function Block({ block }: { block: LegalBlock }) {
   }
   return (
     <dl className={styles.facts}>
-      {presentFacts(block.facts).map(([label, value]) => (
+      {block.facts.map(([label, value]) => (
         <div key={label} className={styles.fact}>
           <dt>{label}</dt>
           <dd>

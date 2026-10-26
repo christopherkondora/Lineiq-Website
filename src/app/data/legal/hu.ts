@@ -11,7 +11,7 @@ const company: readonly Fact[] = [
   ["Cégjegyzékszám", COMPANY.registrationNumber],
   ["Nyilvántartó cégbíróság", COMPANY.registryCourt],
   ["Adószám", COMPANY.taxNumber],
-  ["Képviseli", "Kondora Kristóf és Sütő Áron ügyvezetők"],
+  ["Képviseli", "Kondora Kristóf Máté és Sütő Áron ügyvezetők, önállóan"],
   ["E-mail", COMPANY.email],
 ];
 
