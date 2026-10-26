@@ -1,0 +1,130 @@
+/* The legal pages: a document to read, so one column at a reading measure,
+   Fraunces for the headings and Wix Madefor for the text, and nothing that
+   moves. */
+
+.page {
+  padding: 180px 0 var(--space-3xl);
+}
+
+.inner {
+  max-width: calc(72ch + 2 * var(--container-pad));
+  font-family: var(--font-body);
+  color: var(--color-black);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding-bottom: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  margin-top: var(--space-sm);
+  /* Long German and Hungarian compounds ("Datenschutzerklärung") must break
+     on a phone rather than push the column wide. */
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.version {
+  font-size: var(--text-sm);
+  /* Not --color-muted: the grey is under 3:1 on white. */
+  color: rgb(0 0 0 / 0.7);
+}
+
+/* Which text binds. On a translation it carries the link to the original, so
+   it is set off as a note, not left as another paragraph. */
+.languageNote {
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  padding: var(--space-md) var(--space-md) var(--space-md) 20px;
+  border-left: 2px solid var(--color-red);
+  background: var(--color-surface);
+}
+
+.section {
+  padding-top: var(--space-lg);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+  font-weight: 500;
+  font-variation-settings: "opsz" 40;
+  margin-bottom: var(--space-md);
+  /* An anchor (#privacy-5) lands below the fixed navbar, not under it. */
+  scroll-margin-top: 120px;
+}
+
+.number {
+  color: var(--color-muted);
+}
+
+.paragraph,
+.list,
+.facts {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  margin-bottom: var(--space-md);
+  overflow-wrap: break-word;
+}
+
+.list {
+  padding-left: 1.25em;
+  list-style: disc;
+}
+
+.list li + li {
+  margin-top: var(--space-sm);
+}
+
+/* Label and value side by side on a wide screen, stacked on a phone. */
+.facts {
+  border-top: 1px solid var(--color-border);
+}
+
+.fact {
+  display: grid;
+  grid-template-columns: minmax(10rem, 14rem) 1fr;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.fact dt {
+  font-weight: 500;
+}
+
+.inlineLink {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color 300ms var(--ease-out-quad);
+}
+
+.inlineLink:hover {
+  color: var(--color-red);
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 140px 0 var(--space-2xl);
+  }
+
+  .inner {
+    max-width: none;
+  }
+
+  .fact {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .heading {
+    font-size: var(--text-xl);
+  }
+}

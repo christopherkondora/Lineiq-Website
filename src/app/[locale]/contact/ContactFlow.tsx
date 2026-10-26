@@ -12,6 +12,7 @@ import {
 } from "react";
 import { gsap } from "gsap";
 import CtaSwap from "../../components/CtaSwap";
+import Link from "../../components/LocaleLink";
 import { useLocale } from "../../i18n/LocaleProvider";
 import type { Dictionary } from "../../i18n/dictionary";
 import styles from "./page.module.css";
@@ -1012,6 +1013,14 @@ export default function ContactFlow({
                 hoverLabel={t.sendHover}
               />
             </button>
+            {/* Where the data is given, the notice is one click away: the
+                footer only comes back with the confirmation, after the data
+                has already been sent (Lineiq-Website#14, story 41). On the
+                Send line, not under it: one more line pushes this panel past
+                a phone's height and under the fixed Back. */}
+            <Link href="/privacy" className={styles.privacyLink}>
+              {t.privacyLink}
+            </Link>
             {error && (
               <p className={styles.error} role="alert">
                 {error}

@@ -2,7 +2,9 @@
 // switcher stores it in one first-party cookie; the proxy reads it back and
 // sends a plain address to the same page in that language. Strictly
 // functional: it holds a locale code and nothing else, so it needs no consent.
-// The privacy notice must name it (Lineiq-Website#14); change it there too.
+// The privacy notice names it and states its lifetime and attributes, in
+// three languages (data/legal); change it there too. tests/legal checks the
+// name and the year.
 //
 // There is no Accept-Language sniffing. A visitor without the cookie, and
 // every crawler, gets English at the plain address.

@@ -511,6 +511,8 @@ const de: Dictionary = {
     sending: "Sending…",
     sendHover: "Let's go!",
     back: "Back",
+    // Beside the send button: the privacy notice, where the data is given.
+    privacyLink: "How we handle your answers",
     // Keyed by the codes in contact/intake.ts (INTAKE_ERRORS). company and
     // email are also what the flow says before it lets the visitor past the
     // first question.
@@ -587,6 +589,17 @@ const de: Dictionary = {
         title: "Contact — LineiQ",
         description:
           "Five questions, mostly answered by clicking. Tell us where you are and we will tell you straight whether we are the studio for it.",
+      },
+      // Already in German, like the legal pages themselves (data/legal).
+      "/terms": {
+        title: "Nutzungsbedingungen — LineiQ",
+        description:
+          "Die Bedingungen für die Nutzung von lineiqgroup.com: wer sie betreibt, was die Website ist und was nicht, und die Regeln für ihre Inhalte.",
+      },
+      "/privacy": {
+        title: "Datenschutzerklärung — LineiQ",
+        description:
+          "Wie LineiQ die über lineiqgroup.com angegebenen Daten verarbeitet: das Kontaktformular, ein Sprach-Cookie, keine Analyse.",
       },
     },
     // A category page's title; its description is the category's intro.

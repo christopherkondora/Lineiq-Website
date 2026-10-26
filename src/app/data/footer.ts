@@ -15,6 +15,7 @@
 // addresses, the order, and the proper nouns.
 
 import type { Dictionary } from "../i18n/dictionary";
+import { COMPANY } from "./company";
 
 type FooterLinkId = keyof Dictionary["footer"]["links"];
 
@@ -27,12 +28,11 @@ export const FOOTER_SITEMAP: FooterLink[] = [
   { href: "/contact", id: "contact" },
 ];
 
-/* Neither page exists yet (both 404), so changing their addresses costs
-   nothing now: there is nothing to redirect.
-
-   NOTE: whatever the label says, the DOCUMENT is a Hungarian Kft.'s legal
-   paper: the terms and the privacy notice probably have to be written in
-   Hungarian (or bilingual) regardless of the footer (Lineiq-Website#14). */
+/* The legal pages, in every language; the Hungarian text binds and the
+   translations say so (data/legal, Lineiq-Website#14). The addresses are
+   written out rather than imported from data/legal: the footer is a client
+   component, and that import would ship every legal text to the browser.
+   tests/legal holds the two lists together. */
 export const FOOTER_LEGAL_LINKS: FooterLink[] = [
   { href: "/terms", id: "terms" },
   { href: "/privacy", id: "privacy" },
@@ -41,4 +41,4 @@ export const FOOTER_LEGAL_LINKS: FooterLink[] = [
 /** Channels with no live URL: present, but not links, so no dead link. */
 export const FOOTER_CHANNELS: string[] = ["Instagram", "LinkedIn", "Are.na"];
 
-export const FOOTER_STUDIO_NAME = "LineiQ Kft.";
+export const FOOTER_STUDIO_NAME = COMPANY.name;
