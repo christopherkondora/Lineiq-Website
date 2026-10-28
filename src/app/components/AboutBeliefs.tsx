@@ -36,7 +36,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 // back to the doc without re-deriving the mapping.
 const BELIEFS = [
   { id: "compounding", rule: "P1 Build the Compound, Never the Tax" },
-  { id: "smallWorld", rule: "P3 Three Seats Only" },
+  // The cost keeps P3's revenue clause and drops the seat count: the site does
+  // not state a capacity (Kristóf, 2026-10-28).
+  { id: "smallWorld", rule: "P3 Five Seats Only" },
   { id: "lastWork", rule: "P8 The Wow Bar" },
   // Sourced from P6, not P7. P7's cost of holding names YouTube and Instagram
   // as channels we are absent from, and both are now the two channels we run.

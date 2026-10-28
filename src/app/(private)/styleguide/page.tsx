@@ -3,7 +3,7 @@ import styles from "./styleguide.module.css";
 import CtaSwap from "../../components/CtaSwap";
 
 export const metadata: Metadata = {
-  title: "Styleguide — LineiQ",
+  title: "Styleguide | LineiQ",
   description: "Living visual reference for the LineiQ design system.",
   robots: { index: false, follow: false },
 };

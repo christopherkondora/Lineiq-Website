@@ -117,7 +117,7 @@ describe("a legal page", () => {
   it.each(locales)("%s titles the page as the document does", (locale) => {
     for (const kind of kinds) {
       const meta = dictionaries[locale].meta.pages[LEGAL_PATHS[kind]];
-      expect(meta.title).toBe(`${legalTexts[locale][kind].title} — LineiQ`);
+      expect(meta.title).toBe(`${legalTexts[locale][kind].title} | LineiQ`);
       expect(meta.description).toBeTruthy();
     }
   });
