@@ -94,6 +94,12 @@
   color: var(--color-red);
 }
 
+/* 24px for every pointer (WCAG 2.2, 2.5.8): vertical padding on an inline
+   link grows its hit area without moving the h1 below it. */
+.back {
+  padding-block: 2px;
+}
+
 /* 20px magas volt. Itt a pszeudoelemes kiterjesztés a helyes eszköz, nem a
    min-height: a link egyedül áll a .heroMeta-ban, közvetlenül a hero címsora
    fölött, tehát a doboz növelése lejjebb tolná a h1-et egy megkomponált

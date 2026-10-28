@@ -170,6 +170,18 @@
   color: var(--color-white);
 }
 
+/* Target size (WCAG 2.2, 2.5.8: at least 24 x 24 px), with padding as in
+   Footer.module.css, where the reasoning stands: the inline links are 18px
+   tall, the inline-flex switcher entries 21px and take their padding back. */
+.footerList a {
+  padding-block: 3px;
+}
+
+.footerSwitcher a {
+  padding-block: 2px;
+  margin-block: -2px;
+}
+
 .footerLegal {
   font-family: var(--font-body);
   font-size: var(--text-xs);

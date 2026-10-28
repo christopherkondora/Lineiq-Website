@@ -104,6 +104,25 @@
   color: var(--color-white);
 }
 
+/* Target size, every pointer (WCAG 2.2, 2.5.8: at least 24 x 24 px). A list
+   link is an inline box 18px tall, 23px on a phone: vertical padding grows its
+   hit area to 24px and never moves the line it sits on. The switcher entries
+   are inline-flex and 21px tall, so their padding is taken back by a negative
+   margin. Neighbours sit 28px apart, so the grown areas don't meet.
+
+   Padding, not a positioned ::after: on a page with a running transform
+   animation (the Work page's lines, the category hero's cascade) Chromium
+   lifts every positioned element painted after it onto its own layer, and
+   draws its text without subpixel antialiasing. */
+.list a {
+  padding-block: 3px;
+}
+
+.switcher a {
+  padding-block: 2px;
+  margin-block: -2px;
+}
+
 /* ─── Legal ────────────────────────────────────────────── */
 .legal {
   padding-top: var(--space-lg);
@@ -135,6 +154,10 @@
     display: flex;
     align-items: center;
     min-height: 44px;
+  }
+  /* The min-height holds the padding; the negative margin would shrink the row. */
+  .switcher a {
+    margin-block: 0;
   }
 }
 
@@ -190,6 +213,10 @@
   .switcher a {
     justify-content: center;
     min-height: 40px;
+  }
+  /* As under (pointer: coarse): the min-height holds the padding. */
+  .switcher a {
+    margin-block: 0;
   }
 
   /* A 14px-es lista telefonon apró; a koppintósorban ráadásul veszít is a
