@@ -44,6 +44,7 @@ export const services: ServiceCategory[] = [
       "identity",
       "designSystem",
       "rebranding",
+      "maintenance",
     ],
   }),
   category({
@@ -93,6 +94,7 @@ export const services: ServiceCategory[] = [
     subServices: [
       "channelStrategy",
       "organicSocial",
+      "contentIdeas",
       "paidAds",
       "email",
       "reporting",

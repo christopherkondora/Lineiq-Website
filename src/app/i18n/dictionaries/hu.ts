@@ -17,16 +17,16 @@ const hu: Dictionary = {
       replacement: "Studio",
       lineOneAfter: "and software house.",
       lineTwoHighlight: "We don't just",
-      lineTwoRest: "execute, and we don't deliver standalone services.",
+      lineTwoRest: "execute. Even a single website starts with research.",
       lineThree: "We build a name, backed by custom software and a marketing",
       system: "system.",
-      ecosystemBefore: "An",
-      ecosystem: "ecosystem",
+      ecosystemBefore: "A",
+      ecosystem: "world",
       ecosystemAfter: "with a single purpose:",
-      closing: "To introduce you to the world.",
+      closing: "To make you unmistakable.",
     },
     work: {
-      cursor: "View case",
+      cursor: "Case in writing",
       allWork: "All our work",
       allWorkHover: "Let's see",
       projects: {
@@ -49,7 +49,7 @@ const hu: Dictionary = {
         "Curious, transparent, ambitious. And a little obsessed with the details most people never notice.",
       ],
       columnTwo: [
-        "Setup, a retainer, and a real relationship behind both. We pick up the phone, and we show up in person.",
+        "A project, a maintenance plan, and a real relationship behind both. We pick up the phone, and we show up in person.",
       ],
     },
     manifesto: {
@@ -63,7 +63,7 @@ const hu: Dictionary = {
       mind: "mind",
       leadTwoMiddle: "and the",
       taste: "taste.",
-      leadThree: "Brand, content and code from creative minds,",
+      leadThree: "Brand, marketing and code from creative minds,",
       leadFourBefore: "with technical and theoretical",
       expertise: "expertise.",
       imageAlt: "LineiQ studio",
@@ -112,11 +112,11 @@ const hu: Dictionary = {
       items: {
         compounding: {
           conviction: "Compounding wins.",
-          cost: "We turn down €1,500 to €4,000 a month in campaign work, the kind most studios live on. It stops paying the day it ships.",
+          cost: "We turn down €1,500 to €4,000 a month in one-off campaign work, the kind most studios live on. It stops paying the day it ships.",
         },
         smallWorld: {
           conviction: "We would rather own a small world than rent a big market.",
-          cost: "We hold three seats, and we leave real revenue on the table in the months we can least afford to.",
+          cost: "We leave real revenue on the table, in the months we can least afford to.",
         },
         lastWork: {
           conviction:
@@ -129,7 +129,7 @@ const hu: Dictionary = {
         },
         winWin: {
           conviction: "Win-win, or no deal.",
-          cost: "We carry ninety days of unpaid delivery risk on every pilot before anyone owes us anything.",
+          cost: "We commit to KPIs in writing. If we miss them in the first 30 days, the next month is on us.",
         },
       },
     },
@@ -141,23 +141,25 @@ const hu: Dictionary = {
       lines: {
         "kondora-kristof": [
           "Two years of client work.",
-          "Marketing and SEO at Viltor.hu.",
+          "Marketing and SEO partner, Viltor.hu.",
           "Reads the numbers first.",
           "Built Klient. Designed North.",
         ],
         "suto-aron": [
+          "Designed our delivery process.",
           "Most of our 22 frameworks.",
           "Market and ICP research.",
           "Positioning, voice and sales.",
-          "Taking care of our money.",
         ],
       },
       methodLabel: "The method both of us run on",
-      // Canonical names and lines: academy/_Frameworks.md in the vault.
+      // Canonical names: academy/_Frameworks.md in the vault. The ROI Autopsy
+      // and Future Walk lines follow DOP v3, where both run after signing (Acts
+      // 1 and 2), not the Academy's pre-sale wording (Lineiq-Website#15).
       frameworks: {
         compoundVsTax: {
           name: "The Compound vs Tax Engine",
-          line: "Every forint you spend either builds an asset or pays rent.",
+          line: "Every euro you spend either builds an asset or pays rent.",
         },
         stopPaying: {
           name: "The Stop-Paying Test",
@@ -165,7 +167,7 @@ const hu: Dictionary = {
         },
         roiAutopsy: {
           name: "The ROI Autopsy",
-          line: "We find where the current spend is dying before we propose anything.",
+          line: "We find where the current spend is dying before we build anything.",
         },
         velvetRope: {
           name: "The Velvet Rope",
@@ -173,7 +175,7 @@ const hu: Dictionary = {
         },
         futureWalk: {
           name: "The Future Walk",
-          line: "Day 1, 30, 90 and 365, walked through before an offer exists.",
+          line: "Day 1, 30, 90 and 365, walked through before anything is built.",
         },
       },
       // Two clauses, two lines.
@@ -184,13 +186,13 @@ const hu: Dictionary = {
     record: {
       label: "The one thing we will not dress up",
       title: "LineiQ has never published a case study.",
-      lead: "That is true and we are not going to dress it up. It is also not the same as starting from zero. Kristóf brought the client record below. Áron wrote most of the twenty-two frameworks the studio runs on and owns the research underneath them. Different work, not different weight.",
+      lead: "That is true and we are not going to dress it up. It is also not the same as starting from zero. Kristóf brought the client record below. Áron wrote most of the process we deliver with and most of the twenty-two frameworks it runs on, and owns the research underneath them. Different work, not different weight.",
       rosterLabel: "Clients and projects",
       // One day a year (December 6 to 7) the two ages differ.
       ageSame: "We are both {age}.",
       ageDifferent: "We are {younger} and {older}.",
       close:
-        "The studio is younger than the method it runs on: we built the Academy and the Dream Outcome Process before anyone had paid us a forint, because we refuse to charge a price we cannot run a procedure to justify. We will still be students in two years. The one thing we do, we do well.",
+        "The studio is younger than the method it runs on: we built the Academy and the Dream Outcome Process before anyone had paid us a euro, because we refuse to charge a price we cannot run a procedure to justify. We will still be students in two years. The one thing we do, we do well.",
     },
     bookshelf: {
       title: "The literature that shapes us.",
@@ -205,22 +207,22 @@ const hu: Dictionary = {
         atomicHabits: {
           title: "Atomic Habits",
           commentary:
-            "The reason we sell systems and not campaigns. A goal is a thing you announce; a system is a thing that still runs on the week nobody is watching. We build the second kind, for ourselves and for the people who hire us.",
+            "The reason everything we build comes with a way to keep it running. A goal is a thing you announce; a system is a thing that still runs on the week nobody is watching. We build the second kind, for ourselves and for our partners.",
         },
         zeroToOne: {
           title: "Zero to One",
           commentary:
-            "Where our refusal to be another agency comes from. The work is not to win the category, it is to be the only one in it: international-grade craft on the Hungarian market, which is a thing that either exists or does not.",
+            "Where our refusal to be another agency comes from. The work is not to win a category, it is to be the only one in it. That is the bar for us and for every brand we build: if a competitor could put their logo on it, it is not finished.",
         },
         hardThing: {
           title: "The Hard Thing About Hard Things",
           commentary:
-            "Our licence to have the hard conversation instead of the comfortable one. Building a company offers no good answers, only less bad decisions, and a studio that flinches from saying so ends up selling the comfortable one.",
+            "Our licence to have the hard conversation instead of the comfortable one. Building a company offers no good answers, only less bad ones. We name the real problem first, even when it is not the one you hoped we would find.",
         },
         deepWork: {
           title: "Deep Work",
           commentary:
-            "Why we hold three seats and no more. There is no Slack flood here and no meeting marathon, because the work we sell cannot be done in the gaps between them. Calm is not a perk of the process, it is the process.",
+            "Why we work deep, not wide. No Slack flood, no meeting marathon, no drip of questions to your inbox: we ask at the right moments, and only then. Calm is not a perk of the process, it is the process.",
         },
       },
     },
@@ -255,7 +257,7 @@ const hu: Dictionary = {
       "brand-architecture": {
         title: "Brand Architecture",
         intro:
-          "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for the people who lead them, so it becomes *recognizable*.",
+          "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for people, so it becomes *recognizable*.",
         subServices: {
           research: {
             title: "Audience, market and competitor research",
@@ -285,6 +287,10 @@ const hu: Dictionary = {
             title: "Rebranding",
             desc: "Repositioning and refreshing an existing brand.",
           },
+          maintenance: {
+            title: "Maintenance plan",
+            desc: "Guidelines kept current, new assets made inside the system.",
+          },
         },
       },
       "web-development": {
@@ -298,7 +304,7 @@ const hu: Dictionary = {
           },
           webDesign: {
             title: "Web design (UI/UX)",
-            desc: "An interface that's clear and converts.",
+            desc: "An interface people understand on first use.",
           },
           motion: {
             title: "Motion and animation",
@@ -310,7 +316,7 @@ const hu: Dictionary = {
           },
           landingPages: {
             title: "Landing and campaign pages",
-            desc: "One goal, one message, maximum conversion.",
+            desc: "One goal, one message, nothing in the way.",
           },
           multilingual: {
             title: "Multilingual sites",
@@ -333,7 +339,7 @@ const hu: Dictionary = {
       ecommerce: {
         title: "Ecommerce",
         intro:
-          "Webshops that don't just look good but *convert*, from the product page to the invoice and the *returning* customer.",
+          "Webshops that don't just look good but *sell*, from the product page to the invoice and the *returning* customer.",
         subServices: {
           webshop: {
             title: "Webshop build",
@@ -395,8 +401,8 @@ const hu: Dictionary = {
             desc: "Assistants, search and summaries inside the software, where they help.",
           },
           maintenance: {
-            title: "Maintenance and further development",
-            desc: "The product doesn't stop at launch.",
+            title: "Maintenance plan",
+            desc: "Fixes, patches and small improvements. New features are their own project.",
           },
         },
       },
@@ -412,6 +418,10 @@ const hu: Dictionary = {
           organicSocial: {
             title: "Organic social strategy",
             desc: "The one channel where your customers are, and how to show up there.",
+          },
+          contentIdeas: {
+            title: "Content ideas and scripts",
+            desc: "Ideas, scripts and captions in your voice, on a monthly calendar.",
           },
           paidAds: {
             title: "Paid advertising (Meta, Google)",
@@ -447,7 +457,7 @@ const hu: Dictionary = {
   // code; so does the studio's address.
   contact: {
     heading: "Let's talk for real.",
-    lede: "Five questions, and you will know where you stand.",
+    lede: "Five questions. We read every answer before we reply.",
     begin: "Begin",
     beginHover: "Let's go!",
     aside: "Or just hit us up.",
@@ -473,7 +483,7 @@ const hu: Dictionary = {
     needs: {
       grow: "Grow",
       rebrand: "Rebrand",
-      remarket: "Remarket",
+      remarket: "Rethink the marketing",
       launch: "Launch something new",
     },
     monthly: "Monthly",
@@ -570,39 +580,39 @@ const hu: Dictionary = {
   meta: {
     pages: {
       "/": {
-        title: "LineiQ — Brand. Code. Signal.",
+        title: "LineiQ | Brand. Code. Signal.",
         description:
-          "Premium brand-building agency and software house. Western-European quality, Hungarian market knowledge.",
+          "A brand and business architecture studio and software house, built in Hungary, working with companies and people anywhere.",
       },
       "/about": {
-        title: "About — LineiQ",
+        title: "About | LineiQ",
         description:
-          "A brand and business architecture studio built in Hungary. Our mission, the five beliefs we run on and what they cost us, what we refuse, and the two founders behind it.",
+          "A brand and business architecture studio built in Hungary. Our mission, the five beliefs we run on and what they cost us, the two founders behind it, and the books that shape us.",
       },
       "/work": {
-        title: "Work — LineiQ",
+        title: "Work | LineiQ",
         description:
           "The LineiQ portfolio. Not yet: the case studies are being written.",
       },
       "/contact": {
-        title: "Contact — LineiQ",
+        title: "Contact | LineiQ",
         description:
-          "Five questions, mostly answered by clicking. Tell us where you are and we will tell you straight whether we are the studio for it.",
+          "Five questions, mostly answered by clicking. We read every answer before we reply.",
       },
       // Already in Hungarian, like the legal pages themselves (data/legal).
       "/terms": {
-        title: "Felhasználási feltételek — LineiQ",
+        title: "Felhasználási feltételek | LineiQ",
         description:
           "A lineiqgroup.com használatának feltételei: ki üzemelteti, mi a weboldal és mi nem, és a tartalmára vonatkozó szabályok.",
       },
       "/privacy": {
-        title: "Adatkezelési tájékoztató — LineiQ",
+        title: "Adatkezelési tájékoztató | LineiQ",
         description:
           "Hogyan kezeli a LineiQ a lineiqgroup.com-on megadott adatokat: a kapcsolatfelvételi űrlap, egyetlen nyelvi süti, analitika nélkül.",
       },
     },
     // A category page's title; its description is the category's intro.
-    serviceTitle: "{title} — LineiQ",
+    serviceTitle: "{title} | LineiQ",
   },
 };
 
