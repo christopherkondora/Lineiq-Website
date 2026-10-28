@@ -99,7 +99,13 @@
   font-weight: 500;
 }
 
+/* Target size (WCAG 2.2, 2.5.8: at least 24 x 24 px): the link's inline box
+   is 20px tall. Vertical padding on an inline box grows the hit area without
+   moving the line, and 24px still fits inside one line (24px in the language
+   note, 28px in the text), so a link never reaches into the next one's. As in
+   Footer.module.css: padding, not a positioned ::after. */
 .inlineLink {
+  padding-block: 2px;
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
