@@ -567,7 +567,6 @@ const en = {
     legal: "Legal",
     // The switcher column's heading, and the switcher's accessible name.
     language: "Language",
-    city: "Budapest, HU",
     links: {
       home: "Home",
       services: "Services",

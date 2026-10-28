@@ -10,6 +10,7 @@ import type { Dictionary } from "../i18n/dictionary";
 import { format } from "../i18n/format";
 import {
   FOOTER_CHANNELS,
+  FOOTER_CITIES,
   FOOTER_LEGAL_LINKS,
   FOOTER_SITEMAP,
   FOOTER_STUDIO_NAME,
@@ -133,8 +134,12 @@ export default function SequenceSection({
               <p className={styles.footerLabel}>{footer.studio}</p>
               <p className={styles.footerText}>
                 {FOOTER_STUDIO_NAME}
-                <br />
-                {footer.city}
+                {FOOTER_CITIES.map((city) => (
+                  <span key={city}>
+                    <br />
+                    {city}
+                  </span>
+                ))}
               </p>
             </div>
             <div>

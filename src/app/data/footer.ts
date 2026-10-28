@@ -42,3 +42,8 @@ export const FOOTER_LEGAL_LINKS: FooterLink[] = [
 export const FOOTER_CHANNELS: string[] = ["Instagram", "LinkedIn", "Are.na"];
 
 export const FOOTER_STUDIO_NAME = COMPANY.name;
+
+/** Where the studio works, one per line under its name. Not the registered
+ *  seat (that is on /terms): the cities the founders work from. Proper nouns
+ *  with ISO country codes, so the same in every language. */
+export const FOOTER_CITIES: string[] = ["Budapest, HU", "Steyr, AT"];
