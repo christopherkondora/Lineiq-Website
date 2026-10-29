@@ -16,6 +16,7 @@ import Link from "../../components/LocaleLink";
 import { useLocale } from "../../i18n/LocaleProvider";
 import type { Dictionary } from "../../i18n/dictionary";
 import styles from "./page.module.css";
+import { DRAFT_KEY, parseDraft } from "./draft";
 import {
   EMAIL_RE,
   HONEYPOT_FIELD,
@@ -266,6 +267,62 @@ export default function ContactFlow({
   useEffect(() => {
     mountedAt.current = Date.now();
   }, []);
+
+  // The notice link under Send leaves the page, and the way back mounts a fresh
+  // flow. The answers are kept in the tab (./draft) and put back here, on the
+  // panel the visitor left. In an effect, not in the initial state: the server
+  // render has no storage, and the two must agree on the first paint.
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    try {
+      const draft = parseDraft(window.sessionStorage.getItem(DRAFT_KEY));
+      if (draft) {
+        /* eslint-disable react-hooks/set-state-in-effect -- a restore from
+           storage can only happen after mount */
+        setCompany(draft.company);
+        setEmail(draft.email);
+        setStage(draft.stage);
+        setNeed(draft.need);
+        setBudgetMode(draft.budgetMode);
+        setBand(draft.band);
+        setNote(draft.note);
+        // Read by the camera when it takes its first position.
+        atRef.current = draft.at;
+        setAt(draft.at);
+        /* eslint-enable react-hooks/set-state-in-effect */
+      }
+    } catch {
+      // Storage refused (private mode, blocked): the flow starts empty.
+    }
+    setHydrated(true);
+  }, []);
+
+  // Not before the restore has run, or the empty first render would overwrite
+  // the draft it is about to read. Gone once the enquiry is sent.
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      if (done) {
+        window.sessionStorage.removeItem(DRAFT_KEY);
+      } else {
+        window.sessionStorage.setItem(
+          DRAFT_KEY,
+          JSON.stringify({
+            company,
+            email,
+            stage,
+            need,
+            budgetMode,
+            band,
+            note,
+            at,
+          })
+        );
+      }
+    } catch {
+      // Nothing to do: the answers simply do not survive a page change.
+    }
+  }, [hydrated, done, company, email, stage, need, budgetMode, band, note, at]);
 
   const reduced = () =>
     typeof window !== "undefined" &&
