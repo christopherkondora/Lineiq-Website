@@ -1,255 +1,270 @@
 import type { Dictionary } from "./en";
 
-// Typed against the English, so a missing or extra key fails the type check.
-// Holds the English until the translation slice (Lineiq-Website#16).
+// The Hungarian dictionary, translated from the frozen English (Lineiq-Website#16)
+// and typed against it, so a missing or extra key fails the type check.
+//
+// Claude's draft, for Kristóf and Áron to edit. The rules it follows: the
+// glossary's Hungarian renderings (kontrast-vault strategy/glossary, agreed
+// 2026-10-14), so our own named concepts (Dream Outcome Process, Academy, the
+// framework names, the five category names) stay English and the sentence around
+// them explains them; "partner", never "ügyfél", for the people we work with;
+// tegezés, one visitor. Numbers are set the Hungarian way, a no-break space for
+// the thousands and the currency after the figure.
+//
+// The Kranky marks and the proper nouns stay out of the dictionary, as in en.ts.
+
 const hu: Dictionary = {
   home: {
     hero: {
       // Each word rises on its own; the last word carries the red dot.
-      lineOne: "Forget being",
-      lastWord: "ordinary",
+      lineOne: "Felejtsd el az",
+      lastWord: "átlagost",
     },
     intro: {
-      lineOneBefore: "A brand-building",
-      // "Agency" is struck through by a red redaction, and "Studio" is written
-      // over it letter by letter.
-      struck: "Agency",
-      replacement: "Studio",
-      lineOneAfter: "and software house.",
-      lineTwoHighlight: "We don't just",
-      lineTwoRest: "execute. Even a single website starts with research.",
-      lineThree: "We build a name, backed by custom software and a marketing",
-      system: "system.",
-      ecosystemBefore: "A",
-      ecosystem: "world",
-      ecosystemAfter: "with a single purpose:",
-      closing: "To make you unmistakable.",
+      lineOneBefore: "Egy márkaépítő",
+      // "Ügynökség" is struck through by a red redaction, and "Stúdió" is
+      // written over it letter by letter.
+      struck: "Ügynökség",
+      replacement: "Stúdió",
+      lineOneAfter: "és szoftverház.",
+      lineTwoHighlight: "Nem csupán",
+      lineTwoRest: "kivitelezünk. Egyetlen weboldal is kutatással kezdődik.",
+      lineThree: "Nevet építünk, amelyet egyedi szoftver és marketing",
+      system: "támogat.",
+      ecosystemBefore: "Egy",
+      ecosystem: "világ",
+      ecosystemAfter: "egyetlen céllal:",
+      closing: "Hogy összetéveszthetetlenné tegyünk.",
     },
     work: {
-      cursor: "Case in writing",
-      allWork: "All our work",
-      allWorkHover: "Let's see",
+      cursor: "Esettanulmány készül",
+      allWork: "Minden munkánk",
+      allWorkHover: "Nézzük",
       projects: {
         klient:
-          "Projects, invoicing and client communication on a single surface. The software we built for ourselves before we ever sold it to anyone.",
+          "Projektek, számlázás és ügyfélkommunikáció egyetlen felületen. A szoftver, amelyet magunknak építettünk, mielőtt bárkinek eladtuk volna.",
         north:
-          "A budgeting app for iOS that makes money feel calm. A clear visual system, fluid native interactions, and a flow that turns everyday spending into a habit people actually keep.",
+          "Költségvetés-tervező iOS-alkalmazás, amitől a pénz nyugodtnak hat. Tiszta vizuális rendszer, gördülékeny natív interakciók, és egy folyamat, amely a mindennapi költést olyan szokássá alakítja, amelyet az emberek tényleg megtartanak.",
         miert:
-          "A podcast whose brand is the question. An editorial system, a motion language and a visual voice that sounds the same, recognizably, in every episode.",
+          "Egy podcast, amelynek a márkája a kérdés. Szerkesztői rendszer, mozgásnyelv és vizuális hang, amely minden epizódban felismerhetően ugyanúgy szól.",
       },
     },
     partners: {
       // Word by word; the last word gets the red redaction.
-      denial: "We don't take on",
-      denialMark: "clients",
+      denial: "Nem vállalunk",
+      denialMark: "ügyfeleket",
       // Followed by the Kranky "partners", which is not keyed.
-      claim: "We take on",
+      claim: "Hanem",
       columnOne: [
-        "That's the difference: a studio you keep, not a vendor you replace. Built on trust, consistency, and a point of view.",
-        "Curious, transparent, ambitious. And a little obsessed with the details most people never notice.",
+        "Ez a különbség: olyan stúdió, amelyet megtartasz, nem olyan szállító, amelyet lecserélsz. Bizalomra, következetességre és saját nézőpontra építve.",
+        "Kíváncsiak, átláthatóak, ambiciózusak. És egy kicsit megszállottak azokkal a részletekkel, amelyeket a legtöbben észre sem vesznek.",
       ],
       columnTwo: [
-        "A project, a maintenance plan, and a real relationship behind both. We pick up the phone, and we show up in person.",
+        "Egy projekt, egy karbantartási csomag, és mindkettő mögött valódi kapcsolat. Felvesszük a telefont, és személyesen is megjelenünk.",
       ],
     },
     manifesto: {
-      headingOne: "We didn't lose taste to AI.",
-      headingTwo: "We taught it ours.",
-      leadOneBefore: "A Hungarian studio,",
+      headingOne: "Nem vesztettük el az ízlésünket az AI miatt.",
+      headingTwo: "Megtanítottuk neki a sajátunkat.",
+      leadOneBefore: "Magyar stúdió,",
       // Held as one unbreakable run, then highlighted together with leadOneEnd.
-      leadOneNoBreak: "by Western-European",
-      leadOneEnd: "standards.",
-      leadTwoBefore: "Everyone uses AI. The difference is the",
-      mind: "mind",
-      leadTwoMiddle: "and the",
-      taste: "taste.",
-      leadThree: "Brand, marketing and code from creative minds,",
-      leadFourBefore: "with technical and theoretical",
-      expertise: "expertise.",
-      imageAlt: "LineiQ studio",
+      leadOneNoBreak: "nyugat-európai",
+      leadOneEnd: "színvonalon.",
+      leadTwoBefore: "Mindenki használ AI-t. A különbség a",
+      mind: "gondolkodás",
+      leadTwoMiddle: "és az",
+      taste: "ízlés.",
+      leadThree: "Márka, marketing és kód kreatív emberektől,",
+      leadFourBefore: "műszaki és elméleti",
+      expertise: "szakértelemmel.",
+      imageAlt: "A LineiQ stúdió",
     },
     close: {
-      headline: "Ready?",
-      cta: "Let's begin.",
-      ctaHover: "Let's go!",
+      headline: "Készen állsz?",
+      cta: "Kezdjük el.",
+      ctaHover: "Vágjunk bele!",
     },
   },
   about: {
     hero: {
-      // Two sets of line breaks, one per measure; CSS shows one. The red mark
-      // is the hyphen inside `hyphenated`, wherever that word appears.
+      // Two sets of line breaks, one per measure; CSS shows one. Hungarian has
+      // no hyphen in "rövid távú", so the red mark has nothing to land on and
+      // the line sets plain; renderLine leaves a word without a hyphen alone.
       wideLines: [
-        "We exist to end",
-        "short-termism in the",
-        "brands worth building.",
+        "Véget vetünk a",
+        "rövid távú szemléletnek",
+        "az építésre érdemes",
+        "márkáknál.",
       ],
       narrowLines: [
-        "We exist to end",
-        "short-termism",
-        "in the brands",
-        "worth building.",
+        "Véget vetünk",
+        "a rövid távú",
+        "szemléletnek",
+        "az építésre",
+        "érdemes",
+        "márkáknál.",
       ],
-      hyphenated: "short-termism",
+      hyphenated: "rövid távú",
     },
     origin: {
       paragraphs: [
-        "For as long as we have been paying attention, marketing has been eating itself. Every year a new platform. Every quarter a new tactic. Every week another founder learning that the thing they spent six months building has already been replaced by something shinier.",
-        "We started LineiQ because we could not find a studio doing the work we wanted to do. Work that compounds. Brands that outlast the people who built them. Systems worth more every year instead of less.",
+        "Amióta csak figyeljük, a marketing saját magát falja fel. Minden évben új platform. Minden negyedévben új taktika. Minden héten egy újabb alapító, aki rájön, hogy amit hat hónapig épített, azt már felváltotta valami csillogóbb.",
+        "Azért hoztuk létre a LineiQ-t, mert nem találtunk olyan stúdiót, amely azt a munkát végezte volna, amelyet mi végezni akartunk. Olyan munkát, amely kamatozik. Olyan márkákat, amelyek túlélik az építőiket. Olyan rendszereket, amelyek évről évre többet érnek, nem kevesebbet.",
       ],
     },
     compounds: {
-      first: "Most marketing is a tax.",
-      secondBefore: "Brand is the only thing that",
+      first: "A legtöbb marketing adó.",
+      secondBefore: "A márka az egyetlen, ami",
       // The word that grows to fill the screen.
-      word: "compounds",
+      word: "kamatozik",
       secondAfter: ".",
     },
     beliefs: {
-      title: "What we believe, and what believing it costs us.",
-      lead: "These are not slogans and they are not negotiable. A principle that costs nothing is just a comfortable belief, so each one below is filed with the bill.",
+      title: "Amiben hiszünk, és amibe ez nekünk kerül.",
+      lead: "Ezek nem szlogenek, és nem alkudhatók. Az az elv, amely semmibe sem kerül, csak kényelmes meggyőződés, ezért az alábbiak mindegyike a számlájával együtt szerepel.",
       // Convictions verbatim from Beliefs (locked v1); costs condensed from the
       // matching House Rule. The rule each one traces to is in AboutBeliefs.
       items: {
         compounding: {
-          conviction: "Compounding wins.",
-          cost: "We turn down €1,500 to €4,000 a month in one-off campaign work, the kind most studios live on. It stops paying the day it ships.",
+          conviction: "A kamatozás győz.",
+          cost: "Havi 1 500 és 4 000 euró közötti egyszeri kampánymunkát utasítunk vissza, olyat, amiből a legtöbb stúdió él. Az átadás napján megszűnik fizetni.",
         },
         smallWorld: {
-          conviction: "We would rather own a small world than rent a big market.",
-          cost: "We leave real revenue on the table, in the months we can least afford to.",
+          conviction:
+            "Inkább birtokolunk egy kis világot, mint hogy bérelnénk egy nagy piacot.",
+          cost: "Valódi bevételről mondunk le, éppen azokban a hónapokban, amikor a legkevésbé engedhetjük meg.",
         },
         lastWork: {
           conviction:
-            "We compete with our last piece of work, not with anyone else.",
-          cost: "We rebuild work that is already good enough, spending hours other studios would bank.",
+            "Az utolsó munkánkkal versenyzünk, nem senki mással.",
+          cost: "Újraépítünk olyan munkát is, amely már elég jó, és olyan órákat költünk rá, amelyeket más stúdiók zsebre vágnának.",
         },
         calm: {
-          conviction: "Calm is the product.",
-          cost: "We publish less, and slower, than firms that mass-generate. We say no to easy volume.",
+          conviction: "A nyugalom a termék.",
+          cost: "Kevesebbet és lassabban publikálunk, mint a tömeggyártó cégek. Nemet mondunk a könnyű mennyiségre.",
         },
         winWin: {
-          conviction: "Win-win, or no deal.",
-          cost: "We commit to KPIs in writing. If we miss them in the first 30 days, the next month is on us.",
+          conviction: "Mindkettőnknek jó, vagy nincs üzlet.",
+          cost: "A KPI-kat írásban vállaljuk. Ha az első 30 napban nem teljesítjük őket, a következő hónapot mi álljuk.",
         },
       },
     },
     founders: {
-      headingBefore: "Two founders,",
+      headingBefore: "Két alapító,",
       // The words the red band lands on.
-      band: "one voice.",
+      band: "egy hang.",
       // Four rows each, under ~40 characters (sources in data/founders.ts).
       lines: {
         "kondora-kristof": [
-          "Two years of client work.",
-          "Marketing and SEO partner, Viltor.hu.",
-          "Reads the numbers first.",
-          "Built Klient. Designed North.",
+          "Két év ügyfélmunka.",
+          "A Viltor.hu marketing- és SEO-partnere.",
+          "Előbb a számokat nézi.",
+          "A Klientet építette, a Northot tervezte.",
         ],
         "suto-aron": [
-          "Designed our delivery process.",
-          "Most of our 22 frameworks.",
-          "Market and ICP research.",
-          "Positioning, voice and sales.",
+          "Megtervezte a munkafolyamatunkat.",
+          "A 22 keretrendszerünk zöme.",
+          "Piac- és ICP-kutatás.",
+          "Pozicionálás, hangvétel, értékesítés.",
         ],
       },
-      methodLabel: "The method both of us run on",
-      // Canonical names: academy/_Frameworks.md in the vault. The ROI Autopsy
-      // and Future Walk lines follow DOP v3, where both run after signing (Acts
-      // 1 and 2), not the Academy's pre-sale wording (Lineiq-Website#15).
+      methodLabel: "A módszer, amelyen mindketten dolgozunk",
+      // The framework names are our own named concepts and stay English; the
+      // line under each one is the Hungarian explanation. The ROI Autopsy and
+      // Future Walk lines follow DOP v3, as in the English.
       frameworks: {
         compoundVsTax: {
           name: "The Compound vs Tax Engine",
-          line: "Every euro you spend either builds an asset or pays rent.",
+          line: "Minden elköltött euró vagy vagyont épít, vagy bérleti díjat fizet.",
         },
         stopPaying: {
           name: "The Stop-Paying Test",
-          line: "If you stopped paying for this tomorrow, would the work survive?",
+          line: "Ha holnap abbahagynád a fizetést, megmaradna a munka?",
         },
         roiAutopsy: {
           name: "The ROI Autopsy",
-          line: "We find where the current spend is dying before we build anything.",
+          line: "Mielőtt bármit építenénk, megtaláljuk, hol hal el a jelenlegi költés.",
         },
         velvetRope: {
           name: "The Velvet Rope",
-          line: "People are screened out before any deep work begins, not after.",
+          line: "A mély munka megkezdése előtt szűrünk, nem utána.",
         },
         futureWalk: {
           name: "The Future Walk",
-          line: "Day 1, 30, 90 and 365, walked through before anything is built.",
+          line: "Az 1., 30., 90. és 365. napot végigjárjuk, mielőtt bármi elkészül.",
         },
       },
       // Two clauses, two lines.
       methodShapeOne:
-        "Five of {frameworks}, across {layers} layers. The rest are not secrets,",
-      methodShapeTwo: "they are just not first impressions.",
+        "{frameworks} keretrendszer közül öt, {layers} rétegben. A többi nem titok,",
+      methodShapeTwo: "csak nem első benyomásnak valók.",
     },
     record: {
-      label: "The one thing we will not dress up",
-      title: "LineiQ has never published a case study.",
-      lead: "That is true and we are not going to dress it up. It is also not the same as starting from zero. Kristóf brought the client record below. Áron wrote most of the process we deliver with and most of the twenty-two frameworks it runs on, and owns the research underneath them. Different work, not different weight.",
-      rosterLabel: "Clients and projects",
+      label: "Az az egy dolog, amit nem szépítünk",
+      title: "A LineiQ még soha nem publikált esettanulmányt.",
+      lead: "Ez igaz, és nem fogjuk szépíteni. Az viszont nem ugyanaz, mint a nulláról indulni. Kristóf hozta az alábbi ügyfélmunkát. Áron írta meg a folyamat nagy részét, amellyel dolgozunk, és a huszonkét keretrendszer többségét, amelyen az fut, és övé a mögöttük álló kutatás. Más munka, nem más súly.",
+      rosterLabel: "Ügyfelek és projektek",
       // One day a year (December 6 to 7) the two ages differ.
-      ageSame: "We are both {age}.",
-      ageDifferent: "We are {younger} and {older}.",
+      ageSame: "Mindketten {age} évesek vagyunk.",
+      ageDifferent: "Egyikünk {younger}, a másikunk {older} éves.",
       close:
-        "The studio is younger than the method it runs on: we built the Academy and the Dream Outcome Process before anyone had paid us a euro, because we refuse to charge a price we cannot run a procedure to justify. We will still be students in two years. The one thing we do, we do well.",
+        "A stúdió fiatalabb, mint a módszer, amelyen fut: az Academy és a Dream Outcome Process, a folyamatunk, még azelőtt elkészült, hogy bárki egyetlen eurót fizetett volna nekünk, mert nem vagyunk hajlandók olyan árat kérni, amelyet nem tudunk eljárással megindokolni. Két év múlva is tanulók leszünk. Azt az egyetlen dolgot, amit csinálunk, jól csináljuk.",
     },
     bookshelf: {
-      title: "The literature that shapes us.",
+      title: "A könyvek, amelyek formálnak minket.",
       // What each book is to us. The signature under it is the founder's name,
-      // in the order data/founders.ts gives for the language.
+      // in the order data/founders.ts gives for the language. The titles are
+      // the books' own, as on the covers.
       books: {
         principles: {
           title: "Principles",
           commentary:
-            "LineiQ runs on principles, not assumptions. Who we take on, what we charge, what we refuse: all of it is written down before it is needed, so no decision gets made twice and none of them gets made in a bad week.",
+            "A LineiQ elveken fut, nem feltevéseken. Kit vállalunk, mennyiért dolgozunk, mit utasítunk vissza: mind le van írva, mielőtt szükség lenne rá, így egy döntés sem születik kétszer, és egy sem születik rossz héten.",
         },
         atomicHabits: {
           title: "Atomic Habits",
           commentary:
-            "The reason everything we build comes with a way to keep it running. A goal is a thing you announce; a system is a thing that still runs on the week nobody is watching. We build the second kind, for ourselves and for our partners.",
+            "Ezért jár mindennel, amit építünk, egy mód arra, hogy tovább működjön. A cél az, amit bejelentesz; a rendszer az, ami olyan héten is fut, amelyen senki sem figyel. Az utóbbit építjük, magunknak és a partnereinknek is.",
         },
         zeroToOne: {
           title: "Zero to One",
           commentary:
-            "Where our refusal to be another agency comes from. The work is not to win a category, it is to be the only one in it. That is the bar for us and for every brand we build: if a competitor could put their logo on it, it is not finished.",
+            "Innen jön, hogy nem akarunk újabb ügynökség lenni. A feladat nem az, hogy megnyerjünk egy kategóriát, hanem az, hogy mi legyünk az egyetlen benne. Ez a mérce nekünk és minden márkának, amelyet építünk: ha egy versenytárs ráteheti a saját logóját, akkor még nem kész.",
         },
         hardThing: {
           title: "The Hard Thing About Hard Things",
           commentary:
-            "Our licence to have the hard conversation instead of the comfortable one. Building a company offers no good answers, only less bad ones. We name the real problem first, even when it is not the one you hoped we would find.",
+            "Ez ad jogot arra, hogy a kényelmes helyett a nehéz beszélgetést vállaljuk. Egy cég építése nem kínál jó válaszokat, csak kevésbé rosszakat. Előbb a valódi problémát nevezzük meg, még ha nem az is, amelyet remélted, hogy megtalálunk.",
         },
         deepWork: {
           title: "Deep Work",
           commentary:
-            "Why we work deep, not wide. No Slack flood, no meeting marathon, no drip of questions to your inbox: we ask at the right moments, and only then. Calm is not a perk of the process, it is the process.",
+            "Ezért dolgozunk mélyen, nem szélesen. Nincs Slack-áradat, nincs meetingmaraton, nincs kérdéscsepegtetés a postafiókodba: a megfelelő pillanatokban kérdezünk, és csak akkor. A nyugalom nem a folyamat extrája, hanem maga a folyamat.",
         },
       },
     },
     close: {
-      headingOne: "If this resonates,",
-      headingTwo: "let's talk.",
-      cta: "Let's begin.",
-      ctaHover: "Let's go!",
+      headingOne: "Ha ez megszólít,",
+      headingTwo: "beszéljünk.",
+      cta: "Kezdjük el.",
+      ctaHover: "Vágjunk bele!",
     },
   },
   services: {
     // The frame every category page shares.
-    allServices: "All services",
-    includes: "What it includes",
-    // Every category runs through the Dream Outcome Process (Service Delivery
-    // §1), so every category page says so.
+    allServices: "Minden szolgáltatás",
+    includes: "Mit tartalmaz",
+    // Dream Outcome Process stays English; the sentence is its explanation.
     processNote:
-      "Every engagement runs through the Dream Outcome Process. Research, your customer and your positioning come first; the work is built on them.",
+      "Minden közös munkánk a Dream Outcome Process mentén halad. Előbb a kutatás, a célügyfeled és a pozicionálásod jön; a munka ezekre épül.",
     // Followed by the next category's name.
-    next: "Next",
+    next: "Következő",
     // Followed by the remaining categories' names.
-    or: "Or:",
-    cta: "Let's begin.",
-    ctaHover: "Let's talk!",
-    // Keyed by category id (the slug) and, inside each, by sub-service id. The
-    // order of both, and the Kranky essence word, are in data/services.ts.
-    // Content mirrors strategy/service_delivery.md in the Kontrast Vault.
+    or: "Vagy:",
+    cta: "Kezdjük el.",
+    ctaHover: "Beszéljünk!",
+    // The category names are our own named concepts and stay English (glossary);
+    // the intro under each is the Hungarian explanation.
     //
     // Intros carry *highlight* markers around the words the design can set as
     // oversized Fraunces inline (introSegments in data/services.ts).
@@ -257,183 +272,183 @@ const hu: Dictionary = {
       "brand-architecture": {
         title: "Brand Architecture",
         intro:
-          "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for people, so it becomes *recognizable*.",
+          "Egy márka *alapjai*, a stratégiától a vizuális rendszerig, egy kézben, vállalatoknak és magánszemélyeknek, hogy *felismerhetővé* váljon.",
         subServices: {
           research: {
-            title: "Audience, market and competitor research",
-            desc: "Who you're talking to, what they want to hear, and who else is talking to them.",
+            title: "Közönség-, piac- és versenytárskutatás",
+            desc: "Kivel beszélsz, mit akarnak hallani, és ki más beszél hozzájuk.",
           },
           positioning: {
-            title: "Positioning and strategy",
-            desc: "Where you stand in the market, and the one-sentence reason to choose you.",
+            title: "Pozicionálás és stratégia",
+            desc: "Hol állsz a piacon, és az egy mondat, amiért téged érdemes választani.",
           },
           brandWorld: {
-            title: "Brand world and tone of voice",
-            desc: "The story, the founder story and the voice the brand speaks with everywhere.",
+            title: "Márkavilág és hangvétel",
+            desc: "A történet, az alapítói történet és a hang, amelyen a márka mindenhol megszólal.",
           },
           naming: {
-            title: "Naming",
-            desc: "Company, product and campaign names that stick.",
+            title: "Névadás",
+            desc: "Cég-, termék- és kampánynevek, amelyek megragadnak.",
           },
           identity: {
-            title: "Logo and identity",
-            desc: "The primary mark and the entire system built around it.",
+            title: "Logó és arculat",
+            desc: "Az elsődleges jel és az egész rendszer, amely köré épül.",
           },
           designSystem: {
-            title: "Visual language and design system",
-            desc: "Colors, typography, grid and components as one, with a brand guidelines document.",
+            title: "Vizuális nyelv és designrendszer",
+            desc: "Színek, tipográfia, rács és komponensek egyben, márkakézikönyvvel.",
           },
           rebranding: {
             title: "Rebranding",
-            desc: "Repositioning and refreshing an existing brand.",
+            desc: "Egy meglévő márka újrapozicionálása és megújítása.",
           },
           maintenance: {
-            title: "Maintenance plan",
-            desc: "Guidelines kept current, new assets made inside the system.",
+            title: "Karbantartási csomag",
+            desc: "Az irányelvek naprakészen tartása, új anyagok a rendszeren belül.",
           },
         },
       },
       "web-development": {
         title: "Web Development",
         intro:
-          "Bespoke, animated sites built on Next.js and on the brand's foundations, lightning fast and *alive* under your hands.",
+          "Egyedi, animált oldalak Next.js-re és a márka alapjaira építve, villámgyorsak, és *élnek* a kezed alatt.",
         subServices: {
           bespokeSite: {
-            title: "Bespoke website development",
-            desc: "No templates, built for your brand.",
+            title: "Egyedi weboldal-fejlesztés",
+            desc: "Nincsenek sablonok, a márkádra építjük.",
           },
           webDesign: {
-            title: "Web design (UI/UX)",
-            desc: "An interface people understand on first use.",
+            title: "Webdesign (UI/UX)",
+            desc: "Felület, amelyet elsőre megértenek az emberek.",
           },
           motion: {
-            title: "Motion and animation",
-            desc: "GSAP, Lenis, motion that sets you apart.",
+            title: "Mozgás és animáció",
+            desc: "GSAP, Lenis, mozgás, amely megkülönböztet.",
           },
           copy: {
-            title: "Website copy",
-            desc: "Written from your positioning and your customers' own words.",
+            title: "Weboldal-szövegírás",
+            desc: "A pozicionálásodból és a vevőid saját szavaiból írva.",
           },
           landingPages: {
-            title: "Landing and campaign pages",
-            desc: "One goal, one message, nothing in the way.",
+            title: "Landing- és kampányoldalak",
+            desc: "Egy cél, egy üzenet, semmi, ami útban van.",
           },
           multilingual: {
-            title: "Multilingual sites",
-            desc: "Every language your customers read.",
+            title: "Többnyelvű weboldalak",
+            desc: "Minden nyelven, amelyen a vevőid olvasnak.",
           },
           cms: {
-            title: "CMS integration",
-            desc: "Content you manage yourself, without a developer.",
+            title: "CMS-integráció",
+            desc: "Tartalom, amelyet fejlesztő nélkül, magad kezelsz.",
           },
           performance: {
-            title: "Performance and technical SEO",
-            desc: "Fast loading, Core Web Vitals, a searchable structure.",
+            title: "Teljesítmény és technikai SEO",
+            desc: "Gyors betöltés, Core Web Vitals, kereshető szerkezet.",
           },
           maintenance: {
-            title: "Maintenance plan",
-            desc: "The site stays live, updated and secure.",
+            title: "Karbantartási csomag",
+            desc: "Az oldal élő, naprakész és biztonságos marad.",
           },
         },
       },
       ecommerce: {
         title: "Ecommerce",
         intro:
-          "Webshops that don't just look good but *sell*, from the product page to the invoice and the *returning* customer.",
+          "Webshopok, amelyek nemcsak jól néznek ki, hanem *eladnak*, a termékoldaltól a számláig és a *visszatérő* vevőig.",
         subServices: {
           webshop: {
-            title: "Webshop build",
-            desc: "Our own webshop system with an admin you log in to, and a storefront made for your brand.",
+            title: "Webshop-építés",
+            desc: "Saját webshoprendszerünk bejelentkezős adminnal, és a márkádra szabott kirakat.",
           },
           shopUx: {
-            title: "Shop UX and product page design",
-            desc: "The buying journey and product pages that lead to the cart.",
+            title: "Shop UX és termékoldal-tervezés",
+            desc: "A vásárlási út és a termékoldalak, amelyek a kosárhoz vezetnek.",
           },
           catalogue: {
-            title: "Catalogue upload and product copy",
-            desc: "Your whole catalogue in, described in your customers' own words.",
+            title: "Katalógusfeltöltés és termékszövegek",
+            desc: "A teljes kínálatod bent, a vevőid saját szavaival leírva.",
           },
           paymentShipping: {
-            title: "Payment and shipping integration",
-            desc: "Hungarian and international solutions wired in.",
+            title: "Fizetési és szállítási integráció",
+            desc: "Magyar és nemzetközi megoldások bekötve.",
           },
           invoicing: {
-            title: "Invoicing integration",
-            desc: "Számlázz.hu, Billingo and international equivalents, hooked up automatically.",
+            title: "Számlázási integráció",
+            desc: "Számlázz.hu, Billingo és nemzetközi megfelelőik, automatikusan összekötve.",
           },
           analytics: {
-            title: "Analytics and conversion tracking",
-            desc: "Every sale traced back to where it came from.",
+            title: "Analitika és konverziókövetés",
+            desc: "Minden eladás visszakövethető oda, ahonnan jött.",
           },
           upkeep: {
-            title: "Shop upkeep and conversion optimization",
-            desc: "After launch, a monthly funnel review and improvements shipped.",
+            title: "Webshop-gondozás és konverzióoptimalizálás",
+            desc: "Indulás után havi tölcsér-áttekintés és kiszállított fejlesztések.",
           },
         },
       },
       "software-solutions": {
         title: "Software Solutions",
         intro:
-          "Web apps, *iOS and Android* apps, portals and internal tools, from the same *DNA* we built our own platform from.",
+          "Webalkalmazások, *iOS és Android* alkalmazások, portálok és belső eszközök, ugyanabból a *DNS*-ből, amelyből a saját platformunkat építettük.",
         subServices: {
           webApp: {
-            title: "Web application development",
-            desc: "The SaaS, internal tool, portal or dashboard you need.",
+            title: "Webalkalmazás-fejlesztés",
+            desc: "A SaaS, belső eszköz, portál vagy dashboard, amire szükséged van.",
           },
           mobileApp: {
-            title: "Mobile app development (iOS and Android)",
-            desc: "A thumb-first app, from idea to store launch.",
+            title: "Mobilalkalmazás-fejlesztés (iOS és Android)",
+            desc: "Hüvelykujjra tervezett alkalmazás az ötlettől az áruházi indulásig.",
           },
           productDesign: {
-            title: "Product UI/UX design",
-            desc: "A product interface that's self-explanatory.",
+            title: "Termék UI/UX-tervezés",
+            desc: "Termékfelület, amely magától értetődő.",
           },
           mvp: {
-            title: "MVP development",
-            desc: "A working first version, fast to market.",
+            title: "MVP-fejlesztés",
+            desc: "Működő első verzió, gyorsan a piacon.",
           },
           integration: {
-            title: "API and integration",
-            desc: "Your systems, finally talking to each other.",
+            title: "API és integráció",
+            desc: "A rendszereid végre beszélnek egymással.",
           },
           aiFeatures: {
-            title: "AI features",
-            desc: "Assistants, search and summaries inside the software, where they help.",
+            title: "AI-funkciók",
+            desc: "Asszisztensek, keresés és összefoglalók a szoftveren belül, ahol segítenek.",
           },
           maintenance: {
-            title: "Maintenance plan",
-            desc: "Fixes, patches and small improvements. New features are their own project.",
+            title: "Karbantartási csomag",
+            desc: "Hibajavítások, javítócsomagok és kisebb fejlesztések. Az új funkciók külön projektek.",
           },
         },
       },
       "strategic-marketing": {
         title: "Strategic Marketing",
         intro:
-          "Where and why the brand shows up, across paid and organic channels, with *measurable* goals so it *grows*.",
+          "Hol és miért jelenik meg a márka, fizetett és organikus csatornákon, *mérhető* célokkal, hogy *növekedjen*.",
         subServices: {
           channelStrategy: {
-            title: "Campaign and channel strategy",
-            desc: "A unified plan across channels, with measurable goals.",
+            title: "Kampány- és csatornastratégia",
+            desc: "Egységes terv a csatornákon át, mérhető célokkal.",
           },
           organicSocial: {
-            title: "Organic social strategy",
-            desc: "The one channel where your customers are, and how to show up there.",
+            title: "Organikus social stratégia",
+            desc: "Az az egy csatorna, ahol a vevőid vannak, és hogyan jelenj meg ott.",
           },
           contentIdeas: {
-            title: "Content ideas and scripts",
-            desc: "Ideas, scripts and captions in your voice, on a monthly calendar.",
+            title: "Tartalmi ötletek és forgatókönyvek",
+            desc: "Ötletek, forgatókönyvek és szövegek a te hangodon, havi naptárban.",
           },
           paidAds: {
-            title: "Paid advertising (Meta, Google)",
-            desc: "Ads that bring revenue, not just clicks.",
+            title: "Fizetett hirdetés (Meta, Google)",
+            desc: "Hirdetések, amelyek bevételt hoznak, nem csak kattintást.",
           },
           email: {
-            title: "Email marketing",
-            desc: "The list that stays yours, and turns into buyers.",
+            title: "E-mail marketing",
+            desc: "A lista, amely a tiéd marad, és vevőkké válik.",
           },
           reporting: {
-            title: "Tracking, reporting and strategy",
-            desc: "Measured properly, reported monthly, with a strategy session.",
+            title: "Mérés, jelentés és stratégia",
+            desc: "Rendesen mérve, havonta jelentve, stratégiai megbeszéléssel.",
           },
         },
       },
@@ -441,163 +456,162 @@ const hu: Dictionary = {
   },
   work: {
     // After the ◆ the page sets in front of it.
-    label: "Portfolio",
+    label: "Portfólió",
     // Struck through on the page and answered by the Kranky "not yet.", which
     // is a mark and stays in code.
-    titleLines: ["The work we", "put our name on."],
-    lede: "The case studies are being written. We would rather show you nothing than something half-finished.",
-    cta: "Let's talk?",
-    ctaHover: "Let's go!",
-    back: "Back to home",
+    titleLines: ["A munka, amelyre", "a nevünket adjuk."],
+    lede: "Az esettanulmányok készülnek. Inkább semmit nem mutatunk, mint valami félkészet.",
+    cta: "Beszéljünk?",
+    ctaHover: "Vágjunk bele!",
+    back: "Vissza a főoldalra",
   },
-  // The contact flow (contact/ContactFlow). The stages, needs and bands are
-  // keyed by the ids in contact/intake.ts, which are the same in every
-  // language: only these labels differ, so the route accepts the same answers
-  // from every page. "talk soon." on the confirmation is a mark and stays in
-  // code; so does the studio's address.
+  // The contact flow (contact/ContactFlow). The ids behind the labels are the
+  // same in every language; only these labels differ. The budget figures are
+  // still euros, set the Hungarian way: forints on /hu come with
+  // Lineiq-Website#13, once Kristóf sets the amounts.
   contact: {
-    heading: "Let's talk for real.",
-    lede: "Five questions. We read every answer before we reply.",
-    begin: "Begin",
-    beginHover: "Let's go!",
-    aside: "Or just hit us up.",
+    heading: "Beszéljünk komolyan.",
+    lede: "Öt kérdés. Minden választ elolvasunk, mielőtt válaszolunk.",
+    begin: "Kezdés",
+    beginHover: "Vágjunk bele!",
+    aside: "Vagy csak írj nekünk.",
     // One per counted panel; the statement and the review are not questions.
     questions: {
-      who: "Who are you?",
-      stage: "Where's the money now?",
-      need: "What do you need?",
-      budget: "What can you put behind it?",
-      note: "Anything we should know?",
+      who: "Ki vagy?",
+      stage: "Hogy áll most a bevétel?",
+      need: "Mire van szükséged?",
+      budget: "Mekkora keretet tudsz mögé tenni?",
+      note: "Van még valami, amit tudnunk kell?",
     },
-    company: "Company",
-    email: "Email",
-    next: "Next",
+    company: "Cég",
+    email: "E-mail",
+    next: "Tovább",
     // The note's button while the note is empty.
-    skip: "Skip",
-    optional: "Optional",
+    skip: "Kihagyom",
+    optional: "Nem kötelező",
     stages: {
-      "not-selling": "Not selling yet",
-      inconsistent: "Selling, but inconsistently",
-      "selling-well": "Selling well, want more",
+      "not-selling": "Még nem adunk el",
+      inconsistent: "Eladunk, de nem egyenletesen",
+      "selling-well": "Jól megy, többet szeretnénk",
     },
     needs: {
-      grow: "Grow",
-      rebrand: "Rebrand",
-      remarket: "Rethink the marketing",
-      launch: "Launch something new",
+      grow: "Növekedés",
+      rebrand: "Rebranding",
+      remarket: "A marketing újragondolása",
+      launch: "Valami új indítása",
     },
-    monthly: "Monthly",
-    oneTime: "One-time",
+    monthly: "Havi",
+    oneTime: "Egyszeri",
     // The budget switch's accessible name.
-    switchLabel: "Show one-time budgets instead of monthly",
-    // The figures are per language: forints on /hu, euros elsewhere
-    // (Lineiq-Website#13). Four per mode, so the grid does not reflow.
+    switchLabel: "Az egyszeri keretek mutatása a havi helyett",
+    // Four per mode, so the grid does not reflow.
     bands: {
       monthly: {
-        "mo-under-2k": "Under €2,000 / mo",
-        "mo-2-5k": "€2,000 – 5,000 / mo",
-        "mo-5-10k": "€5,000 – 10,000 / mo",
-        "mo-10k-up": "€10,000+ / mo",
+        "mo-under-2k": "2 000 € alatt / hó",
+        "mo-2-5k": "2 000 – 5 000 € / hó",
+        "mo-5-10k": "5 000 – 10 000 € / hó",
+        "mo-10k-up": "10 000 € felett / hó",
       },
       "one-time": {
-        "ot-under-15k": "Under €15,000",
-        "ot-15-30k": "€15,000 – 30,000",
-        "ot-30-75k": "€30,000 – 75,000",
-        "ot-75k-up": "€75,000+",
+        "ot-under-15k": "15 000 € alatt",
+        "ot-15-30k": "15 000 – 30 000 €",
+        "ot-30-75k": "30 000 – 75 000 €",
+        "ot-75k-up": "75 000 € felett",
       },
     },
     review: {
-      heading: "This is what we have.",
-      company: "Company",
-      email: "Email",
-      stage: "Money",
-      need: "Need",
-      budget: "Budget",
-      note: "Note",
-      notAnswered: "Not answered",
-      change: "Change",
+      heading: "Ennyit tudunk eddig.",
+      company: "Cég",
+      email: "E-mail",
+      stage: "Bevétel",
+      need: "Igény",
+      budget: "Keret",
+      note: "Megjegyzés",
+      notAnswered: "Nincs válasz",
+      change: "Módosítás",
     },
-    send: "Send",
-    sending: "Sending…",
-    sendHover: "Let's go!",
-    back: "Back",
+    send: "Küldés",
+    sending: "Küldés…",
+    sendHover: "Vágjunk bele!",
+    back: "Vissza",
     // Beside the send button: the privacy notice, where the data is given.
-    privacyLink: "How we handle your answers",
+    privacyLink: "Hogyan kezeljük a válaszaidat",
     // Keyed by the codes in contact/intake.ts (INTAKE_ERRORS). company and
     // email are also what the flow says before it lets the visitor past the
     // first question.
     errors: {
-      company: "We need the company name, so we know who we are looking at.",
-      email: "We need a valid email address, so we have somewhere to reply.",
-      steps: "Answer every step and we will have something to work with.",
-      budget: "Pick a budget and we will have something to work with.",
-      unavailable: "The email service is not configured.",
-      failed: "Submission failed, please try again.",
+      company: "Szükségünk van a cég nevére, hogy tudjuk, kivel beszélünk.",
+      email:
+        "Érvényes e-mail-címre van szükségünk, hogy legyen hová válaszolnunk.",
+      steps: "Válaszolj minden lépésre, és lesz miből dolgoznunk.",
+      budget: "Válassz egy keretet, és lesz miből dolgoznunk.",
+      unavailable: "Az e-mail-szolgáltatás nincs beállítva.",
+      failed: "A küldés nem sikerült, kérjük, próbáld újra.",
     },
     done: {
-      title: "Got it.",
-      nextLabel: "Next step",
-      next: "We will read your answers against your market, and arrive at the first call already having something to say.",
-      responseLabel: "Response time",
-      response: "You will hear back by email within 48 hours on business days.",
+      title: "Megkaptuk.",
+      nextLabel: "Következő lépés",
+      next: "A válaszaidat a piacodhoz mérve olvassuk el, és úgy érkezünk az első hívásra, hogy már van mondanivalónk.",
+      responseLabel: "Válaszidő",
+      response: "Munkanapokon 48 órán belül jelentkezünk e-mailben.",
     },
   },
   nav: {
     links: {
-      home: "Home",
-      services: "Services",
-      about: "About",
-      contact: "Contact",
+      home: "Főoldal",
+      services: "Szolgáltatások",
+      about: "Rólunk",
+      contact: "Kapcsolat",
     },
-    openMenu: "Open menu",
-    closeMenu: "Close menu",
-    cta: "Let's talk?",
-    ctaHover: "Let's go!",
+    openMenu: "Menü megnyitása",
+    closeMenu: "Menü bezárása",
+    cta: "Beszéljünk?",
+    ctaHover: "Vágjunk bele!",
   },
   // Both footers read this: components/Footer and the overlay on Home's closing
   // sequence (components/SequenceSection). The links, the channel names and the
   // company name are in data/footer.ts.
   footer: {
-    studio: "Studio",
-    sitemap: "Sitemap",
-    connect: "Connect",
-    legal: "Legal",
+    studio: "Stúdió",
+    sitemap: "Oldaltérkép",
+    connect: "Kapcsolat",
+    legal: "Jogi",
     // The switcher column's heading, and the switcher's accessible name.
-    language: "Language",
+    language: "Nyelv",
     links: {
-      home: "Home",
-      services: "Services",
-      about: "About",
-      contact: "Contact",
-      terms: "Terms",
-      privacy: "Privacy",
+      home: "Főoldal",
+      services: "Szolgáltatások",
+      about: "Rólunk",
+      contact: "Kapcsolat",
+      terms: "Feltételek",
+      privacy: "Adatkezelés",
     },
-    copyright: "© {year} LineiQ. All rights reserved.",
+    copyright: "© {year} LineiQ. Minden jog fenntartva.",
   },
   languageSwitcher: {
-    label: "Language",
+    label: "Nyelv",
   },
   meta: {
     pages: {
       "/": {
         title: "LineiQ | Brand. Code. Signal.",
         description:
-          "A brand and business architecture studio and software house, built in Hungary, working with companies and people anywhere.",
+          "Márka- és üzletarchitektúra-stúdió és szoftverház, Magyarországon épült, vállalatokkal és magánszemélyekkel dolgozik bárhol a világon.",
       },
       "/about": {
-        title: "About | LineiQ",
+        title: "Rólunk | LineiQ",
         description:
-          "A brand and business architecture studio built in Hungary. Our mission, the five beliefs we run on and what they cost us, the two founders behind it, and the books that shape us.",
+          "Magyarországon épült márka- és üzletarchitektúra-stúdió. A küldetésünk, az öt meggyőződés, amelyen futunk, és amibe ez nekünk kerül, a két alapító mögötte, és a könyvek, amelyek formálnak minket.",
       },
       "/work": {
-        title: "Work | LineiQ",
+        title: "Munkák | LineiQ",
         description:
-          "The LineiQ portfolio. Not yet: the case studies are being written.",
+          "A LineiQ portfóliója. Még nem: az esettanulmányok készülnek.",
       },
       "/contact": {
-        title: "Contact | LineiQ",
+        title: "Kapcsolat | LineiQ",
         description:
-          "Five questions, mostly answered by clicking. We read every answer before we reply.",
+          "Öt kérdés, többnyire kattintással megválaszolva. Minden választ elolvasunk, mielőtt válaszolunk.",
       },
       // Already in Hungarian, like the legal pages themselves (data/legal).
       "/terms": {

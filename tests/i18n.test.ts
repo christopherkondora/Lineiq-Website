@@ -233,6 +233,15 @@ function keyPaths(value: unknown, prefix = ""): string[] {
   );
 }
 
+/** Every string of a dictionary, with its dotted path. */
+function leaves(value: unknown, prefix = ""): [string, string][] {
+  if (typeof value === "string") return [[prefix, value]];
+  if (typeof value !== "object" || value === null) return [];
+  return Object.entries(value).flatMap(([key, child]) =>
+    leaves(child, prefix ? `${prefix}.${key}` : key)
+  );
+}
+
 describe("dictionaries", () => {
   const source = keyPaths(dictionaries.en).sort();
 
@@ -242,6 +251,43 @@ describe("dictionaries", () => {
       expect(keyPaths(dictionaries[locale]).sort()).toEqual(source);
     }
   );
+
+  it("hu leaves no English behind, except the names and marks", () => {
+    // Paths whose Hungarian is the English on purpose: our own named concepts
+    // and the tagline stay English (glossary, Hungarian renderings), and so do
+    // the book titles and the loanwords Hungarian uses as they are.
+    const keptEnglish = new Set([
+      "meta.pages./.title",
+      "meta.serviceTitle",
+      "meta.pages./terms.title",
+      "meta.pages./privacy.title",
+      "about.bookshelf.books.principles.title",
+      "about.bookshelf.books.atomicHabits.title",
+      "about.bookshelf.books.zeroToOne.title",
+      "about.bookshelf.books.hardThing.title",
+      "about.bookshelf.books.deepWork.title",
+      "about.founders.frameworks.compoundVsTax.name",
+      "about.founders.frameworks.stopPaying.name",
+      "about.founders.frameworks.roiAutopsy.name",
+      "about.founders.frameworks.velvetRope.name",
+      "about.founders.frameworks.futureWalk.name",
+      "services.categories.brand-architecture.title",
+      "services.categories.web-development.title",
+      "services.categories.ecommerce.title",
+      "services.categories.software-solutions.title",
+      "services.categories.strategic-marketing.title",
+      "services.categories.brand-architecture.subServices.rebranding.title",
+      "contact.needs.rebrand",
+      "contact.email",
+      "contact.review.email",
+    ]);
+    const english = new Map(leaves(dictionaries.en));
+    const stillEnglish = leaves(dictionaries.hu)
+      .filter(([path, text]) => /\p{L}/u.test(text) && english.get(path) === text)
+      .map(([path]) => path)
+      .filter((path) => !keptEnglish.has(path));
+    expect(stillEnglish).toEqual([]);
+  });
 
   it.each(["en", "hu", "de"] as const)("%s has no empty strings", (locale) => {
     const text = JSON.stringify(dictionaries[locale]);
