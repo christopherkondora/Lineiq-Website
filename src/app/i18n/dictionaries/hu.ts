@@ -494,16 +494,16 @@ const hu: Dictionary = {
     // (Lineiq-Website#13). Four per mode, so the grid does not reflow.
     bands: {
       monthly: {
-        "mo-under-2k": "Under €2,000 / mo",
-        "mo-2-5k": "€2,000 – 5,000 / mo",
-        "mo-5-10k": "€5,000 – 10,000 / mo",
-        "mo-10k-up": "€10,000+ / mo",
+        "mo-under-2k": "Under 150 000 Ft / mo",
+        "mo-2-5k": "150 000 – 400 000 Ft / mo",
+        "mo-5-10k": "400 000 – 800 000 Ft / mo",
+        "mo-10k-up": "800 000+ Ft / mo",
       },
       "one-time": {
-        "ot-under-15k": "Under €15,000",
-        "ot-15-30k": "€15,000 – 30,000",
-        "ot-30-75k": "€30,000 – 75,000",
-        "ot-75k-up": "€75,000+",
+        "ot-under-15k": "Under 500 000 Ft",
+        "ot-15-30k": "500 000 – 1 500 000 Ft",
+        "ot-30-75k": "1 500 000 – 4 000 000 Ft",
+        "ot-75k-up": "4 000 000+ Ft",
       },
     },
     review: {
