@@ -1,77 +1,87 @@
 import type { Dictionary } from "./en";
 
 // Typed against the English, so a missing or extra key fails the type check.
-// Holds the English until the translation slice (Lineiq-Website#17).
+//
+// Claude's translation of the frozen English (Lineiq-Website#17); Kristóf and
+// Áron edit it. The conventions it follows:
+//   - "Sie", like the legal pages; the studio's own "wir" wherever the English
+//     invites ("Let's talk" is "Reden wir"), so the formal address is rare.
+//   - The Kranky marks and the proper nouns stay as the English dictionary
+//     leaves them. So do the Glossary's named concepts: the five category names
+//     and the Dream Outcome Process, the framework names, the book titles.
+//   - Ordinary words are translated, "maintenance plan" as "Wartungspaket".
+//   - Euro amounts are written the German way: 1.500 €, a space before the sign.
 const de: Dictionary = {
   home: {
     hero: {
       // Each word rises on its own; the last word carries the red dot.
-      lineOne: "Forget being",
-      lastWord: "ordinary",
+      lineOne: "Vergessen Sie",
+      lastWord: "Mittelmaß",
     },
     intro: {
-      lineOneBefore: "A brand-building",
-      // "Agency" is struck through by a red redaction, and "Studio" is written
-      // over it letter by letter.
-      struck: "Agency",
+      lineOneBefore: "Ein",
+      // "Agentur" is struck through by a red redaction, and "Studio" is
+      // written over it letter by letter.
+      struck: "Agentur",
       replacement: "Studio",
-      lineOneAfter: "and software house.",
-      lineTwoHighlight: "We don't just",
-      lineTwoRest: "execute. Even a single website starts with research.",
-      lineThree: "We build a name, backed by custom software and a marketing",
-      system: "system.",
-      ecosystemBefore: "A",
-      ecosystem: "world",
-      ecosystemAfter: "with a single purpose:",
-      closing: "To make you unmistakable.",
+      lineOneAfter: "für Markenaufbau und ein Softwarehaus.",
+      lineTwoHighlight: "Wir führen nicht nur",
+      lineTwoRest: "aus. Schon eine einzelne Website beginnt mit Recherche.",
+      lineThree:
+        "Wir bauen einen Namen, getragen von Software nach Maß und einem",
+      system: "Marketingsystem.",
+      ecosystemBefore: "Eine",
+      ecosystem: "Welt",
+      ecosystemAfter: "mit einem einzigen Zweck:",
+      closing: "Sie unverwechselbar zu machen.",
     },
     work: {
-      cursor: "Case in writing",
-      allWork: "All our work",
-      allWorkHover: "Let's see",
+      cursor: "Fallstudie in Arbeit",
+      allWork: "Alle unsere Arbeiten",
+      allWorkHover: "Schauen wir",
       projects: {
         klient:
-          "Projects, invoicing and client communication on a single surface. The software we built for ourselves before we ever sold it to anyone.",
+          "Projekte, Rechnungsstellung und Kundenkommunikation auf einer einzigen Oberfläche. Die Software, die wir für uns selbst gebaut haben, bevor wir sie je an irgendjemanden verkauft haben.",
         north:
-          "A budgeting app for iOS that makes money feel calm. A clear visual system, fluid native interactions, and a flow that turns everyday spending into a habit people actually keep.",
+          "Eine Budget-App für iOS, bei der sich Geld ruhig anfühlt. Ein klares visuelles System, flüssige native Interaktionen und ein Ablauf, der aus alltäglichen Ausgaben eine Gewohnheit macht, die Menschen wirklich behalten.",
         miert:
-          "A podcast whose brand is the question. An editorial system, a motion language and a visual voice that sounds the same, recognizably, in every episode.",
+          "Ein Podcast, dessen Marke die Frage ist. Ein redaktionelles System, eine Bewegungssprache und eine visuelle Stimme, die in jeder Folge gleich klingt und wiedererkennbar bleibt.",
       },
     },
     partners: {
       // Word by word; the last word gets the red redaction.
-      denial: "We don't take on",
-      denialMark: "clients",
+      denial: "Wir arbeiten nicht für",
+      denialMark: "Kunden",
       // Followed by the Kranky "partners", which is not keyed.
-      claim: "We take on",
+      claim: "Wir arbeiten mit",
       columnOne: [
-        "That's the difference: a studio you keep, not a vendor you replace. Built on trust, consistency, and a point of view.",
-        "Curious, transparent, ambitious. And a little obsessed with the details most people never notice.",
+        "Das ist der Unterschied: ein Studio, das Sie behalten, kein Dienstleister, den Sie ersetzen. Gebaut auf Vertrauen, Beständigkeit und einer Haltung.",
+        "Neugierig, transparent, ehrgeizig. Und ein wenig besessen von den Details, die die meisten nie bemerken.",
       ],
       columnTwo: [
-        "A project, a maintenance plan, and a real relationship behind both. We pick up the phone, and we show up in person.",
+        "Ein Projekt, ein Wartungspaket und eine echte Beziehung hinter beidem. Wir gehen ans Telefon, und wir kommen persönlich vorbei.",
       ],
     },
     manifesto: {
-      headingOne: "We didn't lose taste to AI.",
-      headingTwo: "We taught it ours.",
-      leadOneBefore: "A Hungarian studio,",
+      headingOne: "Wir haben den Geschmack nicht an die KI verloren.",
+      headingTwo: "Wir haben ihr unseren beigebracht.",
+      leadOneBefore: "Ein ungarisches Studio,",
       // Held as one unbreakable run, then highlighted together with leadOneEnd.
-      leadOneNoBreak: "by Western-European",
-      leadOneEnd: "standards.",
-      leadTwoBefore: "Everyone uses AI. The difference is the",
-      mind: "mind",
-      leadTwoMiddle: "and the",
-      taste: "taste.",
-      leadThree: "Brand, marketing and code from creative minds,",
-      leadFourBefore: "with technical and theoretical",
-      expertise: "expertise.",
-      imageAlt: "LineiQ studio",
+      leadOneNoBreak: "nach westeuropäischen",
+      leadOneEnd: "Maßstäben.",
+      leadTwoBefore: "Alle nutzen KI. Der Unterschied ist der",
+      mind: "Verstand",
+      leadTwoMiddle: "und der",
+      taste: "Geschmack.",
+      leadThree: "Marke, Marketing und Code von kreativen Köpfen,",
+      leadFourBefore: "mit technischer und theoretischer",
+      expertise: "Expertise.",
+      imageAlt: "LineiQ-Studio",
     },
     close: {
-      headline: "Ready?",
-      cta: "Let's begin.",
-      ctaHover: "Let's go!",
+      headline: "Bereit?",
+      cta: "Fangen wir an.",
+      ctaHover: "Los geht's!",
     },
   },
   about: {
@@ -79,177 +89,179 @@ const de: Dictionary = {
       // Two sets of line breaks, one per measure; CSS shows one. The red mark
       // is the hyphen inside `hyphenated`, wherever that word appears.
       wideLines: [
-        "We exist to end",
-        "short-termism in the",
-        "brands worth building.",
+        "Wir beenden das",
+        "Kurzfrist-Denken bei",
+        "Marken, die sich lohnen.",
       ],
       narrowLines: [
-        "We exist to end",
-        "short-termism",
-        "in the brands",
-        "worth building.",
+        "Wir beenden das",
+        "Kurzfrist-Denken",
+        "bei Marken,",
+        "die sich lohnen.",
       ],
-      hyphenated: "short-termism",
+      hyphenated: "Kurzfrist-Denken",
     },
     origin: {
       paragraphs: [
-        "For as long as we have been paying attention, marketing has been eating itself. Every year a new platform. Every quarter a new tactic. Every week another founder learning that the thing they spent six months building has already been replaced by something shinier.",
-        "We started LineiQ because we could not find a studio doing the work we wanted to do. Work that compounds. Brands that outlast the people who built them. Systems worth more every year instead of less.",
+        "Solange wir hinschauen, frisst sich das Marketing selbst auf. Jedes Jahr eine neue Plattform. Jedes Quartal eine neue Taktik. Jede Woche lernt ein weiterer Gründer, dass das, woran er sechs Monate gebaut hat, längst durch etwas Glänzenderes ersetzt wurde.",
+        "Wir haben LineiQ gegründet, weil wir kein Studio fanden, das die Arbeit macht, die wir machen wollten. Arbeit, die sich aufbaut. Marken, die ihre Erbauer überdauern. Systeme, die jedes Jahr mehr wert sind statt weniger.",
       ],
     },
     compounds: {
-      first: "Most marketing is a tax.",
-      secondBefore: "Brand is the only thing that",
+      first: "Das meiste Marketing ist eine Steuer.",
+      secondBefore: "Marke ist das Einzige, was sich",
       // The word that grows to fill the screen.
-      word: "compounds",
+      word: "verzinst",
       secondAfter: ".",
     },
     beliefs: {
-      title: "What we believe, and what believing it costs us.",
-      lead: "These are not slogans and they are not negotiable. A principle that costs nothing is just a comfortable belief, so each one below is filed with the bill.",
+      title: "Woran wir glauben, und was uns das Glauben kostet.",
+      lead: "Das sind keine Slogans, und sie sind nicht verhandelbar. Ein Prinzip, das nichts kostet, ist nur eine bequeme Überzeugung, deshalb ist jedes der folgenden mit der Rechnung abgelegt.",
       // Convictions verbatim from Beliefs (locked v1); costs condensed from the
       // matching House Rule. The rule each one traces to is in AboutBeliefs.
       items: {
         compounding: {
-          conviction: "Compounding wins.",
-          cost: "We turn down €1,500 to €4,000 a month in one-off campaign work, the kind most studios live on. It stops paying the day it ships.",
+          conviction: "Der Zinseszins gewinnt.",
+          cost: "Wir lehnen 1.500 bis 4.000 € im Monat an einmaligen Kampagnenaufträgen ab, wovon die meisten Studios leben. Sie zahlen nicht mehr, sobald sie ausgeliefert sind.",
         },
         smallWorld: {
-          conviction: "We would rather own a small world than rent a big market.",
-          cost: "We leave real revenue on the table, in the months we can least afford to.",
+          conviction:
+            "Wir besitzen lieber eine kleine Welt, als einen großen Markt zu mieten.",
+          cost: "Wir lassen echten Umsatz liegen, und zwar in den Monaten, in denen wir ihn am wenigsten entbehren können.",
         },
         lastWork: {
           conviction:
-            "We compete with our last piece of work, not with anyone else.",
-          cost: "We rebuild work that is already good enough, spending hours other studios would bank.",
+            "Wir messen uns an unserer letzten Arbeit, nicht an irgendjemand anderem.",
+          cost: "Wir bauen Arbeit neu, die schon gut genug ist, und verbrauchen Stunden, die andere Studios einstreichen würden.",
         },
         calm: {
-          conviction: "Calm is the product.",
-          cost: "We publish less, and slower, than firms that mass-generate. We say no to easy volume.",
+          conviction: "Ruhe ist das Produkt.",
+          cost: "Wir veröffentlichen weniger und langsamer als Firmen, die am Fließband generieren. Wir sagen Nein zu leichtem Volumen.",
         },
         winWin: {
-          conviction: "Win-win, or no deal.",
-          cost: "We commit to KPIs in writing. If we miss them in the first 30 days, the next month is on us.",
+          conviction: "Win-win, oder kein Deal.",
+          cost: "Wir verpflichten uns schriftlich auf KPIs. Verfehlen wir sie in den ersten 30 Tagen, geht der nächste Monat auf uns.",
         },
       },
     },
     founders: {
-      headingBefore: "Two founders,",
+      headingBefore: "Zwei Gründer,",
       // The words the red band lands on.
-      band: "one voice.",
+      band: "eine Stimme.",
       // Four rows each, under ~40 characters (sources in data/founders.ts).
       lines: {
         "kondora-kristof": [
-          "Two years of client work.",
-          "Marketing and SEO partner, Viltor.hu.",
-          "Reads the numbers first.",
-          "Built Klient. Designed North.",
+          "Zwei Jahre Arbeit mit Kunden.",
+          "Marketing- und SEO-Partner, Viltor.hu.",
+          "Liest zuerst die Zahlen.",
+          "Baute Klient. Gestaltete North.",
         ],
         "suto-aron": [
-          "Designed our delivery process.",
-          "Most of our 22 frameworks.",
-          "Market and ICP research.",
-          "Positioning, voice and sales.",
+          "Entwarf unseren Arbeitsprozess.",
+          "Die meisten unserer 22 Frameworks.",
+          "Markt- und ICP-Recherche.",
+          "Positionierung, Tonalität, Vertrieb.",
         ],
       },
-      methodLabel: "The method both of us run on",
-      // Canonical names: academy/_Frameworks.md in the vault. The ROI Autopsy
-      // and Future Walk lines follow DOP v3, where both run after signing (Acts
-      // 1 and 2), not the Academy's pre-sale wording (Lineiq-Website#15).
+      methodLabel: "Die Methode, nach der wir beide arbeiten",
+      // Canonical names: academy/_Frameworks.md in the vault; the names stay
+      // English, the lines are translated. The ROI Autopsy and Future Walk lines
+      // follow DOP v3, where both run after signing (Acts 1 and 2), not the
+      // Academy's pre-sale wording (Lineiq-Website#15).
       frameworks: {
         compoundVsTax: {
           name: "The Compound vs Tax Engine",
-          line: "Every euro you spend either builds an asset or pays rent.",
+          line: "Jeder Euro, den Sie ausgeben, baut entweder einen Wert auf oder zahlt Miete.",
         },
         stopPaying: {
           name: "The Stop-Paying Test",
-          line: "If you stopped paying for this tomorrow, would the work survive?",
+          line: "Würde die Arbeit überleben, wenn Sie morgen aufhören, dafür zu zahlen?",
         },
         roiAutopsy: {
           name: "The ROI Autopsy",
-          line: "We find where the current spend is dying before we build anything.",
+          line: "Wir finden heraus, wo das aktuelle Budget versickert, bevor wir irgendetwas bauen.",
         },
         velvetRope: {
           name: "The Velvet Rope",
-          line: "People are screened out before any deep work begins, not after.",
+          line: "Wer nicht passt, scheidet aus, bevor die eigentliche Arbeit beginnt, nicht danach.",
         },
         futureWalk: {
           name: "The Future Walk",
-          line: "Day 1, 30, 90 and 365, walked through before anything is built.",
+          line: "Tag 1, 30, 90 und 365, durchgegangen, bevor irgendetwas gebaut wird.",
         },
       },
       // Two clauses, two lines.
       methodShapeOne:
-        "Five of {frameworks}, across {layers} layers. The rest are not secrets,",
-      methodShapeTwo: "they are just not first impressions.",
+        "Fünf von {frameworks}, verteilt auf {layers} Ebenen. Der Rest ist kein Geheimnis,",
+      methodShapeTwo: "er macht nur keinen ersten Eindruck.",
     },
     record: {
-      label: "The one thing we will not dress up",
-      title: "LineiQ has never published a case study.",
-      lead: "That is true and we are not going to dress it up. It is also not the same as starting from zero. Kristóf brought the client record below. Áron wrote most of the process we deliver with and most of the twenty-two frameworks it runs on, and owns the research underneath them. Different work, not different weight.",
-      rosterLabel: "Clients and projects",
+      label: "Das Eine, was wir nicht schönreden",
+      title: "LineiQ hat noch nie eine Fallstudie veröffentlicht.",
+      lead: "Das stimmt, und wir werden es nicht schönreden. Es ist aber auch nicht dasselbe, wie bei null anzufangen. Kristóf hat die Kundenreferenzen unten mitgebracht. Áron hat den größten Teil des Prozesses geschrieben, mit dem wir arbeiten, und die meisten der zweiundzwanzig Frameworks, auf denen er läuft, und er verantwortet die Recherche darunter. Andere Arbeit, nicht anderes Gewicht.",
+      rosterLabel: "Kunden und Projekte",
       // One day a year (December 6 to 7) the two ages differ.
-      ageSame: "We are both {age}.",
-      ageDifferent: "We are {younger} and {older}.",
+      ageSame: "Wir sind beide {age}.",
+      ageDifferent: "Wir sind {younger} und {older}.",
       close:
-        "The studio is younger than the method it runs on: we built the Academy and the Dream Outcome Process before anyone had paid us a euro, because we refuse to charge a price we cannot run a procedure to justify. We will still be students in two years. The one thing we do, we do well.",
+        "Das Studio ist jünger als die Methode, nach der es arbeitet: Wir haben die Academy und den Dream Outcome Process gebaut, bevor uns jemand einen Euro gezahlt hat, weil wir keinen Preis verlangen, den wir nicht mit einem Verfahren begründen können. In zwei Jahren werden wir immer noch Lernende sein. Das Eine, was wir tun, tun wir gut.",
     },
     bookshelf: {
-      title: "The literature that shapes us.",
+      title: "Die Literatur, die uns prägt.",
       // What each book is to us. The signature under it is the founder's name,
       // in the order data/founders.ts gives for the language.
       books: {
         principles: {
           title: "Principles",
           commentary:
-            "LineiQ runs on principles, not assumptions. Who we take on, what we charge, what we refuse: all of it is written down before it is needed, so no decision gets made twice and none of them gets made in a bad week.",
+            "LineiQ läuft auf Prinzipien, nicht auf Annahmen. Wen wir annehmen, was wir verlangen, was wir ablehnen: Alles ist aufgeschrieben, bevor es gebraucht wird, damit keine Entscheidung zweimal fällt und keine in einer schlechten Woche.",
         },
         atomicHabits: {
           title: "Atomic Habits",
           commentary:
-            "The reason everything we build comes with a way to keep it running. A goal is a thing you announce; a system is a thing that still runs on the week nobody is watching. We build the second kind, for ourselves and for our partners.",
+            "Der Grund, warum alles, was wir bauen, eine Möglichkeit mitbringt, es am Laufen zu halten. Ein Ziel ist etwas, das man verkündet; ein System läuft auch in der Woche weiter, in der niemand hinsieht. Wir bauen die zweite Art, für uns und für unsere Partner.",
         },
         zeroToOne: {
           title: "Zero to One",
           commentary:
-            "Where our refusal to be another agency comes from. The work is not to win a category, it is to be the only one in it. That is the bar for us and for every brand we build: if a competitor could put their logo on it, it is not finished.",
+            "Woher unsere Weigerung kommt, noch eine Agentur zu sein. Die Aufgabe ist nicht, eine Kategorie zu gewinnen, sondern die Einzige darin zu sein. Das ist unser Maßstab und der für jede Marke, die wir bauen: Wenn ein Wettbewerber sein Logo daraufsetzen könnte, ist sie nicht fertig.",
         },
         hardThing: {
           title: "The Hard Thing About Hard Things",
           commentary:
-            "Our licence to have the hard conversation instead of the comfortable one. Building a company offers no good answers, only less bad ones. We name the real problem first, even when it is not the one you hoped we would find.",
+            "Unsere Lizenz, das schwierige Gespräch zu führen statt des bequemen. Ein Unternehmen aufzubauen bietet keine guten Antworten, nur weniger schlechte. Wir benennen zuerst das wahre Problem, auch wenn es nicht das ist, das Sie sich erhofft hatten.",
         },
         deepWork: {
           title: "Deep Work",
           commentary:
-            "Why we work deep, not wide. No Slack flood, no meeting marathon, no drip of questions to your inbox: we ask at the right moments, and only then. Calm is not a perk of the process, it is the process.",
+            "Warum wir in die Tiefe arbeiten, nicht in die Breite. Keine Slack-Flut, kein Meeting-Marathon, kein Tröpfeln von Fragen in Ihr Postfach: Wir fragen zu den richtigen Zeitpunkten, und nur dann. Ruhe ist kein Extra des Prozesses, sie ist der Prozess.",
         },
       },
     },
     close: {
-      headingOne: "If this resonates,",
-      headingTwo: "let's talk.",
-      cta: "Let's begin.",
-      ctaHover: "Let's go!",
+      headingOne: "Wenn Sie sich darin wiederfinden,",
+      headingTwo: "reden wir.",
+      cta: "Fangen wir an.",
+      ctaHover: "Los geht's!",
     },
   },
   services: {
     // The frame every category page shares.
-    allServices: "All services",
-    includes: "What it includes",
+    allServices: "Alle Leistungen",
+    includes: "Was enthalten ist",
     // Every category runs through the Dream Outcome Process (Service Delivery
     // §1), so every category page says so.
     processNote:
-      "Every engagement runs through the Dream Outcome Process. Research, your customer and your positioning come first; the work is built on them.",
+      "Jedes Engagement läuft über den Dream Outcome Process. Recherche, Ihre Kunden und Ihre Positionierung kommen zuerst; die Arbeit baut darauf auf.",
     // Followed by the next category's name.
-    next: "Next",
+    next: "Weiter",
     // Followed by the remaining categories' names.
-    or: "Or:",
-    cta: "Let's begin.",
-    ctaHover: "Let's talk!",
+    or: "Oder:",
+    cta: "Fangen wir an.",
+    ctaHover: "Reden wir!",
     // Keyed by category id (the slug) and, inside each, by sub-service id. The
-    // order of both, and the Kranky essence word, are in data/services.ts.
-    // Content mirrors strategy/service_delivery.md in the Kontrast Vault.
+    // order of both, and the Kranky essence word, are in data/services.ts. The
+    // category titles are the Glossary's names and stay English.
     //
     // Intros carry *highlight* markers around the words the design can set as
     // oversized Fraunces inline (introSegments in data/services.ts).
@@ -257,183 +269,183 @@ const de: Dictionary = {
       "brand-architecture": {
         title: "Brand Architecture",
         intro:
-          "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for people, so it becomes *recognizable*.",
+          "Das *Fundament* einer Marke, von der Strategie bis zum visuellen System, aus einer Hand, für Unternehmen und für Menschen, damit sie *wiedererkennbar* wird.",
         subServices: {
           research: {
-            title: "Audience, market and competitor research",
-            desc: "Who you're talking to, what they want to hear, and who else is talking to them.",
+            title: "Zielgruppen-, Markt- und Wettbewerbsrecherche",
+            desc: "Mit wem Sie sprechen, was diese Menschen hören wollen und wer sonst noch mit ihnen spricht.",
           },
           positioning: {
-            title: "Positioning and strategy",
-            desc: "Where you stand in the market, and the one-sentence reason to choose you.",
+            title: "Positionierung und Strategie",
+            desc: "Wo Sie im Markt stehen, und der eine Satz, der erklärt, warum man Sie wählt.",
           },
           brandWorld: {
-            title: "Brand world and tone of voice",
-            desc: "The story, the founder story and the voice the brand speaks with everywhere.",
+            title: "Markenwelt und Tonalität",
+            desc: "Die Geschichte, die Gründergeschichte und die Stimme, mit der die Marke überall spricht.",
           },
           naming: {
             title: "Naming",
-            desc: "Company, product and campaign names that stick.",
+            desc: "Namen für Unternehmen, Produkte und Kampagnen, die hängen bleiben.",
           },
           identity: {
-            title: "Logo and identity",
-            desc: "The primary mark and the entire system built around it.",
+            title: "Logo und Identität",
+            desc: "Das Hauptzeichen und das gesamte System darum herum.",
           },
           designSystem: {
-            title: "Visual language and design system",
-            desc: "Colors, typography, grid and components as one, with a brand guidelines document.",
+            title: "Visuelle Sprache und Designsystem",
+            desc: "Farben, Typografie, Raster und Komponenten als Ganzes, mit einem Markenhandbuch.",
           },
           rebranding: {
             title: "Rebranding",
-            desc: "Repositioning and refreshing an existing brand.",
+            desc: "Eine bestehende Marke neu positionieren und auffrischen.",
           },
           maintenance: {
-            title: "Maintenance plan",
-            desc: "Guidelines kept current, new assets made inside the system.",
+            title: "Wartungspaket",
+            desc: "Richtlinien, die aktuell bleiben, und neue Assets, die innerhalb des Systems entstehen.",
           },
         },
       },
       "web-development": {
         title: "Web Development",
         intro:
-          "Bespoke, animated sites built on Next.js and on the brand's foundations, lightning fast and *alive* under your hands.",
+          "Maßgeschneiderte, animierte Websites auf Basis von Next.js und der Grundlagen der Marke, blitzschnell und *lebendig* unter Ihren Händen.",
         subServices: {
           bespokeSite: {
-            title: "Bespoke website development",
-            desc: "No templates, built for your brand.",
+            title: "Individuelle Website-Entwicklung",
+            desc: "Keine Vorlagen, gebaut für Ihre Marke.",
           },
           webDesign: {
-            title: "Web design (UI/UX)",
-            desc: "An interface people understand on first use.",
+            title: "Webdesign (UI/UX)",
+            desc: "Eine Oberfläche, die man beim ersten Gebrauch versteht.",
           },
           motion: {
-            title: "Motion and animation",
-            desc: "GSAP, Lenis, motion that sets you apart.",
+            title: "Motion und Animation",
+            desc: "GSAP, Lenis, Bewegung, die Sie abhebt.",
           },
           copy: {
-            title: "Website copy",
-            desc: "Written from your positioning and your customers' own words.",
+            title: "Website-Texte",
+            desc: "Geschrieben aus Ihrer Positionierung und den eigenen Worten Ihrer Kunden.",
           },
           landingPages: {
-            title: "Landing and campaign pages",
-            desc: "One goal, one message, nothing in the way.",
+            title: "Landing- und Kampagnenseiten",
+            desc: "Ein Ziel, eine Botschaft, nichts im Weg.",
           },
           multilingual: {
-            title: "Multilingual sites",
-            desc: "Every language your customers read.",
+            title: "Mehrsprachige Websites",
+            desc: "Jede Sprache, die Ihre Kunden lesen.",
           },
           cms: {
-            title: "CMS integration",
-            desc: "Content you manage yourself, without a developer.",
+            title: "CMS-Integration",
+            desc: "Inhalte, die Sie selbst pflegen, ohne Entwickler.",
           },
           performance: {
-            title: "Performance and technical SEO",
-            desc: "Fast loading, Core Web Vitals, a searchable structure.",
+            title: "Performance und technisches SEO",
+            desc: "Schnelles Laden, Core Web Vitals, eine auffindbare Struktur.",
           },
           maintenance: {
-            title: "Maintenance plan",
-            desc: "The site stays live, updated and secure.",
+            title: "Wartungspaket",
+            desc: "Die Website bleibt online, aktuell und sicher.",
           },
         },
       },
       ecommerce: {
         title: "Ecommerce",
         intro:
-          "Webshops that don't just look good but *sell*, from the product page to the invoice and the *returning* customer.",
+          "Webshops, die nicht nur gut aussehen, sondern *verkaufen*, von der Produktseite bis zur Rechnung und zum *wiederkehrenden* Kunden.",
         subServices: {
           webshop: {
-            title: "Webshop build",
-            desc: "Our own webshop system with an admin you log in to, and a storefront made for your brand.",
+            title: "Webshop-Aufbau",
+            desc: "Unser eigenes Webshop-System mit einem Admin-Bereich, in dem Sie sich anmelden, und einem Storefront, gemacht für Ihre Marke.",
           },
           shopUx: {
-            title: "Shop UX and product page design",
-            desc: "The buying journey and product pages that lead to the cart.",
+            title: "Shop-UX und Produktseiten-Design",
+            desc: "Der Kaufweg und Produktseiten, die in den Warenkorb führen.",
           },
           catalogue: {
-            title: "Catalogue upload and product copy",
-            desc: "Your whole catalogue in, described in your customers' own words.",
+            title: "Katalogimport und Produkttexte",
+            desc: "Ihr gesamter Katalog, beschrieben in den eigenen Worten Ihrer Kunden.",
           },
           paymentShipping: {
-            title: "Payment and shipping integration",
-            desc: "Hungarian and international solutions wired in.",
+            title: "Zahlungs- und Versandanbindung",
+            desc: "Ungarische und internationale Lösungen, eingebunden.",
           },
           invoicing: {
-            title: "Invoicing integration",
-            desc: "Számlázz.hu, Billingo and international equivalents, hooked up automatically.",
+            title: "Rechnungsanbindung",
+            desc: "Számlázz.hu, Billingo und internationale Entsprechungen, automatisch angebunden.",
           },
           analytics: {
-            title: "Analytics and conversion tracking",
-            desc: "Every sale traced back to where it came from.",
+            title: "Analytics und Conversion-Tracking",
+            desc: "Jeder Verkauf, zurückverfolgt bis zu seiner Herkunft.",
           },
           upkeep: {
-            title: "Shop upkeep and conversion optimization",
-            desc: "After launch, a monthly funnel review and improvements shipped.",
+            title: "Shop-Pflege und Conversion-Optimierung",
+            desc: "Nach dem Launch: eine monatliche Funnel-Auswertung und ausgelieferte Verbesserungen.",
           },
         },
       },
       "software-solutions": {
         title: "Software Solutions",
         intro:
-          "Web apps, *iOS and Android* apps, portals and internal tools, from the same *DNA* we built our own platform from.",
+          "Web-Apps, *iOS- und Android-Apps*, Portale und interne Tools, aus derselben *DNA*, aus der wir unsere eigene Plattform gebaut haben.",
         subServices: {
           webApp: {
-            title: "Web application development",
-            desc: "The SaaS, internal tool, portal or dashboard you need.",
+            title: "Entwicklung von Webanwendungen",
+            desc: "Das SaaS, das interne Tool, das Portal oder das Dashboard, das Sie brauchen.",
           },
           mobileApp: {
-            title: "Mobile app development (iOS and Android)",
-            desc: "A thumb-first app, from idea to store launch.",
+            title: "Entwicklung mobiler Apps (iOS und Android)",
+            desc: "Eine App für den Daumen, von der Idee bis zum Store-Launch.",
           },
           productDesign: {
-            title: "Product UI/UX design",
-            desc: "A product interface that's self-explanatory.",
+            title: "Produkt-UI/UX-Design",
+            desc: "Eine Produktoberfläche, die sich selbst erklärt.",
           },
           mvp: {
-            title: "MVP development",
-            desc: "A working first version, fast to market.",
+            title: "MVP-Entwicklung",
+            desc: "Eine funktionierende erste Version, schnell am Markt.",
           },
           integration: {
-            title: "API and integration",
-            desc: "Your systems, finally talking to each other.",
+            title: "API und Integration",
+            desc: "Ihre Systeme, endlich im Gespräch miteinander.",
           },
           aiFeatures: {
-            title: "AI features",
-            desc: "Assistants, search and summaries inside the software, where they help.",
+            title: "KI-Funktionen",
+            desc: "Assistenten, Suche und Zusammenfassungen in der Software, wo sie helfen.",
           },
           maintenance: {
-            title: "Maintenance plan",
-            desc: "Fixes, patches and small improvements. New features are their own project.",
+            title: "Wartungspaket",
+            desc: "Fehlerbehebungen, Patches und kleine Verbesserungen. Neue Funktionen sind ein eigenes Projekt.",
           },
         },
       },
       "strategic-marketing": {
         title: "Strategic Marketing",
         intro:
-          "Where and why the brand shows up, across paid and organic channels, with *measurable* goals so it *grows*.",
+          "Wo und warum die Marke auftaucht, über bezahlte und organische Kanäle, mit *messbaren* Zielen, damit sie *wächst*.",
         subServices: {
           channelStrategy: {
-            title: "Campaign and channel strategy",
-            desc: "A unified plan across channels, with measurable goals.",
+            title: "Kampagnen- und Kanalstrategie",
+            desc: "Ein einheitlicher Plan über alle Kanäle, mit messbaren Zielen.",
           },
           organicSocial: {
-            title: "Organic social strategy",
-            desc: "The one channel where your customers are, and how to show up there.",
+            title: "Organische Social-Media-Strategie",
+            desc: "Der eine Kanal, auf dem Ihre Kunden sind, und wie Sie dort auftreten.",
           },
           contentIdeas: {
-            title: "Content ideas and scripts",
-            desc: "Ideas, scripts and captions in your voice, on a monthly calendar.",
+            title: "Content-Ideen und Skripte",
+            desc: "Ideen, Skripte und Bildunterschriften in Ihrer Stimme, auf einem Monatskalender.",
           },
           paidAds: {
-            title: "Paid advertising (Meta, Google)",
-            desc: "Ads that bring revenue, not just clicks.",
+            title: "Bezahlte Werbung (Meta, Google)",
+            desc: "Anzeigen, die Umsatz bringen, nicht nur Klicks.",
           },
           email: {
-            title: "Email marketing",
-            desc: "The list that stays yours, and turns into buyers.",
+            title: "E-Mail-Marketing",
+            desc: "Die Liste, die Ihnen gehört und aus der Käufer werden.",
           },
           reporting: {
-            title: "Tracking, reporting and strategy",
-            desc: "Measured properly, reported monthly, with a strategy session.",
+            title: "Tracking, Reporting und Strategie",
+            desc: "Sauber gemessen, monatlich berichtet, mit einem Strategiegespräch.",
           },
         },
       },
@@ -444,11 +456,11 @@ const de: Dictionary = {
     label: "Portfolio",
     // Struck through on the page and answered by the Kranky "not yet.", which
     // is a mark and stays in code.
-    titleLines: ["The work we", "put our name on."],
-    lede: "The case studies are being written. We would rather show you nothing than something half-finished.",
-    cta: "Let's talk?",
-    ctaHover: "Let's go!",
-    back: "Back to home",
+    titleLines: ["Die Arbeit, für die", "wir mit unserem Namen stehen."],
+    lede: "Die Fallstudien werden gerade geschrieben. Wir zeigen Ihnen lieber nichts als etwas Halbfertiges.",
+    cta: "Reden wir?",
+    ctaHover: "Los geht's!",
+    back: "Zurück zur Startseite",
   },
   // The contact flow (contact/ContactFlow). The stages, needs and bands are
   // keyed by the ids in contact/intake.ts, which are the same in every
@@ -456,103 +468,108 @@ const de: Dictionary = {
   // from every page. "talk soon." on the confirmation is a mark and stays in
   // code; so does the studio's address.
   contact: {
-    heading: "Let's talk for real.",
-    lede: "Five questions. We read every answer before we reply.",
-    begin: "Begin",
-    beginHover: "Let's go!",
-    aside: "Or just hit us up.",
+    heading: "Reden wir richtig.",
+    lede: "Fünf Fragen. Wir lesen jede Antwort, bevor wir antworten.",
+    begin: "Beginnen",
+    beginHover: "Los geht's!",
+    aside: "Oder melden Sie sich einfach.",
     // One per counted panel; the statement and the review are not questions.
     questions: {
-      who: "Who are you?",
-      stage: "Where's the money now?",
-      need: "What do you need?",
-      budget: "What can you put behind it?",
-      note: "Anything we should know?",
+      who: "Wer sind Sie?",
+      stage: "Wo stehen Sie beim Umsatz?",
+      need: "Was brauchen Sie?",
+      budget: "Was können Sie dafür einsetzen?",
+      note: "Gibt es etwas, das wir wissen sollten?",
     },
-    company: "Company",
-    email: "Email",
-    next: "Next",
+    company: "Unternehmen",
+    email: "E-Mail",
+    next: "Weiter",
     // The note's button while the note is empty.
-    skip: "Skip",
+    skip: "Überspringen",
     optional: "Optional",
     stages: {
-      "not-selling": "Not selling yet",
-      inconsistent: "Selling, but inconsistently",
-      "selling-well": "Selling well, want more",
+      "not-selling": "Noch kein Umsatz",
+      inconsistent: "Umsatz, aber unregelmäßig",
+      "selling-well": "Umsatz läuft gut, wir wollen mehr",
     },
     needs: {
-      grow: "Grow",
-      rebrand: "Rebrand",
-      remarket: "Rethink the marketing",
-      launch: "Launch something new",
+      grow: "Wachsen",
+      rebrand: "Rebranding",
+      remarket: "Marketing neu denken",
+      launch: "Etwas Neues starten",
     },
-    monthly: "Monthly",
-    oneTime: "One-time",
+    monthly: "Monatlich",
+    oneTime: "Einmalig",
     // The budget switch's accessible name.
-    switchLabel: "Show one-time budgets instead of monthly",
+    switchLabel: "Einmalige statt monatliche Budgets anzeigen",
     // The figures are per language: forints on /hu, euros elsewhere
     // (Lineiq-Website#13). Four per mode, so the grid does not reflow.
     bands: {
       monthly: {
-        "mo-under-2k": "Under €2,000 / mo",
-        "mo-2-5k": "€2,000 – 5,000 / mo",
-        "mo-5-10k": "€5,000 – 10,000 / mo",
-        "mo-10k-up": "€10,000+ / mo",
+        "mo-under-2k": "Unter 2.000 € / Monat",
+        "mo-2-5k": "2.000 – 5.000 € / Monat",
+        "mo-5-10k": "5.000 – 10.000 € / Monat",
+        "mo-10k-up": "Ab 10.000 € / Monat",
       },
       "one-time": {
-        "ot-under-15k": "Under €15,000",
-        "ot-15-30k": "€15,000 – 30,000",
-        "ot-30-75k": "€30,000 – 75,000",
-        "ot-75k-up": "€75,000+",
+        "ot-under-15k": "Unter 15.000 €",
+        "ot-15-30k": "15.000 – 30.000 €",
+        "ot-30-75k": "30.000 – 75.000 €",
+        "ot-75k-up": "Ab 75.000 €",
       },
     },
     review: {
-      heading: "This is what we have.",
-      company: "Company",
-      email: "Email",
-      stage: "Money",
-      need: "Need",
+      heading: "Das haben wir.",
+      company: "Unternehmen",
+      email: "E-Mail",
+      stage: "Umsatz",
+      need: "Bedarf",
       budget: "Budget",
-      note: "Note",
-      notAnswered: "Not answered",
-      change: "Change",
+      note: "Anmerkung",
+      notAnswered: "Nicht beantwortet",
+      change: "Ändern",
     },
-    send: "Send",
-    sending: "Sending…",
-    sendHover: "Let's go!",
-    back: "Back",
+    send: "Senden",
+    sending: "Wird gesendet…",
+    sendHover: "Los geht's!",
+    back: "Zurück",
     // Beside the send button: the privacy notice, where the data is given.
-    privacyLink: "How we handle your answers",
+    privacyLink: "Wie wir mit Ihren Antworten umgehen",
     // Keyed by the codes in contact/intake.ts (INTAKE_ERRORS). company and
     // email are also what the flow says before it lets the visitor past the
     // first question.
     errors: {
-      company: "We need the company name, so we know who we are looking at.",
-      email: "We need a valid email address, so we have somewhere to reply.",
-      steps: "Answer every step and we will have something to work with.",
-      budget: "Pick a budget and we will have something to work with.",
-      unavailable: "The email service is not configured.",
-      failed: "Submission failed, please try again.",
+      company:
+        "Wir brauchen den Firmennamen, damit wir wissen, wen wir vor uns haben.",
+      email:
+        "Wir brauchen eine gültige E-Mail-Adresse, damit wir wissen, wohin wir antworten.",
+      steps:
+        "Beantworten Sie jeden Schritt, dann haben wir etwas, womit wir arbeiten können.",
+      budget:
+        "Wählen Sie ein Budget, dann haben wir etwas, womit wir arbeiten können.",
+      unavailable: "Der E-Mail-Dienst ist nicht konfiguriert.",
+      failed: "Das Senden ist fehlgeschlagen, bitte versuchen Sie es erneut.",
     },
     done: {
-      title: "Got it.",
-      nextLabel: "Next step",
-      next: "We will read your answers against your market, and arrive at the first call already having something to say.",
-      responseLabel: "Response time",
-      response: "You will hear back by email within 48 hours on business days.",
+      title: "Angekommen.",
+      nextLabel: "Nächster Schritt",
+      next: "Wir lesen Ihre Antworten vor dem Hintergrund Ihres Marktes und kommen zum ersten Gespräch bereits mit etwas, das wir sagen können.",
+      responseLabel: "Antwortzeit",
+      response:
+        "Sie hören innerhalb von 48 Stunden an Werktagen per E-Mail von uns.",
     },
   },
   nav: {
     links: {
-      home: "Home",
-      services: "Services",
-      about: "About",
-      contact: "Contact",
+      home: "Startseite",
+      services: "Leistungen",
+      about: "Über uns",
+      contact: "Kontakt",
     },
-    openMenu: "Open menu",
-    closeMenu: "Close menu",
-    cta: "Let's talk?",
-    ctaHover: "Let's go!",
+    openMenu: "Menü öffnen",
+    closeMenu: "Menü schließen",
+    cta: "Reden wir?",
+    ctaHover: "Los geht's!",
   },
   // Both footers read this: components/Footer and the overlay on Home's closing
   // sequence (components/SequenceSection). The links, the channel names and the
@@ -560,44 +577,47 @@ const de: Dictionary = {
   footer: {
     studio: "Studio",
     sitemap: "Sitemap",
-    connect: "Connect",
-    legal: "Legal",
+    connect: "Vernetzen",
+    legal: "Rechtliches",
     // The switcher column's heading, and the switcher's accessible name.
-    language: "Language",
+    language: "Sprache",
     links: {
-      home: "Home",
-      services: "Services",
-      about: "About",
-      contact: "Contact",
-      terms: "Terms",
-      privacy: "Privacy",
+      home: "Startseite",
+      services: "Leistungen",
+      about: "Über uns",
+      contact: "Kontakt",
+      terms: "Nutzungsbedingungen",
+      privacy: "Datenschutz",
     },
-    copyright: "© {year} LineiQ. All rights reserved.",
+    copyright: "© {year} LineiQ. Alle Rechte vorbehalten.",
   },
   languageSwitcher: {
-    label: "Language",
+    label: "Sprache",
   },
+  // Each page's title and description: the browser tab, the search result and
+  // the link preview (Open Graph) all read these. The tagline in the home
+  // title is the brand's own and stays English.
   meta: {
     pages: {
       "/": {
         title: "LineiQ | Brand. Code. Signal.",
         description:
-          "A brand and business architecture studio and software house, built in Hungary, working with companies and people anywhere.",
+          "Ein Studio für Marken- und Unternehmensarchitektur und ein Softwarehaus, in Ungarn aufgebaut, tätig für Unternehmen und Menschen überall.",
       },
       "/about": {
-        title: "About | LineiQ",
+        title: "Über uns | LineiQ",
         description:
-          "A brand and business architecture studio built in Hungary. Our mission, the five beliefs we run on and what they cost us, the two founders behind it, and the books that shape us.",
+          "Ein Studio für Marken- und Unternehmensarchitektur, in Ungarn aufgebaut. Unsere Mission, die fünf Überzeugungen, nach denen wir arbeiten, und was sie uns kosten, die zwei Gründer dahinter und die Bücher, die uns prägen.",
       },
       "/work": {
-        title: "Work | LineiQ",
+        title: "Arbeiten | LineiQ",
         description:
-          "The LineiQ portfolio. Not yet: the case studies are being written.",
+          "Das LineiQ-Portfolio. Noch nicht: Die Fallstudien werden gerade geschrieben.",
       },
       "/contact": {
-        title: "Contact | LineiQ",
+        title: "Kontakt | LineiQ",
         description:
-          "Five questions, mostly answered by clicking. We read every answer before we reply.",
+          "Fünf Fragen, meist per Klick beantwortet. Wir lesen jede Antwort, bevor wir antworten.",
       },
       // Already in German, like the legal pages themselves (data/legal).
       "/terms": {
