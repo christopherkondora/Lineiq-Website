@@ -35,6 +35,19 @@
   z-index: 2;
 }
 
+/* Reduced motion: the end state, on one screen. The frames do not scrub (see
+   the component), so the 350vh of scroll they ran on would be empty, and the
+   end text is shown rather than faded in by it. */
+@media (prefers-reduced-motion: reduce) {
+  .wrapper {
+    height: 100vh;
+  }
+
+  .endText {
+    opacity: 1;
+  }
+}
+
 .endHeadline {
   font-family: var(--font-display);
   font-weight: 500;

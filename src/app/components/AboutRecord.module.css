@@ -238,6 +238,21 @@
     display: none;
   }
 
+  /* And a name may wrap too. "Mythos Private Resort" alone is wider than a
+     320px column, and a name that cannot shrink below its own line is cut off
+     by .record's overflow (Lineiq-Website#18). Block, not flex, so a wrapped
+     name keeps its separator after its last word, not at the line's far end. */
+  .client {
+    display: block;
+    flex: 0 1 auto;
+    white-space: normal;
+  }
+
+  .client::after {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
   /* And the second lane with them. It is the same ten names rotated, which is a
      device for the counter-motion; parked, it is just the roster printed twice
      in a shuffled order. */

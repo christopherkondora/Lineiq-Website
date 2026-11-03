@@ -48,6 +48,11 @@ export default function SequenceSection({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Reduced motion: no scrub. The last frame stands still under the end
+    // text, which the stylesheet already shows, and the wrapper is one screen
+    // tall, so there is nothing to scroll through (Lineiq-Website#18).
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const drawFrame = (index: number) => {
       const img = frames.current[index];
       if (!img?.complete || img.naturalWidth === 0) return;
@@ -75,9 +80,18 @@ export default function SequenceSection({
     const loadFrame = (i: number) => {
       const img = frames.current[i];
       if (img.src) return;
-      if (i === 0) img.onload = () => drawFrame(0);
+      if (i === currentFrame.current) img.onload = () => drawFrame(i);
       img.src = frameSrc(i);
     };
+
+    if (reduce) {
+      currentFrame.current = FRAME_COUNT - 1;
+      loadFrame(FRAME_COUNT - 1);
+      resize();
+      window.addEventListener("resize", resize);
+      return () => window.removeEventListener("resize", resize);
+    }
+
     loadFrame(0);
     const idle =
       window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200));
