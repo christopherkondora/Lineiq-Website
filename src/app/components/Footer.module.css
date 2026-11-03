@@ -183,7 +183,7 @@
   .row {
     /* Mobilon két egyenlő hasáb, mindegyik a saját fél-sávjában középre zárva —
        a blokk így a képernyő közepére szimmetrikus. */
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     justify-content: normal;
     /* A rés most HIERARCHIÁT hordoz, nem csak levegőt ad. Korábban a
        rovatcím→első elem (39px), az elemek közti (44px) és a két hasábsor közti
@@ -226,6 +226,14 @@
   .text,
   .switcher a {
     font-size: var(--text-lg);
+  }
+
+  /* minmax(0, 1fr) above and the break here: at 320px "Nutzungsbedingungen"
+     is wider than half the row, and a 1fr track grew to hold it until the
+     footer ran past the screen (Lineiq-Website#18). */
+  .list a {
+    hyphens: auto;
+    overflow-wrap: anywhere;
   }
 
   /* A négy hasáb két sorba tördelve MAGASSÁG szerint párosítva, nem a
