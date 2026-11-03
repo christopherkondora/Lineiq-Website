@@ -243,9 +243,8 @@
     font-size: clamp(1.75rem, 8.2vw, 2.6rem);
     line-height: 1.05;
     text-wrap: balance;
-    /* "Összetéveszthetetlenné" set in capitals is wider than a phone
-       (Lineiq-Website#18). */
-    hyphens: auto;
+    /* Only a net: a word wider than the phone is reworded, and
+       scripts/check-responsive.mjs fails on a broken one (Lineiq-Website#18). */
     overflow-wrap: break-word;
   }
 }

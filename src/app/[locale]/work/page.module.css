@@ -33,13 +33,13 @@
 }
 
 /* The same 93% for the other languages' longest lines (Lineiq-Website#18):
-   "A munka, amelyre" measures 6.69em, "wir mit unserem Namen stehen." 11.59em. */
+   "A munka, amelyre" measures 6.69em, "Arbeit, die unseren" 6.85em. */
 .title:lang(hu) {
   font-size: min(clamp(3rem, 11vw, 10rem), 13.9cqw);
 }
 
 .title:lang(de) {
-  font-size: min(clamp(3rem, 11vw, 10rem), 8cqw);
+  font-size: min(clamp(3rem, 11vw, 10rem), 13.6cqw);
 }
 
 /* One strike per line, so each line is a box of its own and never wraps: a

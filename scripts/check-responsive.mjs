@@ -6,6 +6,8 @@
 // - the page never scrolls sideways;
 // - no text runs past the screen's edge or out of a box that clips it;
 // - no text is under 12 px;
+// - no word is broken across two lines: a word too long for its line is
+//   reworded, not hyphenated (the CSS breaks are only a net);
 // - with reduced motion, no text sits on the screen invisible (opacity or
 //   visibility), waiting for an animation that will not run.
 //
@@ -221,6 +223,16 @@ function inspect(page, reduced) {
       if (style.clipPath === "inset(50%)" || style.clip === "rect(0px, 0px, 0px, 0px)") continue;
 
       if (parseFloat(style.fontSize) < 12) say(`text under 12 px (${style.fontSize})`, el, text);
+
+      // A word broken across two lines, by hyphenation or by overflow-wrap.
+      // Those rules are only a net against overflow: a word that needs them is
+      // reworded. A break after a hyphen the word already has is a line break.
+      for (const match of node.textContent.matchAll(/[^\s-]+-?/g)) {
+        range.setStart(node, match.index);
+        range.setEnd(node, match.index + match[0].length);
+        const tops = new Set([...range.getClientRects()].filter((r) => r.width > 0).map((r) => Math.round(r.top)));
+        if (tops.size > 1) say(`word broken across lines ("${match[0]}")`, el, text);
+      }
 
       // aria-hidden text is a copy or a decoration of something a reader
       // already has: the hover side of a CtaSwap, the marquee's loop copies,

@@ -356,7 +356,8 @@
   /* minmax(0, …), not 1fr: a 1fr track is never narrower than its longest
      word, and at 320px "Wettbewerbsrecherche" or "konverzióoptimalizálás" in a
      chapter title pushed the whole grid, rail included, past the screen. The
-     title breaks instead (Lineiq-Website#18). */
+     break is only a net: a title that needs it is reworded, and
+     scripts/check-responsive.mjs fails on a broken word (Lineiq-Website#18). */
   .chaptersGrid {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-lg);
@@ -367,7 +368,6 @@
   }
 
   .chapterTitle {
-    hyphens: auto;
     overflow-wrap: break-word;
   }
 
