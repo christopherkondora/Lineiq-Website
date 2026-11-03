@@ -34,7 +34,7 @@ const hu: Dictionary = {
       ecosystemBefore: "Egy",
       ecosystem: "világ",
       ecosystemAfter: "egyetlen céllal:",
-      closing: "Hogy összetéveszthetetlenné tegyünk.",
+      closing: "Hogy senkivel ne tévesszenek össze.",
     },
     work: {
       cursor: "Esettanulmány készül",
@@ -381,7 +381,7 @@ const hu: Dictionary = {
             desc: "Minden eladás visszakövethető oda, ahonnan jött.",
           },
           upkeep: {
-            title: "Webshop-gondozás és konverzióoptimalizálás",
+            title: "Webshop-gondozás és a konverzió javítása",
             desc: "Indulás után havi tölcsér-áttekintés és kiszállított fejlesztések.",
           },
         },
