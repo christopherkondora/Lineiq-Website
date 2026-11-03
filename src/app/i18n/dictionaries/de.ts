@@ -272,7 +272,7 @@ const de: Dictionary = {
           "Das *Fundament* einer Marke, von der Strategie bis zum visuellen System, aus einer Hand, für Unternehmen und für Menschen, damit sie *wiedererkennbar* wird.",
         subServices: {
           research: {
-            title: "Zielgruppen-, Markt- und Wettbewerbsrecherche",
+            title: "Recherche zu Zielgruppe, Markt und Wettbewerb",
             desc: "Mit wem Sie sprechen, was diese Menschen hören wollen und wer sonst noch mit ihnen spricht.",
           },
           positioning: {
@@ -370,7 +370,7 @@ const de: Dictionary = {
             desc: "Ungarische und internationale Lösungen, eingebunden.",
           },
           invoicing: {
-            title: "Rechnungsanbindung",
+            title: "Anbindung ans Rechnungstool",
             desc: "Számlázz.hu, Billingo und internationale Entsprechungen, automatisch angebunden.",
           },
           analytics: {
@@ -456,7 +456,7 @@ const de: Dictionary = {
     label: "Portfolio",
     // Struck through on the page and answered by the Kranky "not yet.", which
     // is a mark and stays in code.
-    titleLines: ["Die Arbeit, für die", "wir mit unserem Namen stehen."],
+    titleLines: ["Arbeit, die unseren", "Namen trägt."],
     lede: "Die Fallstudien werden gerade geschrieben. Wir zeigen Ihnen lieber nichts als etwas Halbfertiges.",
     cta: "Reden wir?",
     ctaHover: "Los geht's!",
