@@ -85,11 +85,25 @@ describe("the catalogue in a language", () => {
     expect(en[0].subServices.map((ss) => ss.id)).toEqual(
       services[0].subServices
     );
-    expect(en[0].subServices[3]).toEqual({
+    expect(en[0].subServices[2]).toEqual({
       id: "naming",
       title: "Naming",
       desc: "Company, product and campaign names that stick.",
     });
+  });
+
+  it("lists Brand Architecture's build as Service Delivery 4.1 does", () => {
+    // Research and positioning are Acts 1 and 2 for every category (4.1).
+    expect(services[0].subServices).toEqual([
+      "brandWorld",
+      "principles",
+      "naming",
+      "identity",
+      "designSystem",
+      "rebranding",
+      "visionBoard",
+      "maintenance",
+    ]);
   });
 
   it("follows the dictionary it is given", () => {

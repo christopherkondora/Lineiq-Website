@@ -175,7 +175,7 @@ const de: Dictionary = {
         },
         futureWalk: {
           name: "The Future Walk",
-          line: "Day 1, 30, 90 and 365, walked through before anything is built.",
+          line: "The day the build is finished, walked through before anything is built.",
         },
       },
       // Two clauses, two lines.
@@ -259,17 +259,13 @@ const de: Dictionary = {
         intro:
           "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for people, so it becomes *recognizable*.",
         subServices: {
-          research: {
-            title: "Audience, market and competitor research",
-            desc: "Who you're talking to, what they want to hear, and who else is talking to them.",
-          },
-          positioning: {
-            title: "Positioning and strategy",
-            desc: "Where you stand in the market, and the one-sentence reason to choose you.",
-          },
           brandWorld: {
             title: "Brand world and tone of voice",
             desc: "The story, the founder story and the voice the brand speaks with everywhere.",
+          },
+          principles: {
+            title: "Brand principles",
+            desc: "What the brand stands for and refuses, written down before it is needed.",
           },
           naming: {
             title: "Naming",
@@ -286,6 +282,10 @@ const de: Dictionary = {
           rebranding: {
             title: "Rebranding",
             desc: "Repositioning and refreshing an existing brand.",
+          },
+          visionBoard: {
+            title: "Vision Board",
+            desc: "Your Dream Outcome, framed, in your own words.",
           },
           maintenance: {
             title: "Maintenance plan",
