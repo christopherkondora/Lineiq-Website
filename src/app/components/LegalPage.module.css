@@ -29,6 +29,15 @@
   hyphens: auto;
 }
 
+/* The break above is a net, not a look. "Datenschutzerklärung" is 285px at
+   the 2rem floor, past a 320px phone's 265px column; it is the document's
+   name, so the size gives way rather than the word (Lineiq-Website#18). */
+@media (max-width: 359px) {
+  .title {
+    font-size: 1.75rem;
+  }
+}
+
 .version {
   font-size: var(--text-sm);
   /* Not --color-muted: the grey is under 3:1 on white. */

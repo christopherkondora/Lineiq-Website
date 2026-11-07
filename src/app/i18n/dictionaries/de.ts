@@ -187,7 +187,7 @@ const de: Dictionary = {
         },
         futureWalk: {
           name: "The Future Walk",
-          line: "Tag 1, 30, 90 und 365, durchgegangen, bevor irgendetwas gebaut wird.",
+          line: "Der Tag, an dem der Aufbau fertig ist, durchgegangen, bevor irgendetwas gebaut wird.",
         },
       },
       // Two clauses, two lines.
@@ -271,17 +271,13 @@ const de: Dictionary = {
         intro:
           "Das *Fundament* einer Marke, von der Strategie bis zum visuellen System, aus einer Hand, für Unternehmen und für Menschen, damit sie *wiedererkennbar* wird.",
         subServices: {
-          research: {
-            title: "Recherche zu Zielgruppe, Markt und Wettbewerb",
-            desc: "Mit wem Sie sprechen, was diese Menschen hören wollen und wer sonst noch mit ihnen spricht.",
-          },
-          positioning: {
-            title: "Positionierung und Strategie",
-            desc: "Wo Sie im Markt stehen, und der eine Satz, der erklärt, warum man Sie wählt.",
-          },
           brandWorld: {
             title: "Markenwelt und Tonalität",
             desc: "Die Geschichte, die Gründergeschichte und die Stimme, mit der die Marke überall spricht.",
+          },
+          principles: {
+            title: "Markenprinzipien",
+            desc: "Wofür die Marke steht und was sie ablehnt, aufgeschrieben, bevor es gebraucht wird.",
           },
           naming: {
             title: "Naming",
@@ -298,6 +294,10 @@ const de: Dictionary = {
           rebranding: {
             title: "Rebranding",
             desc: "Eine bestehende Marke neu positionieren und auffrischen.",
+          },
+          visionBoard: {
+            title: "Vision Board",
+            desc: "Ihr Dream Outcome, eingerahmt, in Ihren eigenen Worten.",
           },
           maintenance: {
             title: "Wartungspaket",
@@ -506,16 +506,16 @@ const de: Dictionary = {
     // (Lineiq-Website#13). Four per mode, so the grid does not reflow.
     bands: {
       monthly: {
-        "mo-under-2k": "Unter 2.000 € / Monat",
-        "mo-2-5k": "2.000 – 5.000 € / Monat",
-        "mo-5-10k": "5.000 – 10.000 € / Monat",
-        "mo-10k-up": "Ab 10.000 € / Monat",
+        "mo-under-2k": "Unter 1.000 € / Monat",
+        "mo-2-5k": "1.000 – 2.500 € / Monat",
+        "mo-5-10k": "2.500 – 5.000 € / Monat",
+        "mo-10k-up": "Ab 5.000 € / Monat",
       },
       "one-time": {
-        "ot-under-15k": "Unter 15.000 €",
-        "ot-15-30k": "15.000 – 30.000 €",
-        "ot-30-75k": "30.000 – 75.000 €",
-        "ot-75k-up": "Ab 75.000 €",
+        "ot-under-15k": "Unter 3.000 €",
+        "ot-15-30k": "3.000 – 8.000 €",
+        "ot-30-75k": "8.000 – 20.000 €",
+        "ot-75k-up": "Ab 20.000 €",
       },
     },
     review: {

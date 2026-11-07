@@ -175,7 +175,7 @@ const hu: Dictionary = {
         },
         futureWalk: {
           name: "The Future Walk",
-          line: "Day 1, 30, 90 and 365, walked through before anything is built.",
+          line: "The day the build is finished, walked through before anything is built.",
         },
       },
       // Two clauses, two lines.
@@ -259,17 +259,13 @@ const hu: Dictionary = {
         intro:
           "The *foundations* of a brand, from strategy to the visual system, in one hand, for companies and for people, so it becomes *recognizable*.",
         subServices: {
-          research: {
-            title: "Audience, market and competitor research",
-            desc: "Who you're talking to, what they want to hear, and who else is talking to them.",
-          },
-          positioning: {
-            title: "Positioning and strategy",
-            desc: "Where you stand in the market, and the one-sentence reason to choose you.",
-          },
           brandWorld: {
             title: "Brand world and tone of voice",
             desc: "The story, the founder story and the voice the brand speaks with everywhere.",
+          },
+          principles: {
+            title: "Brand principles",
+            desc: "What the brand stands for and refuses, written down before it is needed.",
           },
           naming: {
             title: "Naming",
@@ -286,6 +282,10 @@ const hu: Dictionary = {
           rebranding: {
             title: "Rebranding",
             desc: "Repositioning and refreshing an existing brand.",
+          },
+          visionBoard: {
+            title: "Vision Board",
+            desc: "Your Dream Outcome, framed, in your own words.",
           },
           maintenance: {
             title: "Maintenance plan",
@@ -494,16 +494,16 @@ const hu: Dictionary = {
     // (Lineiq-Website#13). Four per mode, so the grid does not reflow.
     bands: {
       monthly: {
-        "mo-under-2k": "Under €2,000 / mo",
-        "mo-2-5k": "€2,000 – 5,000 / mo",
-        "mo-5-10k": "€5,000 – 10,000 / mo",
-        "mo-10k-up": "€10,000+ / mo",
+        "mo-under-2k": "Under 150 000 Ft / mo",
+        "mo-2-5k": "150 000 – 400 000 Ft / mo",
+        "mo-5-10k": "400 000 – 800 000 Ft / mo",
+        "mo-10k-up": "800 000+ Ft / mo",
       },
       "one-time": {
-        "ot-under-15k": "Under €15,000",
-        "ot-15-30k": "€15,000 – 30,000",
-        "ot-30-75k": "€30,000 – 75,000",
-        "ot-75k-up": "€75,000+",
+        "ot-under-15k": "Under 500 000 Ft",
+        "ot-15-30k": "500 000 – 1 500 000 Ft",
+        "ot-30-75k": "1 500 000 – 4 000 000 Ft",
+        "ot-75k-up": "4 000 000+ Ft",
       },
     },
     review: {
