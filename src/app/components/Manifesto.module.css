@@ -40,9 +40,36 @@
   gap: var(--space-lg);
 }
 
-.heading {
+/* The headline's lines are the writer's: they never wrap. Its size is the usual
+   statement size (--head-size), capped so the longest line fits the column.
+   --head-em is that line's width in em (set in Manifesto.tsx).
+
+   The column is as wide as its content (this grid sits in a shrink-wrapped
+   container), and a headline that does not wrap is its widest content. A size
+   container, which is what lets the font follow the column (cqw), has no
+   intrinsic width, so .headBox asks for the headline's natural width itself:
+   as much as it needs at its usual size, but never more than the room there is
+   (--head-room: the page's content width less the studio image column). */
+.headBox {
+  --head-size: clamp(2.5rem, 7vw, var(--text-7xl));
+  /* 20px of slack: 100vw counts the scrollbar. */
+  --head-room: calc(
+    min(100vw, var(--container-max)) - 2 * var(--container-pad) - 440px -
+      var(--space-xl) - 20px
+  );
+  container-type: inline-size;
+  min-width: min(calc(var(--head-em, 0) * var(--head-size)), var(--head-room));
+}
+
+/* Two class names deep to beat the global utility regardless of stylesheet
+   order. */
+.copy .heading {
   margin-top: var(--space-md);
-  max-width: 16ch;
+  font-size: min(var(--head-size), calc(99cqw / var(--head-em, 1000)));
+}
+
+.headLine > span {
+  white-space: nowrap;
 }
 
 /* Each headline line sits in an overflow-clip mask so it can rise up from
@@ -202,8 +229,10 @@
      own. Made fluid so the line scales with the column instead, with ≥8px of
      slack from 320px up. Two class names deep to beat the global utility
      regardless of stylesheet order. */
-  .copy .heading {
-    font-size: clamp(1.9rem, 9.6vw, 2.5rem);
+  .headBox {
+    --head-size: clamp(1.9rem, 9.6vw, 2.5rem);
+    /* One column here: the whole content width. */
+    --head-room: calc(100vw - 2 * var(--container-pad) - 20px);
   }
 
   /* Belt and braces for the same orphan: real devices do not measure text
@@ -282,5 +311,11 @@
   }
   .lastBlock {
     margin-top: 0.75em;
+  }
+}
+
+@media (max-width: 768px) {
+  .headBox {
+    --head-room: calc(100vw - 2 * var(--container-pad-mobile) - 20px);
   }
 }

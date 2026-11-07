@@ -37,6 +37,14 @@
   text-align: left;
 }
 
+/* Where the denial wraps onto a second line, the red bar (as tall as the
+   letters, tails of g and y included) must clear the ascenders below it: the
+   shared 0.9 leading is too tight for that. The bar needs 0.25em below the
+   baseline and the next line's tallest letter 0.75em above its own. */
+.lineOne {
+  line-height: 1.12;
+}
+
 .word {
   display: inline-block;
   will-change: transform;
@@ -52,6 +60,8 @@
    állapotban scaleX(0) — a szó látszik. */
 .clientsHighlight {
   position: absolute;
+  /* top and height are set from the letters of the word (Partners.tsx); this
+     is only the state before that runs. */
   top: -0.05em;
   bottom: 0.05em;
   left: -0.08em;
@@ -153,6 +163,10 @@
     line-height: 0.9;
   }
 
+  .lineOne {
+    line-height: 1.12;
+  }
+
   .lineTwo {
     margin-top: 0;
   }
@@ -229,7 +243,7 @@
      és 56px fölött már három sorra esik szét a 350px-es konténerben. */
   .lineOne {
     font-size: clamp(2.5rem, 13.5vw, 5.5rem);
-    line-height: 0.95;
+    line-height: 1.12;
   }
 
   /* Az állítás viszont három rövid szó, tehát elbírja a nagyobb fokozatot — és
@@ -246,8 +260,15 @@
      Itt csak a fokozatot állítjuk; a pozicionálást (absolute, left 50%, top 100%,
      translate(-50% - 0.15em, -60%)) a fenti no-preference blokk adja, minden
      szélességen ugyanaz. */
+  /* Sized for "partners" (8 letters); a longer word in the dictionary
+     ("partnerekkel", 12) scales down by its length, floor included, so it
+     stays on the screen. --script-len is set in Partners.tsx. */
   .script {
-    font-size: clamp(2.8rem, 17vw, 6rem);
+    font-size: clamp(
+      calc(2.8rem * 8 / var(--script-len, 8)),
+      calc(17vw * 8 / var(--script-len, 8)),
+      6rem
+    );
   }
 
   /* A három mondat a saját képernyőjén: egy hasáb, bőven mért közökkel. A rács

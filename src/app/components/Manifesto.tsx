@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Manifesto.module.css";
@@ -12,6 +12,40 @@ export default function Manifesto({
   t: Dictionary["home"]["manifesto"];
 }) {
   const rootRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  // The headline lines never wrap: each one is a line the writer chose. So the
+  // type has to follow the column instead. The width of the longest line, in
+  // em, is set as --head-em and the CSS caps the font size at column ÷ that
+  // (Manifesto.module.css). The first value is an estimate from the number of
+  // characters, so the server-rendered page is close before this measures.
+  useEffect(() => {
+    const heading = headingRef.current;
+    if (!heading) return;
+    const measure = () => {
+      const size = parseFloat(getComputedStyle(heading).fontSize);
+      let widest = 0;
+      heading
+        .querySelectorAll<HTMLElement>("[data-head-line] > span")
+        .forEach((line) => {
+          const range = document.createRange();
+          range.selectNodeContents(line);
+          widest = Math.max(widest, range.getBoundingClientRect().width);
+        });
+      // Set on the wrapper, which asks for the width (Manifesto.module.css).
+      if (widest > 0)
+        heading.parentElement?.style.setProperty(
+          "--head-em",
+          String(widest / size)
+        );
+    };
+    measure();
+    let alive = true;
+    document.fonts.ready.then(() => alive && measure());
+    return () => {
+      alive = false;
+    };
+  }, [t.headingLines]);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -48,14 +82,14 @@ export default function Manifesto({
       tl.from(
         root.querySelectorAll("[data-head-line] > span"),
         { yPercent: 120, duration: 0.5, ease: "none", stagger: 0.15 },
-        0
+        0,
       );
 
       // 2) The running copy fades up line by line, just behind the headline.
       tl.from(
         root.querySelectorAll("[data-lead-line]"),
         { y: 24, autoAlpha: 0, duration: 0.4, ease: "none", stagger: 0.1 },
-        0.3
+        0.3,
       );
 
       // 3) Narrative line draws across the whole range; linear, the scroll
@@ -80,7 +114,7 @@ export default function Manifesto({
           block,
           { scaleX: 0, transformOrigin: "left center" },
           { scaleX: 1, duration: 0.8, ease: "sine.inOut" },
-          0.6
+          0.6,
         );
         tl.to(
           block,
@@ -90,7 +124,7 @@ export default function Manifesto({
             duration: 0.7,
             ease: "sine.inOut",
           },
-          1.3
+          1.3,
         );
       }
     }, root);
@@ -122,14 +156,26 @@ export default function Manifesto({
       <div className="container">
         <div className={styles.grid}>
           <div className={styles.copy}>
-            <h2 className={`text-statement ${styles.heading}`}>
-              <span className={styles.headLine} data-head-line>
-                <span>{t.headingOne}</span>
-              </span>
-              <span className={styles.headLine} data-head-line>
-                <span>{t.headingTwo}</span>
-              </span>
-            </h2>
+            <div
+              className={styles.headBox}
+              style={
+                {
+                  "--head-em":
+                    Math.max(...t.headingLines.map((l) => l.length)) * 0.36,
+                } as CSSProperties
+              }
+            >
+              <h2
+                ref={headingRef}
+                className={`text-statement ${styles.heading}`}
+              >
+                {t.headingLines.map((line, i) => (
+                  <span key={i} className={styles.headLine} data-head-line>
+                    <span>{line}</span>
+                  </span>
+                ))}
+              </h2>
+            </div>
 
             <p className={styles.lead}>
               <span className={styles.line1} data-lead-line>
@@ -158,9 +204,7 @@ export default function Manifesto({
                   mobilon némán elmarad, és csak a beúszás maradna. A piros sáv
                   amúgy is egy gesztusként fogja össze a két mondatot. */}
               <span className={styles.lastBlock} data-lead-line>
-                <span className={styles.line3}>
-                  {t.leadThree}
-                </span>{" "}
+                <span className={styles.line3}>{t.leadThree}</span>{" "}
                 <span className={styles.line4}>
                   {t.leadFourBefore}{" "}
                   <span className={styles.highlight}>{t.expertise}</span>

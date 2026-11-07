@@ -52,8 +52,10 @@ const de: Dictionary = {
       // Word by word; the last word gets the red redaction.
       denial: "Wir arbeiten nicht für",
       denialMark: "Kunden",
+      denialAfter: "",
       // Followed by the Kranky "partners", which is not keyed.
       claim: "Wir arbeiten mit",
+      claimScript: "partners",
       columnOne: [
         "Das ist der Unterschied: ein Studio, das Sie behalten, kein Dienstleister, den Sie ersetzen. Gebaut auf Vertrauen, Beständigkeit und einer Haltung.",
         "Neugierig, transparent, ehrgeizig. Und ein wenig besessen von den Details, die die meisten nie bemerken.",
@@ -63,8 +65,11 @@ const de: Dictionary = {
       ],
     },
     manifesto: {
-      headingOne: "Wir haben den Geschmack nicht an die KI verloren.",
-      headingTwo: "Wir haben ihr unseren beigebracht.",
+      // One string per line, as many lines as the language needs.
+      headingLines: [
+        "Wir haben den Geschmack nicht an die KI verloren.",
+        "Wir haben ihr unseren beigebracht.",
+      ],
       leadOneBefore: "Ein ungarisches Studio,",
       // Held as one unbreakable run, then highlighted together with leadOneEnd.
       leadOneNoBreak: "nach westeuropäischen",
