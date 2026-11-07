@@ -183,7 +183,7 @@
   .row {
     /* Mobilon két egyenlő hasáb, mindegyik a saját fél-sávjában középre zárva —
        a blokk így a képernyő közepére szimmetrikus. */
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     justify-content: normal;
     /* A rés most HIERARCHIÁT hordoz, nem csak levegőt ad. Korábban a
        rovatcím→első elem (39px), az elemek közti (44px) és a két hasábsor közti
@@ -228,6 +228,14 @@
     font-size: var(--text-lg);
   }
 
+  /* minmax(0, 1fr) above and the break here are a net: a 1fr track grew to
+     hold a word wider than half the row until the footer ran past the screen.
+     A word that needs the break is a fault in its own right, and
+     scripts/check-responsive.mjs fails on it (Lineiq-Website#18). */
+  .list a {
+    overflow-wrap: anywhere;
+  }
+
   /* A négy hasáb két sorba tördelve MAGASSÁG szerint párosítva, nem a
      forrássorrend szerint. A Studio két sornyi cím, a Sitemap négy 44px-es
      koppintósor: egymás mellett a rács első sora a magasabbhoz igazodik, és a
@@ -267,5 +275,15 @@
   .legal {
     padding-top: var(--space-lg);
     text-align: center;
+  }
+}
+
+/* German on a phone: "Nutzungsbedingungen" is 194px, wider than half the row
+   under 450px, and it is the legal page's name, so it is not reworded. Studio
+   and Legal take a row each instead, as the switcher does (Lineiq-Website#18). */
+@media (max-width: 449px) {
+  .row:lang(de) .colStudio,
+  .row:lang(de) .colLegal {
+    grid-column: 1 / -1;
   }
 }

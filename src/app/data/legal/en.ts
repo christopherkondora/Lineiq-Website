@@ -163,9 +163,12 @@ const en: LegalTexts = {
                 "Purpose",
                 "to answer your enquiry, to judge whether our services fit what you need, and to talk before a contract.",
               ],
+              // \u2060 is a word joiner: a line may break between ")" and "(",
+              // and "6(1)" / "(f)" on two lines is not a citation any more
+              // (Lineiq-Website#18).
               [
                 "Legal basis",
-                "Article 6(1)(b) GDPR: steps taken at your request before entering into a contract. If you contact us as the representative or an employee of a company, the legal basis is Article 6(1)(f) GDPR: our legitimate interest in answering business enquiries.",
+                "Article 6(1)\u2060(b) GDPR: steps taken at your request before entering into a contract. If you contact us as the representative or an employee of a company, the legal basis is Article 6(1)\u2060(f) GDPR: our legitimate interest in answering business enquiries.",
               ],
               [
                 "Retention",
@@ -227,7 +230,7 @@ const en: LegalTexts = {
               ],
               [
                 "Legal basis",
-                "Article 6(1)(f) GDPR: our legitimate interest in running the website securely.",
+                "Article 6(1)\u2060(f) GDPR: our legitimate interest in running the website securely.",
               ],
               [
                 "Retention",

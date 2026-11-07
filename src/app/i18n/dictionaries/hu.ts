@@ -191,7 +191,7 @@ const hu: Dictionary = {
         },
         futureWalk: {
           name: "The Future Walk",
-          line: "Az 1., 30., 90. és 365. napot végigjárjuk, mielőtt bármi elkészül.",
+          line: "Azt a napot, amikor az építés elkészül, végigjárjuk, mielőtt bármit építenénk.",
         },
       },
       // Two clauses, two lines.
@@ -274,17 +274,13 @@ const hu: Dictionary = {
         intro:
           "Egy márka *alapjai*, a stratégiától a vizuális rendszerig, egy kézben, vállalatoknak és magánszemélyeknek, hogy *felismerhetővé* váljon.",
         subServices: {
-          research: {
-            title: "Közönség-, piac- és versenytárskutatás",
-            desc: "Kivel beszélsz, mit akarnak hallani, és ki más beszél hozzájuk.",
-          },
-          positioning: {
-            title: "Pozicionálás és stratégia",
-            desc: "Hol állsz a piacon, és az egy mondat, amiért téged érdemes választani.",
-          },
           brandWorld: {
             title: "Márkavilág és hangvétel",
             desc: "A történet, az alapítói történet és a hang, amelyen a márka mindenhol megszólal.",
+          },
+          principles: {
+            title: "Márkaelvek",
+            desc: "Amit a márka képvisel és amit visszautasít, leírva, mielőtt szükség lenne rá.",
           },
           naming: {
             title: "Névadás",
@@ -301,6 +297,10 @@ const hu: Dictionary = {
           rebranding: {
             title: "Rebranding",
             desc: "Egy meglévő márka újrapozicionálása és megújítása.",
+          },
+          visionBoard: {
+            title: "Vision Board",
+            desc: "A Dream Outcome bekeretezve, a saját szavaiddal.",
           },
           maintenance: {
             title: "Karbantartási csomag",
@@ -507,16 +507,16 @@ const hu: Dictionary = {
     // Four per mode, so the grid does not reflow.
     bands: {
       monthly: {
-        "mo-under-2k": "2 000 € alatt / hó",
-        "mo-2-5k": "2 000 – 5 000 € / hó",
-        "mo-5-10k": "5 000 – 10 000 € / hó",
-        "mo-10k-up": "10 000 € felett / hó",
+        "mo-under-2k": "150 000 Ft alatt / hó",
+        "mo-2-5k": "150 000 – 400 000 Ft / hó",
+        "mo-5-10k": "400 000 – 800 000 Ft / hó",
+        "mo-10k-up": "800 000 Ft felett / hó",
       },
       "one-time": {
-        "ot-under-15k": "15 000 € alatt",
-        "ot-15-30k": "15 000 – 30 000 €",
-        "ot-30-75k": "30 000 – 75 000 €",
-        "ot-75k-up": "75 000 € felett",
+        "ot-under-15k": "500 000 Ft alatt",
+        "ot-15-30k": "500 000 – 1 500 000 Ft",
+        "ot-30-75k": "1 500 000 – 4 000 000 Ft",
+        "ot-75k-up": "4 000 000 Ft felett",
       },
     },
     review: {

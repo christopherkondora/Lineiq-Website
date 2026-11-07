@@ -211,7 +211,7 @@ describe("POST /api/contact", () => {
     const forged = [
       { mode: "monthly", band: "mo-100k-up" },
       { mode: "one-time", band: "mo-2-5k" },
-      { mode: "monthly", band: "€2,000 – 5,000 / mo" },
+      { mode: "monthly", band: "€1,000 – 2,500 / mo" },
       { mode: "yearly", band: "mo-2-5k" },
       { mode: "monthly" },
     ];

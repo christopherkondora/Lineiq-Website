@@ -277,6 +277,7 @@ describe("dictionaries", () => {
       "services.categories.software-solutions.title",
       "services.categories.strategic-marketing.title",
       "services.categories.brand-architecture.subServices.rebranding.title",
+      "services.categories.brand-architecture.subServices.visionBoard.title",
       "contact.needs.rebrand",
       "contact.email",
       "contact.review.email",
