@@ -1,10 +1,11 @@
 "use client";
 
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, type CSSProperties } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Partners.module.css";
 import type { Dictionary } from "../i18n/dictionary";
+import { fitBarToWord } from "./inkBar";
 
 // Full-viewport, görgetésre vezérelt "tagadás → állítás" sequence. A szekció egy
 // magas wrapper (scroll-budget), benne egy sticky 100vh színpad. A scrub-idővonal
@@ -24,6 +25,16 @@ export default function Partners({
   t: Dictionary["home"]["partners"];
 }) {
   const rootRef = useRef<HTMLElement>(null);
+
+  // The red redaction is exactly as tall as the letters of the word it covers
+  // (see inkBar.ts), so the tails of g and y in "ügyfelekkel" are under it and
+  // it never reaches the line below.
+  useEffect(() => {
+    const word = rootRef.current?.querySelector<HTMLElement>("[data-clients]");
+    const bar = word?.querySelector<HTMLElement>("[data-clients-highlight]");
+    if (!word || !bar) return;
+    return fitBarToWord(word, bar, word);
+  }, [t.denialMark]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -232,7 +243,7 @@ export default function Partners({
                   </span>{" "}
                 </Fragment>
               ))}
-              <span className={`${styles.word} ${styles.clients}`} data-word>
+              <span className={`${styles.word} ${styles.clients}`} data-word data-clients>
                 {t.denialMark}
                 <span
                   className={styles.clientsHighlight}
@@ -240,6 +251,16 @@ export default function Partners({
                   aria-hidden="true"
                 />
               </span>
+              {t.denialAfter
+                ? t.denialAfter.split(" ").map((word, i) => (
+                    <Fragment key={i}>
+                      {" "}
+                      <span className={styles.word} data-word>
+                        {word}
+                      </span>
+                    </Fragment>
+                  ))
+                : null}
             </h2>
 
             {/* (4) állítás */}
@@ -254,9 +275,12 @@ export default function Partners({
                   </Fragment>
                 ))}
               </h2>
-              <span className={styles.script}>
+              <span
+                className={styles.script}
+                style={{ "--script-len": t.claimScript.length } as CSSProperties}
+              >
                 <span className={styles.scriptInner} data-script-inner>
-                  partners
+                  {t.claimScript}
                 </span>
               </span>
             </div>

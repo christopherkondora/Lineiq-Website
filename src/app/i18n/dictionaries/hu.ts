@@ -18,23 +18,23 @@ const hu: Dictionary = {
     hero: {
       // Each word rises on its own; the last word carries the red dot.
       lineOne: "Felejtsd el az",
-      lastWord: "átlagost",
+      lastWord: "átlagosat",
     },
     intro: {
-      lineOneBefore: "Egy márkaépítő",
+      lineOneBefore: "Egy brandépítő",
       // "Ügynökség" is struck through by a red redaction, and "Stúdió" is
       // written over it letter by letter.
       struck: "Ügynökség",
       replacement: "Stúdió",
       lineOneAfter: "és szoftverház.",
-      lineTwoHighlight: "Nem csupán",
-      lineTwoRest: "kivitelezünk. Egyetlen weboldal is kutatással kezdődik.",
-      lineThree: "Nevet építünk, amelyet egyedi szoftver és marketing",
+      lineTwoHighlight: "Nem csak kivitelezünk.",
+      lineTwoRest: "Egy weboldalfejlesztést is kutatás előz meg.",
+      lineThree: "Nevet építünk Neked, amelyet marketing és egyedi szoftver",
       system: "támogat.",
-      ecosystemBefore: "Egy",
-      ecosystem: "világ",
+      ecosystemBefore: "A Te",
+      ecosystem: "világod",
       ecosystemAfter: "egyetlen céllal:",
-      closing: "Hogy senkivel ne tévesszenek össze.",
+      closing: "Hogy senkivel ne téveszthessenek össze.",
     },
     work: {
       cursor: "Esettanulmány készül",
@@ -46,36 +46,42 @@ const hu: Dictionary = {
         north:
           "Költségvetés-tervező iOS-alkalmazás, amitől a pénz nyugodtnak hat. Tiszta vizuális rendszer, gördülékeny natív interakciók, és egy folyamat, amely a mindennapi költést olyan szokássá alakítja, amelyet az emberek tényleg megtartanak.",
         miert:
-          "Egy podcast, amelynek a márkája a kérdés. Szerkesztői rendszer, mozgásnyelv és vizuális hang, amely minden epizódban felismerhetően ugyanúgy szól.",
+          "Egy podcast, amelynek a brandje a kérdés. Szerkesztői rendszer, mozgásnyelv és vizuális hang, amely minden epizódban felismerhetően ugyanúgy szól.",
       },
     },
     partners: {
       // Word by word; the last word gets the red redaction.
-      denial: "Nem vállalunk",
-      denialMark: "ügyfeleket",
-      // Followed by the Kranky "partners", which is not keyed.
+      denial: "Mi nem",
+      denialMark: "ügyfelekkel",
+      denialAfter: "dolgozunk.",
+      // The Kranky word that follows the claim.
       claim: "Hanem",
+      claimScript: "partnerekkel",
       columnOne: [
-        "Ez a különbség: olyan stúdió, amelyet megtartasz, nem olyan szállító, amelyet lecserélsz. Bizalomra, következetességre és saját nézőpontra építve.",
-        "Kíváncsiak, átláthatóak, ambiciózusak. És egy kicsit megszállottak azokkal a részletekkel, amelyeket a legtöbben észre sem vesznek.",
+        "Ez a különbség: egy stúdió hosszú távra, és egy kapcsolat, ami bizalomra, következetességre és objektív nézőpontra épül.",
+        "Kíváncsiak, átláthatóak és ambiciózusak vagyunk. Meg egy kicsit megszállottak azokkal a részletekkel, amelyeket a legtöbben észre sem vesznek.",
       ],
       columnTwo: [
-        "Egy projekt, egy karbantartási csomag, és mindkettő mögött valódi kapcsolat. Felvesszük a telefont, és személyesen is megjelenünk.",
+        "Mindegy, hogy egyszeri projekt, vagy egy karbantartási csomag. Bármelyik mögött egy valódi kapcsolat áll. Felvesszük a telefont, és személyesen is megjelenünk.",
       ],
     },
     manifesto: {
-      headingOne: "Nem vesztettük el az ízlésünket az AI miatt.",
-      headingTwo: "Megtanítottuk neki a sajátunkat.",
+      // One string per line, as many lines as the language needs.
+      headingLines: [
+        "Nem veszítettük el az",
+        "ízlésünket az AI miatt.",
+        "Megtanítottuk a sajátunkat.",
+      ],
       leadOneBefore: "Magyar stúdió,",
       // Held as one unbreakable run, then highlighted together with leadOneEnd.
       leadOneNoBreak: "nyugat-európai",
       leadOneEnd: "színvonalon.",
-      leadTwoBefore: "Mindenki használ AI-t. A különbség a",
-      mind: "gondolkodás",
+      leadTwoBefore: "Mindenki AI-t használ. A különbség a",
+      mind: "vízió",
       leadTwoMiddle: "és az",
       taste: "ízlés.",
-      leadThree: "Márka, marketing és kód kreatív emberektől,",
-      leadFourBefore: "műszaki és elméleti",
+      leadThree: "Branding, marketing és kód kreatív emberektől,",
+      leadFourBefore: "gyakorlati és elméleti",
       expertise: "szakértelemmel.",
       imageAlt: "A LineiQ stúdió",
     },
@@ -94,7 +100,7 @@ const hu: Dictionary = {
         "Véget vetünk a",
         "rövid távú szemléletnek",
         "az építésre érdemes",
-        "márkáknál.",
+        "brandeknél.",
       ],
       narrowLines: [
         "Véget vetünk",
@@ -102,19 +108,19 @@ const hu: Dictionary = {
         "szemléletnek",
         "az építésre",
         "érdemes",
-        "márkáknál.",
+        "brandeknél.",
       ],
       hyphenated: "rövid távú",
     },
     origin: {
       paragraphs: [
         "Amióta csak figyeljük, a marketing saját magát falja fel. Minden évben új platform. Minden negyedévben új taktika. Minden héten egy újabb alapító, aki rájön, hogy amit hat hónapig épített, azt már felváltotta valami csillogóbb.",
-        "Azért hoztuk létre a LineiQ-t, mert nem találtunk olyan stúdiót, amely azt a munkát végezte volna, amelyet mi végezni akartunk. Olyan munkát, amely kamatozik. Olyan márkákat, amelyek túlélik az építőiket. Olyan rendszereket, amelyek évről évre többet érnek, nem kevesebbet.",
+        "Azért hoztuk létre a LineiQ-t, mert nem találtunk olyan stúdiót, amely azt a munkát végezte volna, amelyet mi végezni akartunk. Olyan munkát, amely kamatozik. Olyan brandeket, amelyek túlélik az építőiket. Olyan rendszereket, amelyek évről évre többet érnek, nem kevesebbet.",
       ],
     },
     compounds: {
       first: "A legtöbb marketing adó.",
-      secondBefore: "A márka az egyetlen, ami",
+      secondBefore: "A brand az egyetlen, ami",
       // The word that grows to fill the screen.
       word: "kamatozik",
       secondAfter: ".",
@@ -229,7 +235,7 @@ const hu: Dictionary = {
         zeroToOne: {
           title: "Zero to One",
           commentary:
-            "Innen jön, hogy nem akarunk újabb ügynökség lenni. A feladat nem az, hogy megnyerjünk egy kategóriát, hanem az, hogy mi legyünk az egyetlen benne. Ez a mérce nekünk és minden márkának, amelyet építünk: ha egy versenytárs ráteheti a saját logóját, akkor még nem kész.",
+            "Innen jön, hogy nem akarunk újabb ügynökség lenni. A feladat nem az, hogy megnyerjünk egy kategóriát, hanem az, hogy mi legyünk az egyetlen benne. Ez a mérce nekünk és minden brandnek, amelyet építünk: ha egy versenytárs ráteheti a saját logóját, akkor még nem kész.",
         },
         hardThing: {
           title: "The Hard Thing About Hard Things",
@@ -270,17 +276,17 @@ const hu: Dictionary = {
     // oversized Fraunces inline (introSegments in data/services.ts).
     categories: {
       "brand-architecture": {
-        title: "Brand Architecture",
+        title: "Brand Architektúra",
         intro:
-          "Egy márka *alapjai*, a stratégiától a vizuális rendszerig, egy kézben, vállalatoknak és magánszemélyeknek, hogy *felismerhetővé* váljon.",
+          "Egy brand *alapjai*, a stratégiától a vizuális rendszerig, egy kézben, vállalatoknak és magánszemélyeknek, hogy *felismerhetővé* váljon.",
         subServices: {
           brandWorld: {
-            title: "Márkavilág és hangvétel",
-            desc: "A történet, az alapítói történet és a hang, amelyen a márka mindenhol megszólal.",
+            title: "Brandvilág és hangvétel",
+            desc: "A történet, az alapítói történet és a hang, amelyen a brand mindenhol megszólal.",
           },
           principles: {
-            title: "Márkaelvek",
-            desc: "Amit a márka képvisel és amit visszautasít, leírva, mielőtt szükség lenne rá.",
+            title: "Brandelvek",
+            desc: "Amit a brand képvisel és amit visszautasít, leírva, mielőtt szükség lenne rá.",
           },
           naming: {
             title: "Névadás",
@@ -292,11 +298,11 @@ const hu: Dictionary = {
           },
           designSystem: {
             title: "Vizuális nyelv és designrendszer",
-            desc: "Színek, tipográfia, rács és komponensek egyben, márkakézikönyvvel.",
+            desc: "Színek, tipográfia, rács és komponensek egyben, brandkézikönyvvel.",
           },
           rebranding: {
             title: "Rebranding",
-            desc: "Egy meglévő márka újrapozicionálása és megújítása.",
+            desc: "Egy meglévő brand újrapozicionálása és megújítása.",
           },
           visionBoard: {
             title: "Vision Board",
@@ -309,13 +315,13 @@ const hu: Dictionary = {
         },
       },
       "web-development": {
-        title: "Web Development",
+        title: "Webfejlesztés",
         intro:
-          "Egyedi, animált oldalak Next.js-re és a márka alapjaira építve, villámgyorsak, és *élnek* a kezed alatt.",
+          "Egyedi, animált oldalak Next.js-re és a brand alapjaira építve, villámgyorsak, és *élnek* a kezed alatt.",
         subServices: {
           bespokeSite: {
             title: "Egyedi weboldal-fejlesztés",
-            desc: "Nincsenek sablonok, a márkádra építjük.",
+            desc: "Nincsenek sablonok, a brandedre építjük.",
           },
           webDesign: {
             title: "Webdesign (UI/UX)",
@@ -352,13 +358,13 @@ const hu: Dictionary = {
         },
       },
       ecommerce: {
-        title: "Ecommerce",
+        title: "E-kereskedelem",
         intro:
           "Webshopok, amelyek nemcsak jól néznek ki, hanem *eladnak*, a termékoldaltól a számláig és a *visszatérő* vevőig.",
         subServices: {
           webshop: {
             title: "Webshop-építés",
-            desc: "Saját webshoprendszerünk bejelentkezős adminnal, és a márkádra szabott kirakat.",
+            desc: "Saját webshoprendszerünk bejelentkezős adminnal, és a brandedre szabott kirakat.",
           },
           shopUx: {
             title: "Shop UX és termékoldal-tervezés",
@@ -387,7 +393,7 @@ const hu: Dictionary = {
         },
       },
       "software-solutions": {
-        title: "Software Solutions",
+        title: "Szoftvermegoldások",
         intro:
           "Webalkalmazások, *iOS és Android* alkalmazások, portálok és belső eszközök, ugyanabból a *DNS*-ből, amelyből a saját platformunkat építettük.",
         subServices: {
@@ -422,9 +428,9 @@ const hu: Dictionary = {
         },
       },
       "strategic-marketing": {
-        title: "Strategic Marketing",
+        title: "Stratégiai marketing",
         intro:
-          "Hol és miért jelenik meg a márka, fizetett és organikus csatornákon, *mérhető* célokkal, hogy *növekedjen*.",
+          "Hol és miért jelenik meg a brand, fizetett és organikus csatornákon, *mérhető* célokkal, hogy *növekedjen*.",
         subServices: {
           channelStrategy: {
             title: "Kampány- és csatornastratégia",
@@ -596,12 +602,12 @@ const hu: Dictionary = {
       "/": {
         title: "LineiQ | Brand. Code. Signal.",
         description:
-          "Márka- és üzletarchitektúra-stúdió és szoftverház, Magyarországon épült, vállalatokkal és magánszemélyekkel dolgozik bárhol a világon.",
+          "Brand- és üzletarchitektúra-stúdió és szoftverház, Magyarországon épült, vállalatokkal és magánszemélyekkel dolgozik bárhol a világon.",
       },
       "/about": {
         title: "Rólunk | LineiQ",
         description:
-          "Magyarországon épült márka- és üzletarchitektúra-stúdió. A küldetésünk, az öt meggyőződés, amelyen futunk, és amibe ez nekünk kerül, a két alapító mögötte, és a könyvek, amelyek formálnak minket.",
+          "Magyarországon épült brand- és üzletarchitektúra-stúdió. A küldetésünk, az öt meggyőződés, amelyen futunk, és amibe ez nekünk kerül, a két alapító mögötte, és a könyvek, amelyek formálnak minket.",
       },
       "/work": {
         title: "Munkák | LineiQ",

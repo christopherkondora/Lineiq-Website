@@ -5,9 +5,23 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Intro.module.css";
 import type { Dictionary } from "../i18n/dictionary";
+import { fitBarToWord } from "./inkBar";
 
 export default function Intro({ t }: { t: Dictionary["home"]["intro"] }) {
   const rootRef = useRef<HTMLElement>(null);
+
+  // The red bar is exactly as tall as the struck word's letters, not the line
+  // box (see inkBar.ts). The white word is set on the struck word's baseline.
+  useEffect(() => {
+    const root = rootRef.current;
+    const bar = root?.querySelector<HTMLElement>("[data-redaction]");
+    const word = root?.querySelector<HTMLElement>("[data-struck]");
+    const swap = bar?.parentElement;
+    if (!bar || !word || !swap) return;
+    return fitBarToWord(word, bar, swap, ({ up, lineBaseline }) => {
+      bar.style.setProperty("--studio-shift", `${up - lineBaseline}px`);
+    });
+  }, [t.struck]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -82,6 +96,7 @@ export default function Intro({ t }: { t: Dictionary["home"]["intro"] }) {
                 <span
                   className={`${styles.swapWord} ${styles.agency}`}
                   aria-hidden="true"
+                  data-struck
                 >
                   {t.struck}
                 </span>

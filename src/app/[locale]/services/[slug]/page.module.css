@@ -120,9 +120,30 @@
   }
 }
 
+/* A word cannot break across lines, so the longest word of a title has to fit
+   the page width at the title's size: the size is capped at width ÷ (letters ×
+   0.44em, what Fraunces SemiBold measures at about 0.41–0.42 per letter). --word
+   is that word's length, set in CategoryArticle.tsx. English is untouched (its
+   longest word, "Architecture", already fits); long Hungarian words like
+   "Márkaarchitektúra" scale down. */
+.title,
+.nextTitle {
+  --page-pad: var(--container-pad);
+  --word-fit: calc(
+    (100vw - 2 * var(--page-pad)) * 0.97 / (var(--word, 1) * 0.44)
+  );
+}
+
+@media (max-width: 768px) {
+  .title,
+  .nextTitle {
+    --page-pad: var(--container-pad-mobile);
+  }
+}
+
 .title {
   font-family: var(--font-display);
-  font-size: clamp(3.25rem, 10vw, 9rem);
+  font-size: min(clamp(3.25rem, 10vw, 9rem), var(--word-fit));
   line-height: 0.98;
   letter-spacing: var(--tracking-tight);
   font-weight: 600;
@@ -262,7 +283,7 @@
 
 .nextTitle {
   font-family: var(--font-display);
-  font-size: clamp(2.75rem, 8vw, 7rem);
+  font-size: min(clamp(2.75rem, 8vw, 7rem), var(--word-fit));
   line-height: 1;
   letter-spacing: var(--tracking-tight);
   font-weight: 600;

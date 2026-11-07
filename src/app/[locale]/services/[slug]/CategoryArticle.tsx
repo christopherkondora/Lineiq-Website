@@ -10,6 +10,16 @@ import { plainIntro, type LocalizedCategory } from "../../../data/services";
 import type { Dictionary } from "../../../i18n/dictionary";
 import styles from "./page.module.css";
 
+/**
+ * The letters in a title's longest word. A word cannot be broken across lines,
+ * so on a phone it is the word, not the title, that has to fit the screen:
+ * "Szoftvermegoldások" is 18 letters, "Architecture" 12. The CSS scales the title
+ * down by it (page.module.css, --word).
+ */
+function longestWord(title: string) {
+  return Math.max(...title.split(/\s+/).map((word) => word.length));
+}
+
 // A Kranky aláírás dőlése kategóriánként váltakozik, hogy ne ugyanabban a
 // szögben álljon minden oldalon. Determinisztikus, így az SSR és a kliens
 // ugyanazt rendereli.
@@ -99,7 +109,11 @@ export default function CategoryArticle({
             </Link>
           </div>
 
-          <h1 className={`reveal ${styles.title}`} data-hero>
+          <h1
+            className={`reveal ${styles.title}`}
+            style={{ "--word": longestWord(service.title) } as CSSProperties}
+            data-hero
+          >
             {service.title}
           </h1>
           <p
@@ -154,7 +168,12 @@ export default function CategoryArticle({
               href={`/services/${next.slug}`}
               className={styles.nextLink}
             >
-              <span className={styles.nextTitle}>{next.title}</span>
+              <span
+                className={styles.nextTitle}
+                style={{ "--word": longestWord(next.title) } as CSSProperties}
+              >
+                {next.title}
+              </span>
               <span className={styles.nextEssence} aria-hidden="true">
                 {next.essence}
               </span>

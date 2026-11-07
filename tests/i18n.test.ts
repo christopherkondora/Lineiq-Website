@@ -271,11 +271,6 @@ describe("dictionaries", () => {
       "about.founders.frameworks.roiAutopsy.name",
       "about.founders.frameworks.velvetRope.name",
       "about.founders.frameworks.futureWalk.name",
-      "services.categories.brand-architecture.title",
-      "services.categories.web-development.title",
-      "services.categories.ecommerce.title",
-      "services.categories.software-solutions.title",
-      "services.categories.strategic-marketing.title",
       "services.categories.brand-architecture.subServices.rebranding.title",
       "services.categories.brand-architecture.subServices.visionBoard.title",
       "contact.needs.rebrand",
@@ -291,7 +286,11 @@ describe("dictionaries", () => {
   });
 
   it.each(["en", "hu", "de"] as const)("%s has no empty strings", (locale) => {
-    const text = JSON.stringify(dictionaries[locale]);
-    expect(text).not.toContain('""');
+    // denialAfter is empty where the sentence ends on the red word (English).
+    const emptyOnPurpose = new Set(["home.partners.denialAfter"]);
+    const empty = leaves(dictionaries[locale])
+      .filter(([path, text]) => text === "" && !emptyOnPurpose.has(path))
+      .map(([path]) => path);
+    expect(empty).toEqual([]);
   });
 });

@@ -99,15 +99,18 @@
 .redaction {
   position: absolute;
   left: -0.12em;
-  top: 50%;
-  transform: translateY(-50%);
+  /* top and height are set from the letters of the struck word (Intro.tsx);
+     this is only the state before that runs. */
+  top: 0;
   box-sizing: border-box;
+  /* No line box of its own: the bar is as tall as the letters, not the line. */
+  line-height: 0;
   /* min-width: az "Agency" teljes szélessége + kétoldali bleed (a jobb szélén az
      "Agency" 'y'-farka különben kilógna a piros alól); max-content, hogy a
      "Studio"-ra is ránőjön, ha valaha az lenne a szélesebb. */
   min-width: calc(100% + 0.3em);
   width: max-content;
-  padding: 0.06em 0.1em;
+  padding: 0 0.1em;
   background: var(--color-red);
   clip-path: inset(0% 100% 0% 0%);
   /* A sáv szélességét az "Agency" szabja meg (azt kell eltakarnia), a "Studio"
@@ -118,6 +121,11 @@
 
 .studio {
   color: var(--color-white);
+  /* A one-em line box, moved down onto the struck word's baseline (Intro.tsx
+     sets --studio-shift). */
+  line-height: 1;
+  position: relative;
+  top: var(--studio-shift, 0);
 }
 
 /* A "Studio" betűi a sweep UTÁN úsznak fel egyenként (2. fázis); alaphelyzetben
@@ -217,10 +225,9 @@
        tapad ("justexecute") — egy hajszálnyi levegő elválasztja. */
     margin-right: 0.12em;
   }
-  /* A sáv magasságát a betűméret adja; a függőleges padding csak annyi, hogy a
-     "Studio" ne érjen a piros széléhez. */
+  /* The bar's height comes from the letters of the struck word (Intro.tsx). */
   .redaction {
-    padding: 0.04em 0.1em;
+    padding: 0 0.1em;
   }
 
   /* Az ecosystem mondat külön bekezdés — a lead-del közös bal éllel, de a záró
