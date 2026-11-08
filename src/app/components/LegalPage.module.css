@@ -108,6 +108,11 @@
   font-weight: 500;
 }
 
+/* The notice sets its objection sentence and its labels in bold. */
+.strong {
+  font-weight: 600;
+}
+
 /* Target size (WCAG 2.2, 2.5.8: at least 24 x 24 px): the link's inline box
    is 20px tall. Vertical padding on an inline box grows the hit area without
    moving the line, and 24px still fits inside one line (24px in the language

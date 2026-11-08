@@ -122,18 +122,27 @@ const de: LegalTexts = {
     title: "Datenschutzerklärung",
     sections: [
       {
-        heading: "Verantwortlicher",
+        heading: "Der Verantwortliche",
         blocks: [
-          "Verantwortlicher für die über die Website www.lineiqgroup.com (die Website) angegebenen personenbezogenen Daten ist (LineiQ oder wir):",
+          "Verantwortlicher für die in dieser Erklärung beschriebenen personenbezogenen Daten ist (LineiQ oder wir):",
           { facts: company },
-          "Wir sind nicht verpflichtet, einen Datenschutzbeauftragten zu benennen, und haben keinen benannt. Fragen zur Datenverarbeitung richten Sie bitte an die obige E-Mail-Adresse.",
+          "Bei allen Fragen zu Ihren Daten erreichen Sie uns unter: **contact@lineiqgroup.com**. Wir sind nicht verpflichtet, einen Datenschutzbeauftragten zu benennen, und haben keinen benannt.",
         ],
       },
       {
-        heading: "Zweck und Geltungsbereich",
+        heading: "Geltungsbereich dieser Erklärung",
         blocks: [
-          "Diese Erklärung informiert gemäß Artikel 13 der Verordnung (EU) 2016/679 des Europäischen Parlaments und des Rates (Datenschutz-Grundverordnung, DSGVO) und dem ungarischen Gesetz CXII von 2011 über das informationelle Selbstbestimmungsrecht und die Informationsfreiheit (Infotv.) darüber, welche personenbezogenen Daten wir bei der Nutzung der Website zu welchem Zweck, auf welcher Rechtsgrundlage und wie lange verarbeiten, wer Zugriff darauf hat und welche Rechte Sie haben.",
-          "Diese Erklärung gilt für alle Sprachfassungen der Website. Die Daten unserer Partner verarbeiten wir während einer Zusammenarbeit nach dem Vertrag und der dazugehörigen gesonderten Information.",
+          "Diese Erklärung informiert gemäß den Artikeln 13 und 14 der Verordnung (EU) 2016/679 (Datenschutz-Grundverordnung, DSGVO) und dem ungarischen Gesetz CXII von 2011 über das informationelle Selbstbestimmungsrecht und die Informationsfreiheit (Infotv.) darüber, welche personenbezogenen Daten wir als Verantwortlicher verarbeiten, woher sie stammen, zu welchem Zweck, auf welcher Rechtsgrundlage und wie lange wir sie verarbeiten, wer sie erhält und welche Rechte Sie haben. Sie gilt für Sie, wenn Sie:",
+          {
+            list: [
+              "die Website www.lineiqgroup.com besuchen oder uns über deren Formular oder per E-Mail schreiben;",
+              "bei einem Unternehmen arbeiten, das wir gefunden haben und das wir ansprechen dürfen (ein potenzieller Kunde);",
+              "auf einer Social-Media-Plattform mit uns in Kontakt treten oder wir mit Ihnen;",
+              "bei einem Partner von uns arbeiten oder einen Vertrag mit uns unterzeichnen;",
+              "eine Rechnung von uns erhalten oder uns eine Rechnung stellen.",
+            ],
+          },
+          "Sie gilt nicht für die personenbezogenen Daten der eigenen Kunden, Interessenten und Mitarbeiter eines Partners, die wir bei einem Projekt auf Weisung des Partners verarbeiten. Für diese Daten ist der Partner der Verantwortliche, und es gilt seine eigene Datenschutzerklärung; unsere Rolle regelt der Auftragsverarbeitungsvertrag mit dem Partner.",
         ],
       },
       {
@@ -141,45 +150,180 @@ const de: LegalTexts = {
         blocks: [
           {
             list: [
-              "Wir verarbeiten nur die Angaben, die Sie uns im Kontaktformular oder per E-Mail machen, sowie die Serverprotokolle unseres Hosting-Anbieters.",
-              "Wir verwenden keine Analyse, keinen Tracking-Code und keine Werbe- oder Social-Media-Cookies.",
-              "Wir setzen ein einziges Cookie, und nur dann, wenn Sie eine Sprache wählen: Es merkt sich die gewählte Sprache.",
-              "Wir verkaufen Ihre Daten nicht und geben sie niemandem zu Werbezwecken weiter.",
+              "Wir verarbeiten geschäftliche Kontaktdaten und das, was Sie uns mitteilen, sonst nichts.",
+              "Über potenzielle Kunden nutzen wir nur öffentliche Informationen, und wir informieren sie spätestens in unserer ersten Nachricht.",
+              "Wir verkaufen Ihre Daten nicht und geben sie niemandem für dessen Werbezwecke weiter.",
+              "Über Sie wird keine automatisierte Entscheidung getroffen.",
+              "Die Website verwendet weder Analyse noch Tracking und setzt nur dann ein Cookie, wenn Sie eine Sprache wählen.",
             ],
           },
         ],
       },
       {
-        heading: "Das Kontaktformular",
+        heading: "Anfragen über die Website und per E-Mail",
         blocks: [
-          "Über das Formular auf der Kontaktseite können Sie mit uns Kontakt aufnehmen, um ein Angebot anzufragen oder eine Zusammenarbeit zu besprechen.",
+          "Über das Formular auf der Kontaktseite können Sie ein Angebot anfragen oder eine Zusammenarbeit anstoßen. Schreiben Sie uns per E-Mail, gilt dasselbe.",
           {
             facts: [
               [
                 "Verarbeitete Daten",
-                "der Firmenname, die E-Mail-Adresse, Ihre Antworten auf die Fragen des Formulars (wo das Unternehmen heute steht, die gewünschte Leistung, der Budgetrahmen), die freiwillige Anmerkung sowie die Sprache der Seite, auf der Sie das Formular ausgefüllt haben. Firmenname und E-Mail-Adresse sind personenbezogene Daten, wenn sie eine natürliche Person identifizieren, etwa der Name eines Einzelunternehmers oder eine persönliche E-Mail-Adresse.",
+                "Der Firmenname, die E-Mail-Adresse, Ihre Antworten auf die Fragen des Formulars (wo das Unternehmen heute steht, die gewünschte Leistung, der Budgetrahmen), die freiwillige Anmerkung, die Sprache der Seite; oder der Inhalt Ihrer E-Mail. Firmenname und E-Mail-Adresse sind personenbezogene Daten, wenn sie eine natürliche Person identifizieren, etwa der Name eines Einzelunternehmers oder eine E-Mail-Adresse mit dem Namen einer Person.",
               ],
               [
                 "Zweck",
-                "Ihre Anfrage zu beantworten, einzuschätzen, ob unsere Leistungen zu Ihrem Bedarf passen, und Gespräche vor einem Vertragsschluss.",
+                "Ihre Anfrage zu beantworten, einzuschätzen, ob unsere Leistungen passen, und Gespräche vor einem Vertragsschluss.",
               ],
               [
                 "Rechtsgrundlage",
-                "Artikel 6 Absatz 1 Buchstabe b DSGVO: Maßnahmen auf Ihre Anfrage vor Abschluss eines Vertrags. Wenden Sie sich als Vertreter oder Mitarbeiter eines Unternehmens an uns, ist die Rechtsgrundlage Artikel 6 Absatz 1 Buchstabe f DSGVO: unser berechtigtes Interesse, geschäftliche Anfragen zu beantworten.",
+                "Artikel 6 Absatz 1 Buchstabe b DSGVO: Maßnahmen auf Ihre Anfrage vor Abschluss eines Vertrags. Schreiben Sie als Vertreter oder Mitarbeiter eines Unternehmens: Artikel 6 Absatz 1 Buchstabe f DSGVO, unser berechtigtes Interesse, geschäftliche Anfragen zu beantworten.",
               ],
               [
                 "Speicherdauer",
-                "Kommt kein Vertrag zustande, 12 Monate ab dem letzten Nachrichtenwechsel; danach löschen wir die Daten. Kommt ein Vertrag zustande, bewahren wir die Korrespondenz 5 Jahre ab Vertragsende auf, die allgemeine Verjährungsfrist nach dem Ptk.",
+                "12 Monate ab der letzten Nachricht, wenn kein Vertrag zustande kommt. Kommt einer zustande, gilt Abschnitt 6.",
               ],
               [
                 "Bereitstellung",
-                "freiwillig. Ohne Firmenname und E-Mail-Adresse können wir nicht antworten; ohne sie lässt sich das Formular daher nicht absenden.",
+                "Nicht verpflichtend. Ohne Firmennamen und E-Mail-Adresse können wir nicht antworten, deshalb lässt sich das Formular ohne sie nicht absenden.",
               ],
             ],
           },
-          "Die Website speichert die Formulardaten nicht in einer Datenbank: Beim Absenden gehen sie als E-Mail in unserem Postfach ein und werden dort verarbeitet. Schreiben Sie uns statt über das Formular direkt per E-Mail, verarbeiten wir Ihre Angaben zum selben Zweck, auf derselben Grundlage und für dieselbe Dauer.",
-          "Jede Anfrage wird von einem Menschen gelesen und beantwortet. Ihre Antworten im Formular werden nicht für automatisierte Entscheidungen oder Profiling verwendet.",
-          "Um unerwünschte, automatisierte Einsendungen herauszufiltern, prüft das Formular ein verborgenes Feld und die Ausfülldauer. Daraus leiten wir keine personenbezogenen Daten ab und speichern keine.",
+          "Die Website speichert das Formular nicht in einer Datenbank: Es erreicht unser Postfach als E-Mail. Um unerwünschte automatisierte Einsendungen auszufiltern, prüft das Formular ein verstecktes Feld und die Dauer des Ausfüllens; daraus leiten wir keine personenbezogenen Daten ab und speichern keine.",
+        ],
+      },
+      {
+        heading: "Potenzielle Kunden: Unternehmen, die wir selbst finden",
+        blocks: [
+          "Wir suchen Unternehmen, denen unsere Leistungen nützen können, und sprechen die Personen an, die sie leiten.",
+          {
+            facts: [
+              [
+                "Verarbeitete Daten",
+                "Name, Position, geschäftliche E-Mail-Adresse und geschäftliche Telefonnummer, das Unternehmen, Links zu öffentlichen Geschäftsprofilen, die Quelle der Information, unsere kurzen Notizen dazu, ob unsere Leistungen zum Unternehmen passen könnten, sowie unser Nachrichtenwechsel mit Ihnen.",
+              ],
+              [
+                "Herkunft der Daten",
+                "Ausschließlich öffentliche Quellen: die Website des Unternehmens, öffentliche Geschäftsprofile und -seiten (zum Beispiel LinkedIn, Instagram, Facebook, YouTube, TikTok, Substack), Handelsregister, Presse sowie Empfehlungen von Personen, die Sie kennen.",
+              ],
+              [
+                "Zweck",
+                "Unternehmen zu finden, denen wir helfen können, und sie wegen einer Zusammenarbeit anzusprechen.",
+              ],
+              [
+                "Rechtsgrundlage",
+                "Artikel 6 Absatz 1 Buchstabe f DSGVO: unser berechtigtes Interesse, Kunden für unser Unternehmen zu finden. Wir haben es gegen Ihre Interessen abgewogen und die Abwägung schriftlich festgehalten; Sie können sie unter contact@lineiqgroup.com anfordern.",
+              ],
+              [
+                "Wann wir informieren",
+                "Spätestens in unserer ersten Nachricht an Sie, in jedem Fall innerhalb eines Monats nach Erhalt Ihrer Daten. Entscheiden wir uns, Sie nicht anzusprechen, löschen wir Ihre Daten innerhalb dieses Monats und behalten nur den Namen des Unternehmens und den Grund unserer Entscheidung.",
+              ],
+              [
+                "Speicherdauer",
+                "12 Monate ab dem letzten Nachrichtenwechsel, wenn keine Zusammenarbeit zustande kommt; danach löschen wir Ihre Daten. Teilen Sie uns mit, dass Sie kein Interesse haben, hören wir sofort auf (siehe Abschnitt 15).",
+              ],
+              [
+                "Bereitstellung",
+                "Sie geben uns nichts; wir haben es gefunden.",
+              ],
+            ],
+          },
+          "**Dem können Sie jederzeit ohne Angabe von Gründen widersprechen: Dann sprechen wir Sie nicht mehr an und löschen Ihre Daten** (Artikel 21 Absätze 2 und 3 DSGVO). Es genügt, auf eine unserer Nachrichten entsprechend zu antworten oder an contact@lineiqgroup.com zu schreiben.",
+        ],
+      },
+      {
+        heading: "Ansprechpartner bei unseren Partnern",
+        blocks: [
+          "Wenn wir mit einem Unternehmen zusammenarbeiten, verarbeiten wir die Daten der Menschen, mit denen wir dort arbeiten.",
+          {
+            facts: [
+              [
+                "Verarbeitete Daten",
+                "Name, Position, geschäftliche E-Mail-Adresse und Telefonnummer, unser Schriftverkehr und die Notizen zu Besprechungen.",
+              ],
+              [
+                "Zweck",
+                "Den Vertrag mit dem Partner vorzubereiten, zu erfüllen und abzuschließen.",
+              ],
+              [
+                "Rechtsgrundlage",
+                "Artikel 6 Absatz 1 Buchstabe b DSGVO, wenn Sie selbst Vertragspartei sind (zum Beispiel als Einzelunternehmer). Sonst Artikel 6 Absatz 1 Buchstabe f DSGVO: unser berechtigtes Interesse, mit dem von Ihnen vertretenen Unternehmen zusammenzuarbeiten.",
+              ],
+              [
+                "Speicherdauer",
+                "Die Dauer der Zusammenarbeit und danach 5 Jahre, die allgemeine Verjährungsfrist nach § 6:22 des Bürgerlichen Gesetzbuchs (Ptk.).",
+              ],
+              [
+                "Bereitstellung",
+                "Für die Zusammenarbeit erforderlich; ohne Ansprechpartner können wir die Arbeit nicht ausführen.",
+              ],
+            ],
+          },
+          "**Das Starting Brief.** Zu Beginn der Zusammenarbeit füllen Inhaber und Freigeber des Partners in Tally ein Formular aus: ihre Kontaktdaten und ihre Antworten zum Unternehmen. Zweck und Rechtsgrundlage sind dieselben wie oben. Wir exportieren die Antworten in unseren verschlüsselten Speicher und löschen sie innerhalb von 30 Tagen in Tally; den Export bewahren wir anschließend für die oben genannte Dauer auf.",
+        ],
+      },
+      {
+        heading: "Unterzeichnung von Verträgen",
+        blocks: [
+          "Wir unterzeichnen Verträge elektronisch mit Adobe Acrobat Sign.",
+          {
+            facts: [
+              [
+                "Verarbeitete Daten",
+                "Name, geschäftliche E-Mail-Adresse und Unterschrift der Unterzeichner sowie das Signaturprotokoll (die Zeitpunkte und Ereignisse der Unterzeichnung). IP-Adressen erfassen wir nicht.",
+              ],
+              [
+                "Zweck",
+                "Den Vertrag zu schließen und beweisen zu können.",
+              ],
+              [
+                "Rechtsgrundlage",
+                "Artikel 6 Absatz 1 Buchstabe b DSGVO, wenn Sie als Vertragspartei unterzeichnen; Artikel 6 Absatz 1 Buchstabe f DSGVO, unser berechtigtes Interesse an einer nachweisbaren Unterschrift, wenn Sie für ein Unternehmen unterzeichnen.",
+              ],
+              [
+                "Speicherdauer",
+                "Die unterzeichnete Ausfertigung und ihr Protokoll: die Dauer der Zusammenarbeit und danach 5 Jahre. Die Ausfertigung in Acrobat Sign löschen wir, sobald wir sie in unserem Speicher abgelegt haben.",
+              ],
+              [
+                "Bereitstellung",
+                "Ohne Unterschrift kommt der Vertrag nicht zustande.",
+              ],
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Rechnungsstellung und Buchhaltung",
+        blocks: [
+          {
+            facts: [
+              [
+                "Verarbeitete Daten",
+                "Name, Rechnungsadresse, Steuernummer, Rechnungsdaten.",
+              ],
+              [
+                "Zweck",
+                "Rechnungen zu stellen und unsere Buchführungs- und Steuerpflichten zu erfüllen.",
+              ],
+              [
+                "Rechtsgrundlage",
+                "Artikel 6 Absatz 1 Buchstabe c DSGVO: rechtliche Verpflichtung nach dem ungarischen Gesetz CXXVII von 2007 über die Mehrwertsteuer (Inhalt der Rechnung) und dem Gesetz C von 2000 über die Rechnungslegung (Aufbewahrung).",
+              ],
+              [
+                "Speicherdauer",
+                "8 Jahre, wie § 169 des Rechnungslegungsgesetzes es vorschreibt.",
+              ],
+              [
+                "Bereitstellung",
+                "Ja, das Gesetz verlangt es; ohne sie können wir keine ordnungsgemäße Rechnung ausstellen.",
+              ],
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Soziale Medien",
+        blocks: [
+          "Wir und unsere Gründer können Sie mit den Konten, die sie für LineiQ nutzen, auf Instagram, LinkedIn, YouTube, Facebook, TikTok und Substack ansprechen oder mit Ihnen sprechen. Was wir aus diesen Gesprächen festhalten, behandeln wir wie in Abschnitt 5 oder 6. Die Plattform selbst verarbeitet Ihre Daten nach ihren eigenen Bedingungen als eigener Verantwortlicher; darauf haben wir keinen Einfluss.",
+          "Auf Facebook und Instagram (Meta) sowie LinkedIn stellt die Plattform den Seiteninhabern Statistiken über die Besucher der Seite zur Verfügung (Page Insights). Für diese Statistiken sind wir und die Plattform gemeinsam Verantwortliche; die Aufgabenverteilung regelt die Zusatzvereinbarung der Plattform, und Ihre Anliegen dazu bearbeitet die Plattform: [Meta Page Insights-Zusatz](https://www.facebook.com/legal/terms/page_controller_addendum), [LinkedIn Page Insights-Zusatz](https://legal.linkedin.com/pages-joint-controller-addendum). Wir sehen nur aggregierte Statistiken, nicht, wer Sie sind.",
         ],
       },
       {
@@ -188,42 +332,44 @@ const de: LegalTexts = {
           "Die Website verwendet ein einziges Cookie. Ein Cookie ist eine kleine Textdatei, die Ihr Browser auf Ihrem Gerät speichert.",
           {
             facts: [
-              ["Name", "lineiq-locale"],
+              [
+                "Name",
+                "lineiq-locale",
+              ],
               [
                 "Gesetzt von",
-                "der Website selbst (Erstanbieter-Cookie), und nur, wenn Sie im Sprachwähler eine Sprache wählen. Wählen Sie keine, erhalten Sie kein Cookie.",
+                "Der Website selbst (Erstanbieter-Cookie), und nur dann, wenn Sie im Sprachumschalter eine Sprache wählen. Wählen Sie keine, erhalten Sie kein Cookie.",
               ],
               [
                 "Inhalt",
-                "nur der Code der gewählten Sprache (en, hu oder de). Es enthält keine Kennung und keine personenbezogenen Daten.",
+                "Ausschließlich der Code der gewählten Sprache (en, hu oder de). Keine Kennung und keine personenbezogenen Daten.",
               ],
               [
                 "Zweck",
-                "rein funktional: Eine einfache Adresse (etwa /about) öffnet sich in der gewählten Sprache. Nichts wird verfolgt, ausgewertet oder weitergegeben.",
+                "Rein funktional: Eine einfache Adresse (etwa /about) öffnet sich in der gewählten Sprache. Nichts wird verfolgt, ausgewertet oder weitergegeben.",
               ],
               [
-                "Laufzeit",
-                "1 Jahr, verlängert bei jeder erneuten Sprachwahl.",
+                "Lebensdauer",
+                "1 Jahr, das sich mit jeder erneuten Sprachwahl verlängert.",
               ],
               [
-                "Attribute",
-                "Path=/, SameSite=Lax, über https Secure. Nicht HttpOnly, weil der Sprachwähler es im Browser schreibt.",
+                "Eigenschaften",
+                "Path=/, SameSite=Lax, Secure bei https. Nicht HttpOnly, weil der Sprachumschalter es im Browser schreibt.",
               ],
             ],
           },
-          "Dieses Cookie ist für einen von Ihnen ausdrücklich gewünschten Dienst unbedingt erforderlich und bedarf daher nach § 155 Absatz 4 des ungarischen Gesetzes C von 2003 über die elektronische Kommunikation und Artikel 5 Absatz 3 der Richtlinie 2002/58/EG keiner Einwilligung. Sie können es jederzeit in Ihren Browsereinstellungen löschen; die einfachen Adressen der Website öffnen sich dann auf Englisch.",
-          "Die Website verwendet kein weiteres Cookie, lädt keinen Analyse- oder Tracking-Code und liefert ihre Schriften vom eigenen Hosting aus, sodass auch durch die Schriften keine Daten an Dritte gelangen.",
+          "Dieses Cookie ist für einen von Ihnen ausdrücklich gewünschten Dienst unbedingt erforderlich; nach § 155 Absatz 4 des ungarischen Gesetzes C von 2003 über die elektronische Kommunikation und Artikel 5 Absatz 3 der Richtlinie 2002/58/EG ist dafür keine Einwilligung nötig. Sie können es jederzeit in den Einstellungen Ihres Browsers löschen; die einfachen Adressen öffnen sich dann auf Englisch. Die Website verwendet kein anderes Cookie, lädt keinen Analyse- oder Tracking-Code und liefert ihre Schriftarten von ihrem eigenen Host aus.",
         ],
       },
       {
         heading: "Serverprotokolle",
         blocks: [
-          "Die Website wird von unserem Hosting-Anbieter betrieben (siehe nächster Abschnitt). Beim Laden der Seiten erfasst dessen System technische Daten: die IP-Adresse, den Zeitpunkt der Anfrage, die Adresse der aufgerufenen Seite und die Kennung des Browsers (User-Agent).",
+          "Wenn Seiten der Website geladen werden, erfasst das System unseres Hosting-Anbieters die IP-Adresse, den Zeitpunkt der Anfrage, die angeforderte Seite und die Kennungen des Browsers (User-Agent).",
           {
             facts: [
               [
                 "Zweck",
-                "der sichere und zuverlässige Betrieb der Website sowie das Erkennen von Fehlern und Missbrauch.",
+                "Der sichere und zuverlässige Betrieb der Website; das Erkennen von Fehlern und Missbrauch.",
               ],
               [
                 "Rechtsgrundlage",
@@ -231,78 +377,132 @@ const de: LegalTexts = {
               ],
               [
                 "Speicherdauer",
-                "Das System des Hosting-Anbieters bewahrt sie nur so kurz auf, wie der Betrieb es erfordert, und löscht sie dann automatisch. Wir verknüpfen diese Daten nicht mit anderen Daten und identifizieren damit keine Besucher.",
+                "Die kurze Zeit, die der Betrieb erfordert; danach löscht das System des Hosting-Anbieters sie automatisch. Wir verknüpfen diese Daten nicht mit anderen Daten und identifizieren damit keine Besucher.",
               ],
             ],
           },
         ],
       },
       {
-        heading: "Auftragsverarbeiter und Übermittlungen",
+        heading: "Wer Ihre Daten erhält",
         blocks: [
-          "Außer uns haben nur die Anbieter Zugriff auf die Daten, die als Auftragsverarbeiter am Betrieb der Website mitwirken, und nur soweit dies dafür erforderlich ist:",
+          "Außer den beiden Geschäftsführern von LineiQ erhalten nur die folgenden personenbezogene Daten, und nur soweit ihre Aufgabe es erfordert.",
+          "**Unsere Auftragsverarbeiter** (sie handeln auf unsere Weisung auf Grundlage eines Auftragsverarbeitungsvertrags):",
           {
-            list: [
-              "Vercel Inc. (440 N Barranca Avenue #4133, Covina, CA 91723, Vereinigte Staaten; privacy@vercel.com): Hosting und Serverprotokolle.",
-              "Plus Five Five, Inc., Betreiber von Resend (2261 Market Street #5039, San Francisco, CA 94114, Vereinigte Staaten; support@resend.com): Zustellung der Formularnachricht per E-Mail.",
-              "Google Ireland Limited (Gordon House, Barrow Street, Dublin 4, Irland): der E-Mail-Dienst (Google Workspace), in dem wir Anfragen empfangen und beantworten.",
+            facts: [
+              [
+                "Proton AG (Schweiz)",
+                "E-Mail (contact@lineiqgroup.com), verschlüsselte Dateiablage, Passwortmanager. Ort der Daten: Schweiz. Übermittlung außerhalb der EU/des EWR: Für die Schweiz gibt es einen Angemessenheitsbeschluss der Europäischen Kommission.",
+              ],
+              [
+                "Supabase Pte. Ltd. (Singapur)",
+                "Unser internes Arbeitssystem (Kontrast): die Daten potenzieller Kunden und Partner. Ort der Daten: EU (Frankfurt). Übermittlung außerhalb der EU/des EWR: Für Singapur gibt es keinen Angemessenheitsbeschluss der Europäischen Kommission; die Standardvertragsklauseln im Auftragsverarbeitungsvertrag von Supabase.",
+              ],
+              [
+                "Tally BV (Belgien)",
+                "Das Formular des Starting Brief. Ort der Daten: EU. Übermittlung außerhalb der EU/des EWR: Keine.",
+              ],
+              [
+                "Adobe (Acrobat Sign)",
+                "Elektronische Unterzeichnung. Ort der Daten: EU (Deutschland, Irland). Übermittlung außerhalb der EU/des EWR: Adobe Inc. (USA) ist nach dem EU-US-Datenschutzrahmen zertifiziert; ihr Vertrag enthält die Standardvertragsklauseln.",
+              ],
+              [
+                "Vercel Inc. (USA)",
+                "Hosting der Website, Serverprotokolle. Ort der Daten: USA. Übermittlung außerhalb der EU/des EWR: EU-US-Datenschutzrahmen; Standardvertragsklauseln.",
+              ],
+              [
+                "Plus Five Five, Inc., Betreiberin von Resend (USA)",
+                "Zustellung der über das Formular der Website gesendeten Nachricht per E-Mail. Ort der Daten: USA. Übermittlung außerhalb der EU/des EWR: EU-US-Datenschutzrahmen; Standardvertragsklauseln.",
+              ],
+              [
+                "GitHub B.V. (Niederlande) und GitHub, Inc. (USA)",
+                "Das private Repository, in dem wir unsere Arbeitsnotizen zu potenziellen Kunden und Partnern führen. Ort der Daten: USA. Übermittlung außerhalb der EU/des EWR: GitHub ist nach dem EU-US-Datenschutzrahmen zertifiziert.",
+              ],
+              [
+                "Anthropic Ireland, Limited (Irland)",
+                "Der KI-Assistent Claude (Team-Tarif, Firmenkonto): Wir nutzen ihn zum Recherchieren, Entwerfen und Ordnen, wozu auch das Lesen unserer Arbeitsnotizen zu potenziellen Kunden und Partnern gehört. Anthropic darf seine Modelle nicht mit diesen Daten trainieren. Ort der Daten: Für diesen Tarif nicht von Anthropic angegeben; wir gehen von den USA aus. Übermittlung außerhalb der EU/des EWR: Anthropic ist ein EU-Unternehmen; jede Weiterübermittlung erfolgt nach den Standardvertragsklauseln in seinem Auftragsverarbeitungsvertrag.",
+              ],
             ],
           },
-          "Vercel und Resend verarbeiten Daten in den Vereinigten Staaten, Google kann einzelne Daten auch außerhalb der Europäischen Union verarbeiten. Grundlage dieser Übermittlungen ist der Angemessenheitsbeschluss der Europäischen Kommission vom 10. Juli 2023 zum EU-US-Datenschutzrahmen (Artikel 45 DSGVO), dem die Anbieter beigetreten sind, sowie die von der Kommission erlassenen Standarddatenschutzklauseln (Artikel 46 DSGVO).",
-          "Wir verkaufen keine personenbezogenen Daten und geben sie niemandem zu Werbezwecken weiter. An Behörden geben wir Daten nur heraus, wo und soweit das Gesetz es vorschreibt.",
+          "**Weitere Empfänger:**",
+          {
+            list: [
+              "**Die Social-Media-Plattformen** (Abschnitt 9), jede nach ihren eigenen Bedingungen.",
+              "**Unser Steuerberater und die Steuerbehörde** für die Rechnungsdaten, wie es das Gesetz verlangt.",
+            ],
+          },
+          "Der Angemessenheitsbeschluss zum EU-US-Datenschutzrahmen ist der Beschluss der Europäischen Kommission vom 10. Juli 2023 (Artikel 45 DSGVO); die Standardvertragsklauseln sind die von der Kommission angenommenen (Artikel 46 DSGVO). Wir verkaufen keine personenbezogenen Daten. Daten geben wir an eine Behörde nur heraus, wo und soweit das Gesetz es verlangt.",
+        ],
+      },
+      {
+        heading: "Keine automatisierte Entscheidungsfindung",
+        blocks: [
+          "Über Sie wird keine Entscheidung mit automatisierten Mitteln getroffen, und wir erstellen kein Profil von Ihnen (Artikel 22 DSGVO). Ein KI-Assistent kann uns beim Recherchieren öffentlicher Informationen helfen, aber ein Mensch liest das Ergebnis und entscheidet jedes Mal.",
         ],
       },
       {
         heading: "Datensicherheit",
         blocks: [
-          "Die Website ist nur über eine verschlüsselte (HTTPS-)Verbindung erreichbar. Zugriff auf Anfragen haben nur die Geschäftsführer von LineiQ. Wir schützen die Daten durch geeignete technische und organisatorische Maßnahmen vor unbefugtem Zugriff, Veränderung, Übermittlung, Offenlegung, Löschung und Vernichtung.",
-          "Kommt es zu einer Verletzung des Schutzes personenbezogener Daten, handeln wir nach Artikel 33 und 34 DSGVO: Wir melden sie der Behörde und informieren auch Sie, wenn sie voraussichtlich ein hohes Risiko für Sie mit sich bringt.",
+          "Wir schützen personenbezogene Daten mit angemessenen technischen und organisatorischen Maßnahmen: einzelne Passwörter aus einem Passwortmanager und Zwei-Faktor-Authentifizierung, verschlüsselte Speicherung, so wenig Zugriff wie die Aufgabe erfordert, verschlüsselte und aktuell gehaltene Geräte sowie Vertraulichkeit für jeden mit Zugriff. Die Website ist ausschließlich über eine verschlüsselte (HTTPS-)Verbindung erreichbar. Kommt es zu einer Verletzung des Schutzes personenbezogener Daten, gehen wir nach den Artikeln 33 und 34 DSGVO vor: Wir melden sie der Behörde und informieren auch Sie, wenn die Verletzung voraussichtlich ein hohes Risiko für Sie mit sich bringt.",
         ],
       },
       {
         heading: "Ihre Rechte",
         blocks: [
-          "Nach der DSGVO haben Sie in Bezug auf die Verarbeitung folgende Rechte:",
           {
             list: [
-              "Auskunft (Artikel 15): Sie können erfragen, ob wir Daten über Sie verarbeiten, und wenn ja, eine Kopie verlangen.",
-              "Berichtigung (Artikel 16): Sie können verlangen, dass wir unrichtige Daten berichtigen und unvollständige vervollständigen.",
-              "Löschung (Artikel 17): Sie können die Löschung Ihrer Daten verlangen, wenn sie nicht mehr benötigt werden oder die Verarbeitung unrechtmäßig ist.",
-              "Einschränkung (Artikel 18): Sie können verlangen, dass wir Ihre Daten eine Zeit lang nur speichern, etwa solange wir ihre Richtigkeit prüfen.",
-              "Datenübertragbarkeit (Artikel 20): Sie können die Daten, die wir auf Grundlage vorvertraglicher Maßnahmen verarbeiten, in einem strukturierten, maschinenlesbaren Format erhalten oder ihre Übermittlung an einen anderen Verantwortlichen verlangen.",
-              "Widerspruch (Artikel 21): Sie können einer auf unser berechtigtes Interesse gestützten Verarbeitung aus Gründen, die sich aus Ihrer besonderen Situation ergeben, jederzeit widersprechen.",
+              "**Auskunft** (Artikel 15): Sie können erfragen, ob wir Daten über Sie verarbeiten, und eine Kopie erhalten.",
+              "**Berichtigung** (Artikel 16): Sie können unrichtige Daten berichtigen und unvollständige vervollständigen lassen.",
+              "**Löschung** (Artikel 17): Sie können Ihre Daten löschen lassen, wenn sie nicht mehr benötigt werden, wenn Sie widersprochen haben oder wenn die Verarbeitung unrechtmäßig ist.",
+              "**Einschränkung der Verarbeitung** (Artikel 18): Sie können verlangen, dass wir Ihre Daten nur für eine bestimmte Zeit speichern, zum Beispiel solange ihre Richtigkeit geprüft wird.",
+              "**Datenübertragbarkeit** (Artikel 20): Die Daten, die Sie uns für einen Vertrag oder für vorvertragliche Schritte gegeben haben, können Sie in einem maschinenlesbaren Format erhalten oder an einen anderen Verantwortlichen übermitteln lassen.",
+              "**Widerspruch** (Artikel 21): Sie können jederzeit aus Gründen, die sich aus Ihrer besonderen Situation ergeben, der Verarbeitung widersprechen, die auf unserem berechtigten Interesse beruht. **Wenn wir Sie wegen unserer Leistungen ansprechen, können Sie jederzeit ohne Angabe von Gründen widersprechen, und wir hören auf.**",
             ],
           },
-          "Richten Sie Ihren Antrag an hello@lineiqgroup.com. Wir antworten unverzüglich, spätestens innerhalb eines Monats; diese Frist kann in begründeten Fällen um weitere zwei Monate verlängert werden, worüber wir Sie innerhalb des ersten Monats informieren. Auskunft und Maßnahmen sind kostenlos. Haben wir Zweifel an der Identität der antragstellenden Person, können wir zusätzliche Angaben zu ihrer Bestätigung anfordern.",
+          "Senden Sie Ihr Anliegen an contact@lineiqgroup.com. Wir antworten unverzüglich, spätestens innerhalb eines Monats; in begründeten Fällen kann diese Frist um weitere zwei Monate verlängert werden, worüber wir Sie innerhalb des ersten Monats informieren. Die Information und die Maßnahme sind kostenlos. Haben wir Zweifel an der Identität der anfragenden Person, können wir weitere Angaben zu ihrer Bestätigung verlangen. Ihr Anliegen und unsere Antwort bewahren wir 5 Jahre auf, um die Erledigung nachweisen zu können (Artikel 6 Absatz 1 Buchstabe f DSGVO: unser berechtigtes Interesse daran, innerhalb der fünfjährigen Verjährungsfrist nach § 6:22 Ptk.).",
         ],
       },
       {
         heading: "Rechtsbehelfe",
         blocks: [
-          "Wenn Sie meinen, dass Ihre Daten rechtswidrig verarbeitet werden, wenden Sie sich bitte zuerst an uns, damit wir das direkt beheben können. Sie können sich auch bei der ungarischen Nationalen Behörde für Datenschutz und Informationsfreiheit (NAIH) beschweren:",
+          "Wenn Sie glauben, dass Ihre Daten rechtswidrig verarbeitet werden, wenden Sie sich bitte zuerst an uns, damit wir das Problem beheben können. Sie können sich auch bei der ungarischen Nationalen Behörde für Datenschutz und Informationsfreiheit (NAIH) beschweren:",
           {
             facts: [
-              ["Sitz", "1055 Budapest, Falk Miksa utca 9–11., Ungarn"],
-              ["Postanschrift", "1363 Budapest, Pf. 9., Ungarn"],
-              ["Telefon", "+36 1 391 1400"],
-              ["E-Mail", "ugyfelszolgalat@naih.hu"],
-              ["Website", "www.naih.hu"],
+              [
+                "Sitz",
+                "1055 Budapest, Falk Miksa utca 9–11., Ungarn",
+              ],
+              [
+                "Postanschrift",
+                "1363 Budapest, Pf. 9., Ungarn",
+              ],
+              [
+                "Telefon",
+                "+36 1 391 1400",
+              ],
+              [
+                "E-Mail",
+                "ugyfelszolgalat@naih.hu",
+              ],
+              [
+                "Website",
+                "www.naih.hu",
+              ],
             ],
           },
-          "Werden Ihre Rechte verletzt, können Sie auch ein Gericht anrufen (Artikel 79 DSGVO, § 23 Infotv.). Zuständig ist der Gerichtshof (törvényszék); Sie können die Klage nach Ihrer Wahl auch vor dem Gerichtshof Ihres Wohn- oder Aufenthaltsorts erheben. Haben Sie Ihren gewöhnlichen Aufenthalt in einem anderen Mitgliedstaat der Europäischen Union, können Sie sich auch bei der dortigen Datenschutzaufsichtsbehörde beschweren.",
+          "Sie können auch ein Gericht anrufen (Artikel 79 DSGVO, § 23 Infotv.). Zuständig sind die Landgerichte (törvényszék), und Sie können Ihre Klage wahlweise beim Gericht Ihres Wohnsitzes oder Ihres Aufenthaltsorts erheben. Haben Sie Ihren gewöhnlichen Aufenthalt in einem anderen EU-Mitgliedstaat, können Sie sich auch bei der dortigen Aufsichtsbehörde beschweren.",
         ],
       },
       {
         heading: "Kinder",
         blocks: [
-          "Die Website richtet sich an Unternehmen. Von Personen unter 16 Jahren erheben wir wissentlich keine Daten.",
+          "Unsere Leistungen richten sich an Unternehmen. Daten von Personen unter 16 Jahren verarbeiten wir nicht wissentlich.",
         ],
       },
       {
         heading: "Änderungen dieser Erklärung",
         blocks: [
-          "Wir ändern diese Erklärung, wenn sich die Funktionsweise der Website oder die Rechtslage ändert. Die jeweils geltende Fassung steht immer auf dieser Seite, oben mit Versionsnummer und dem Datum, ab dem sie gilt.",
-          "Diese Erklärung wurde auf Ungarisch verfasst. Ihre englische und deutsche Übersetzung dient der Information; bei Abweichungen geht der ungarische Text vor.",
+          "Wir ändern diese Erklärung, wenn sich unsere Arbeitsweise oder die Rechtslage ändert. Die jeweils geltende Fassung steht immer unter lineiqgroup.com/privacy, mit Versionsnummer und dem Datum, ab dem sie gilt. Diese Erklärung wurde auf Ungarisch verfasst. Ihre englische und deutsche Übersetzung dient der Information; bei Abweichungen geht der ungarische Text vor.",
         ],
       },
     ],
