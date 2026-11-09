@@ -17,7 +17,7 @@ export const SITE_URL = "https://www.lineiqgroup.com";
  * host. Flip to true on launch day — robots.ts and layout.tsx both read this,
  * so the blackout lifts in one edit and cannot half-lift.
  */
-export const SITE_INDEXABLE = false;
+export const SITE_INDEXABLE = true;
 
 /**
  * Routes that stay out of the index even after the blackout lifts. /styleguide
