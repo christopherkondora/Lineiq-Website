@@ -132,13 +132,13 @@ describe("a legal page", () => {
 
   it("states the same version and date in each language's own words", () => {
     expect(legalPage("privacy", "en").versionLine).toBe(
-      "Version 2.0 · in force from 7 November 2026"
+      "Version 2.0 · in force from 9 November 2026"
     );
     expect(legalPage("privacy", "hu").versionLine).toBe(
-      "2.0. változat · hatályos: 2026. november 7."
+      "2.0. változat · hatályos: 2026. november 9."
     );
     expect(legalPage("privacy", "de").versionLine).toBe(
-      "Version 2.0 · gültig ab 7. November 2026"
+      "Version 2.0 · gültig ab 9. November 2026"
     );
   });
 

@@ -47,7 +47,7 @@ export const LEGAL_VERSIONS: Record<
 > = {
   terms: { version: "1.0", effective: "2026-10-25" },
   // 2.0: the extended notice (Lineiq-Website#38), written in the vault first.
-  privacy: { version: "2.0", effective: "2026-11-07" },
+  privacy: { version: "2.0", effective: "2026-11-09" },
 };
 
 export const legalTexts = { en, hu, de };
