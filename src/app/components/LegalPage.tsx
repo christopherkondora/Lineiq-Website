@@ -5,6 +5,8 @@ import { getDictionary } from "../i18n/dictionary";
 import type { Locale } from "../i18n/routing";
 import {
   BINDING_LOCALE,
+  emphasize,
+  keepTogether,
   legalPage,
   linkify,
   type LegalBlock,
@@ -19,7 +21,7 @@ import {
 // The page is for reading, not for the scroll set pieces: one column at a
 // reading measure, the house type, no motion.
 
-function Text({ text }: { text: string }) {
+function Links({ text }: { text: string }) {
   return (
     <>
       {linkify(text).map((segment, i) =>
@@ -29,6 +31,24 @@ function Text({ text }: { text: string }) {
           </a>
         ) : (
           segment.text
+        )
+      )}
+    </>
+  );
+}
+
+// **bold** marks in the text become <strong>; the addresses inside either
+// kind of piece still become links.
+function Text({ text }: { text: string }) {
+  return (
+    <>
+      {emphasize(keepTogether(text)).map((piece, i) =>
+        piece.bold ? (
+          <strong key={i} className={styles.strong}>
+            <Links text={piece.text} />
+          </strong>
+        ) : (
+          <Links key={i} text={piece.text} />
         )
       )}
     </>

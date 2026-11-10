@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   BINDING_LOCALE,
   LEGAL_PATHS,
+  emphasize,
+  keepTogether,
   formatLegalDate,
   legalPage,
   legalTexts,
@@ -77,6 +79,32 @@ describe("the legal documents", () => {
     }
   });
 
+  it.each(locales)("the privacy notice in %s has the notice's eighteen sections, and the objection right in bold", (locale) => {
+    const { sections } = legalTexts[locale].privacy;
+    expect(sections).toHaveLength(18);
+    // Article 21(4): the right to object to marketing contact is set apart.
+    expect(sections[4].blocks.some((b) => typeof b === "string" && b.startsWith("**"))).toBe(true);
+  });
+
+  it.each(locales)("the privacy notice in %s sends requests to contact@, not the studio mailbox", (locale) => {
+    const text = allText("privacy", locale);
+    expect(text).toContain("contact@lineiqgroup.com");
+    // The company block still prints the studio mailbox; the requests do not go there.
+    const { sections } = legalTexts[locale].privacy;
+    const rights = JSON.stringify(sections[14]);
+    expect(rights).toContain("contact@lineiqgroup.com");
+    expect(rights).not.toContain(COMPANY.email);
+  });
+
+  it.each(locales)("the privacy notice in %s lists every processor, with no bold mark left open", (locale) => {
+    const text = allText("privacy", locale);
+    for (const processor of ["Proton", "Supabase", "Tally", "Adobe", "Vercel", "Resend", "GitHub", "Anthropic"]) {
+      expect(text, processor).toContain(processor);
+    }
+    expect((text.match(/\*\*/g) ?? []).length % 2, "** marks come in pairs").toBe(0);
+    expect(text).not.toMatch(/\{company\}/);
+  });
+
   it("the cookie lives as long as the notice says: one year", () => {
     expect(LOCALE_COOKIE_MAX_AGE).toBe(365 * 24 * 60 * 60);
   });
@@ -104,13 +132,13 @@ describe("a legal page", () => {
 
   it("states the same version and date in each language's own words", () => {
     expect(legalPage("privacy", "en").versionLine).toBe(
-      "Version 1.0 · in force from 25 October 2026"
+      "Version 2.0 · in force from 9 November 2026"
     );
     expect(legalPage("privacy", "hu").versionLine).toBe(
-      "1.0. változat · hatályos: 2026. október 25."
+      "2.0. változat · hatályos: 2026. november 9."
     );
     expect(legalPage("privacy", "de").versionLine).toBe(
-      "Version 1.0 · gültig ab 25. Oktober 2026"
+      "Version 2.0 · gültig ab 9. November 2026"
     );
   });
 
@@ -142,12 +170,57 @@ describe("formatLegalDate", () => {
   });
 });
 
+describe("emphasize", () => {
+  it("cuts a paragraph at its bold marks", () => {
+    expect(emphasize("A **b** c")).toEqual([
+      { text: "A ", bold: false },
+      { text: "b", bold: true },
+      { text: " c", bold: false },
+    ]);
+  });
+
+  it("leaves a paragraph without marks whole", () => {
+    expect(emphasize("Plain.")).toEqual([{ text: "Plain.", bold: false }]);
+  });
+
+  it("starts with the bold piece when the paragraph does", () => {
+    expect(emphasize("**Objection.** Always.")).toEqual([
+      { text: "Objection.", bold: true },
+      { text: " Always.", bold: false },
+    ]);
+  });
+});
+
+describe("keepTogether", () => {
+  it("joins an en-dash pair and a chain of bracketed references", () => {
+    expect(keepTogether("EU–USA")).toBe("EU–⁠USA");
+    expect(keepTogether("Article 6(1)(f) and 9–11.")).toBe(
+      "Article 6(1)⁠(f) and 9–⁠11."
+    );
+  });
+
+  it("leaves a dash between spaces and ordinary text alone", () => {
+    expect(keepTogether("one – two")).toBe("one – two");
+    expect(keepTogether("Plain (text).")).toBe("Plain (text).");
+  });
+});
+
 describe("linkify", () => {
   it("links an email address and leaves the full stop behind", () => {
     expect(linkify("Write to hello@lineiqgroup.com.")).toEqual([
       { text: "Write to " },
       { text: "hello@lineiqgroup.com", href: "mailto:hello@lineiqgroup.com" },
       { text: "." },
+    ]);
+  });
+
+  it("links a labelled address under its label, and does not show the address", () => {
+    expect(
+      linkify("See [the addendum](https://example.com/a_very_long_path), then stop.")
+    ).toEqual([
+      { text: "See " },
+      { text: "the addendum", href: "https://example.com/a_very_long_path" },
+      { text: ", then stop." },
     ]);
   });
 
