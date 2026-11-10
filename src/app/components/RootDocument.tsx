@@ -53,6 +53,35 @@ const kranky = Kranky({
 export const rootMetadata = (locale: Locale): Metadata => ({
   metadataBase: new URL(SITE_URL),
   ...getDictionary(locale).meta.pages["/"],
+  // The logomark on white for a light browser theme, on black for a dark one.
+  // app/favicon.ico (light) stays the fallback for browsers that ignore the
+  // media query. The Apple icon is declared here, not as app/apple-icon.png:
+  // an explicit `icons` field displaces the file convention, so a file would
+  // ship no <link> on any visitor page. Built by scripts/make-icons.mjs from
+  // the brand files on Proton.
+  icons: {
+    icon: [
+      {
+        url: "/icons/icon-light.png",
+        type: "image/png",
+        sizes: "96x96",
+        media: "(prefers-color-scheme: light)",
+      },
+      {
+        url: "/icons/icon-dark.png",
+        type: "image/png",
+        sizes: "96x96",
+        media: "(prefers-color-scheme: dark)",
+      },
+    ],
+    apple: [
+      {
+        url: "/icons/apple-touch-icon.png",
+        type: "image/png",
+        sizes: "180x180",
+      },
+    ],
+  },
   // Inherited by every route, so no page can opt itself back in by accident.
   // Lifts with SITE_INDEXABLE on launch day. See [[data/site]].
   robots: SITE_INDEXABLE ? undefined : { index: false, follow: false },
