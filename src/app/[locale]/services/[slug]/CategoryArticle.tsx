@@ -128,7 +128,6 @@ export default function CategoryArticle({
           >
             {service.essence}
           </p>
-
         </div>
       </section>
 
@@ -156,6 +155,27 @@ export default function CategoryArticle({
           </ol>
         </div>
       </section>
+
+      {/* ── The band: the page's one photograph ──
+          Edge to edge between the chapters and the hand-off. The chapters are
+          the argument, the next page is the next argument; this is the pause
+          between them, and it has to be the whole width to read as a pause
+          rather than as a picture in the margin. A second photograph beside
+          the title was tried on 2026-11-11 and cut: the title, the red
+          signature and the cascade already share that spread, and a fourth
+          thing there is noise. Decorative, so the alt is empty; the prompt
+          log sits beside the file in public/services/. */}
+      <figure className={styles.band} aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={`/services/${service.slug}-wide.webp`}
+          alt=""
+          width={2400}
+          height={1350}
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
 
       {/* ── Next chapter handoff ── */}
       <section className={`section ${styles.nextSection}`}>

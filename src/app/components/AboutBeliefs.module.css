@@ -2,25 +2,18 @@
   background: var(--color-white);
 }
 
-/* ─── The seam with AboutCompounds ─────────────────────────
-   The pinned stage above releases a full viewport before its section ends, and
-   the word has already lifted out by then, so the reader scrolls through ~900px
-   of empty black to reach this section. The white is pulled up over most of it.
-
-   Same idiom as the homepage, where .rise pulls the Manifesto panel over the
-   end state of the pinned Partners sequence. The pull is bounded well short of
-   the pin release, so nothing ever slides over a pinned element.
-
-   The padding it lands on is deliberately larger than the --space-3xl the
-   .section class gives everything else: the first row has to open with real
-   white above it, or it reads as arriving already on its way out. Raised
-   specificity because .section sets the shorthand. */
+/* ─── The seam above ──────────────────────────────────────
+   Until 2026-11-11 this section pulled its white up over the empty black the
+   pinned AboutCompounds stage leaves behind. AboutInterlude, the full-screen
+   photograph that opens this section, now does that pull itself. The heading
+   sits close under the image, at the ordinary section rhythm: the image and
+   the question are one unit, the room and what is believed in it, so no extra
+   white between them. Raised specificity because .section sets the shorthand. */
 
 section.beliefs {
   position: relative;
   z-index: 1;
-  margin-top: calc(-1 * clamp(220px, 45vh, 480px));
-  padding-top: clamp(220px, 34vh, 420px);
+  padding-top: var(--space-3xl);
 }
 
 /* ─── Layout ───────────────────────────────────────────────
@@ -164,6 +157,10 @@ section.beliefs {
 
   .head {
     position: static;
+  }
+
+  .figure {
+    width: min(60%, 280px);
   }
 
   .title,

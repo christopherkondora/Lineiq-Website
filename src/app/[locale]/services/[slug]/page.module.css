@@ -421,3 +421,33 @@
     transform: rotate(-3deg);
   }
 }
+
+/* ── The band (2026-11-11) ─────────────────────────────────
+   The page's one photograph, edge to edge, between the chapters and the
+   hand-off. Not a section: no container, no padding, so the white of the
+   chapters stops dead at the image and the hand-off starts dead under it.
+   Most of a viewport tall, never a whole one: it is a pause in the reading,
+   not a page of its own. The source is 16:9; the crop is centred, and the
+   renders were composed with their subject in the middle band. */
+.band {
+  margin: 0;
+  width: 100%;
+  height: clamp(360px, 72vh, 820px);
+  overflow: hidden;
+}
+
+.band img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 900px) {
+  /* A 16:9 render cropped to 72vh of a portrait phone keeps a sliver. Let it
+     keep most of its shape instead; the width is the bleed that matters. */
+  .band {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+}

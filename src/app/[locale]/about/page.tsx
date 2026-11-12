@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import AboutHero from "../../components/AboutHero";
 import AboutOrigin from "../../components/AboutOrigin";
 import AboutCompounds from "../../components/AboutCompounds";
+import AboutInterlude from "../../components/AboutInterlude";
 import AboutBeliefs from "../../components/AboutBeliefs";
 import AboutFounders from "../../components/AboutFounders";
 import AboutRecord from "../../components/AboutRecord";
@@ -38,6 +39,9 @@ export default async function AboutPage({
           seam: the prose argues its way to the word "compounds", and the
           section below detonates it. Same movement, so same background. */}
       <AboutCompounds t={t.compounds} />
+      {/* The page's one photograph, opening the Beliefs section: the room the
+          beliefs are held in, after three black screens of speech. */}
+      <AboutInterlude />
       <AboutBeliefs t={t.beliefs} />
       <AboutFounders t={t.founders} />
       {/* AboutRefusals stood here until 2026-09-25. Its three refusals were cut

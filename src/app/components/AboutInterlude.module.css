@@ -1,0 +1,34 @@
+/* Full-bleed, one viewport tall.
+
+   The seam with AboutCompounds: the pinned stage above releases a full
+   viewport before its section ends, so the reader would scroll through
+   ~900px of empty black. This image is pulled up over most of it, the job
+   AboutBeliefs' white did before the image sat between them. The pull is
+   bounded well short of the pin release, so nothing slides over a pinned
+   element. */
+.interlude {
+  position: relative;
+  z-index: 1;
+  margin: calc(-1 * clamp(220px, 45vh, 480px)) 0 0;
+  height: 100vh;
+  height: 100svh;
+  background: var(--color-black);
+  overflow: hidden;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 60%;
+}
+
+/* On a phone a 16:9 frame cropped to a portrait viewport loses the room. Let
+   it keep its shape there instead. */
+@media (max-width: 700px) {
+  .interlude {
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+}
